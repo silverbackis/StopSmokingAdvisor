@@ -240,6 +240,7 @@ compressPageTasks = [],
 copySrc = [];
 
 function revisionsFull(){
+  //create revisions of files
   return combiner.obj(
     rev(),
     revDelOriginal(),
@@ -390,7 +391,7 @@ gulp.task('compress:symfony', gulp.series(
 
 gulp.task('revisions', function(){
   var revisionsSrc;
-  if(argv.files){
+  if(argv.files!==false){
     revisionsSrc = [];
     argv.files.forEach(function(fileArg){
       var minFileInfo = getMinFile(fileArg),
@@ -402,21 +403,21 @@ gulp.task('revisions', function(){
         revRoot + minFile
       );
     });
-  }else if(argv.clean){
+  }else if(argv.clean!==false){
     revisionsSrc = [
       dest.manifest.file
     ];
   }else{
     revisionsSrc = [
-      bundleRoot+'/Resources/public/*/dist/**',
-      '!'+bundleRoot+'/Resources/public/*/dist/**/*-*.*',
-      '!'+bundleRoot+'/Resources/public/*/dist/**/*.map'
+      bundleRoot+'/Resources/public/*/dist/**/!(*-*).+(js|css)'
     ];
   }
+  return gulp.src(revisionsSrc, { allowEmpty:true })
 
-  return gulp.src(revisionsSrc)
+    .pipe(debug({title: 'revisionsSrc'}))
+
+    // if we aren't cleaning then the input is the files we should be making revisions of
     .pipe(gulpif( (argv.clean===false), revisionsFull() ))
-
     //Check for files no longer used to remove them manually, if we are only updating a set of files
     .pipe(gulpif( (argv.files!==false || argv.clean!==false), deleteUnusedFiles() ))
 

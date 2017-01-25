@@ -1,0 +1,23 @@
+{% extends '@BWBase/base.html.twig' %}
+{% block stylesheets %}
+    {# Add assets using @ namespace references and wildcards #}
+    {{ addLocalAssets(['@App/Resources/private/pages/index.scss']) }}
+{% endblock %}
+
+{% block body %}
+<div class="site-wrapper">
+    <div class="container-fluid">
+        <div class="row" style="height:100%; padding-bottom:200px;">
+            <div class="col">
+                1 of 2
+            </div>
+            <div class="col-12 col-md-auto">
+                2 of 2
+            </div>
+            <div class="col-12" style="position:absolute; bottom:0; height:200px;">
+                Another row
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

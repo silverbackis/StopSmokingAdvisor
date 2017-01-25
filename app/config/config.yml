@@ -69,6 +69,69 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
+sonata_seo:
+    encoding:         UTF-8
+    page:
+        title:        Stop Smoking Advisor
+        metas:
+            name:
+                robots:               index, follow                
+                description:          Stop Smoking Advisor - Providing scheduled video sessions by experts to help you quit smoking
+                viewport:             width=device-width,height=device-height,initial-scale=1,maximum-scale=1,minimum-scale=1
+
+                # Only if an application
+                #application-name:     Website Name
+
+                # Android
+                #mobile-web-app-capable: 'yes'
+                theme-color:            '#000'
+
+                # Apple App Capable
+                #apple-mobile-web-app-capable:           'yes'
+                #apple-mobile-web-app-status-bar-style:  'black-translucent'
+
+                # Windows Phone - Back/Forward Button Colour
+                msapplication-navbutton-color:          '#000'
+
+                # Windows Phone - Shortcut Tile Colour
+                msapplication-TileColor:                '#000'
+
+            property:
+                # Facebook application settings - will be auto-added by fb ask if used
+                #fb:app_id:          XXXXXX
+                #fb:admins:          admin1, admin2
+
+                # Open Graph information
+                # see http://developers.facebook.com/docs/opengraphprotocol/#types or http://ogp.me/
+                og:site_name:       Stop Smoking Advisor
+                og:description:     Stop Smoking Advisor - Providing scheduled video sessions by experts to help you quit smoking
+                og:locale:          en_GB
+
+                #web based options: website, article or blog
+                og:type:            website
+
+            http-equiv:
+                'Content-Type':         text/html; charset=utf-8
+                #'X-Ua-Compatible':      IE=EmulateIE7
+
+            charset:
+                UTF-8:    ''
+
+        head:
+            xmlns:          http://www.w3.org/1999/xhtml
+            xmlns:og:       http://opengraphprotocol.org/schema/
+            #xmlns:fb:      "http://www.facebook.com/2008/fbml"
+
+            #Possible twitter namespace??
+            #xmlns:twitter: "http://api.twitter.com/"
+
+bw_assets:
+    local:
+        includeBower: false
+        assets: ['@AppBundle/Resources/private/greensock/TweenMax.min.js', '@AppBundle/Resources/private/bootstrap/*']
+    remote:
+        gsap: false
+
 bw_base:
     page:
         #Will be merged with Sonata meta tags when being fetched using Twig extension - defining here means will auto-detect tags which are image assets and pass through the default package's getURL method (e.g. for CDN prefix in live environment)
