@@ -1329,12 +1329,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/silverbackis/BW-AssetsBundle.git",
-                "reference": "d87bd983acc6323c29654c6fa540edd4d946854e"
+                "reference": "e5bff79f64d23e257915964393e70d7d85082827"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silverbackis/BW-AssetsBundle/zipball/d87bd983acc6323c29654c6fa540edd4d946854e",
-                "reference": "d87bd983acc6323c29654c6fa540edd4d946854e",
+                "url": "https://api.github.com/repos/silverbackis/BW-AssetsBundle/zipball/e5bff79f64d23e257915964393e70d7d85082827",
+                "reference": "e5bff79f64d23e257915964393e70d7d85082827",
                 "shasum": ""
             },
             "require": {
@@ -1369,7 +1369,7 @@
                 "npm",
                 "symfony"
             ],
-            "time": "2017-01-25 09:31:49"
+            "time": "2017-01-26 12:32:33"
         },
         {
             "name": "silverbackis/bw-base-bundle",
@@ -1377,12 +1377,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/silverbackis/BW-BaseBundle.git",
-                "reference": "f237e6989d0d7e5cd692e7af85769fc15afef3a5"
+                "reference": "6545c3e10ca3eb851a45acf2209df4a5a5054eb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silverbackis/BW-BaseBundle/zipball/f237e6989d0d7e5cd692e7af85769fc15afef3a5",
-                "reference": "f237e6989d0d7e5cd692e7af85769fc15afef3a5",
+                "url": "https://api.github.com/repos/silverbackis/BW-BaseBundle/zipball/6545c3e10ca3eb851a45acf2209df4a5a5054eb4",
+                "reference": "6545c3e10ca3eb851a45acf2209df4a5a5054eb4",
                 "shasum": ""
             },
             "require": {
@@ -1421,7 +1421,7 @@
                 "sonta",
                 "symfony"
             ],
-            "time": "2017-01-24 14:51:20"
+            "time": "2017-01-25 17:24:08"
         },
         {
             "name": "sonata-project/block-bundle",
