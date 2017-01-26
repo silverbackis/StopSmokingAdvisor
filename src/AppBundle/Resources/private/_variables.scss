@@ -1,0 +1,12 @@
+$teal-light:	#53b5dd;
+$teal-lighter:	#a8d2e4;
+$teal-dark:		#1b82a7;
+$asset-url-base:	'/';
+$asset-image-base:	$asset-url-base + 'bundles/app/images/';
+
+body,
+html {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
+  min-width: 320px;
+}

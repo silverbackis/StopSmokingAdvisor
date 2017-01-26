@@ -109,7 +109,7 @@ var dest = {
 };
 var bowerSource = bundleRoot + '/Resources/public/bower/source',
 scssIncludePaths = [bowerSource],
-scriptIncludePaths = [bowerSource];
+scriptIncludePaths = ['.', bowerSource];
 
 
 //css auto-prefixer global options

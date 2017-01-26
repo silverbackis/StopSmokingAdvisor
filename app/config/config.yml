@@ -128,7 +128,7 @@ sonata_seo:
 bw_assets:
     local:
         includeBower: false
-        assets: ['@AppBundle/Resources/private/greensock/TweenMax.min.js', '@AppBundle/Resources/private/bootstrap/*']
+        assets: ['@AppBundle/Resources/private/greensock/TweenMax.min.js', '@AppBundle/Resources/private/bootstrap/*', '@AppBundle/Resources/private/bootstrap-toolkit.js', '@AppBundle/Resources/private/_variables.scss']
     remote:
         gsap: false
 

@@ -94,21 +94,23 @@
 // Start with assigning color names to specific hex values.
 $white:  #fff !default;
 $black:  #000 !default;
-$red:    #d9534f !default;
+$red:    #a61d39 !default;
 $orange: #f0ad4e !default;
 $yellow: #ffd500 !default;
-$green:  #5cb85c !default;
+$green:  #3baf29 !default;
 $blue:   #0275d8 !default;
-$teal:   #5bc0de !default;
-$pink:   #ff5b77 !default;
+$teal:   #1e92c1 !default;
+$pink:   #ef4467 !default;
 $purple: #613d7c !default;
 
 // Create grayscale
-$gray-dark:                 #292b2c !default;
-$gray:                      #464a4c !default;
-$gray-light:                #636c72 !default;
+$gray-dark:                 #4d4d4d !default;
+$gray:                      #737373 !default;
+$gray-light:                #cccccc !default;
+$gray-lightest:             #f8f8f8 !default;
+
+//not really used gray-lighter
 $gray-lighter:              #eceeef !default;
-$gray-lightest:             #f7f7f9 !default;
 
 // Reassign color vars to semantic color scheme
 $brand-primary:             $blue !default;
@@ -181,8 +183,8 @@ $sizes: (
 //
 // Settings for the `<body>` element.
 
-$body-bg:       $gray-lightest !default;
-$body-color:    $gray-dark !default;
+$body-bg:       $gray-dark !default;
+$body-color:    $gray-lightest !default;
 $inverse-bg:    $gray-dark !default;
 $inverse-color: $gray-lighter !default;
 
@@ -205,7 +207,8 @@ $link-hover-decoration: underline !default;
 $grid-breakpoints: (
   xs: 0,
   sm: 576px,
-  md: 768px,
+  //md: 768px,
+  md: 810px,
   lg: 992px,
   xl: 1200px
 ) !default;
