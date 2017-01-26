@@ -16,3 +16,4 @@
 /web/bundles/
 /node_modules/
 sftp-config.json
+composer.lock
