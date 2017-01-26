@@ -1329,12 +1329,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/silverbackis/BW-AssetsBundle.git",
-                "reference": "e5bff79f64d23e257915964393e70d7d85082827"
+                "reference": "aacfb50ab5a3b2e14a08f94cebee73d3a60ad1ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silverbackis/BW-AssetsBundle/zipball/e5bff79f64d23e257915964393e70d7d85082827",
-                "reference": "e5bff79f64d23e257915964393e70d7d85082827",
+                "url": "https://api.github.com/repos/silverbackis/BW-AssetsBundle/zipball/aacfb50ab5a3b2e14a08f94cebee73d3a60ad1ad",
+                "reference": "aacfb50ab5a3b2e14a08f94cebee73d3a60ad1ad",
                 "shasum": ""
             },
             "require": {
@@ -1369,7 +1369,7 @@
                 "npm",
                 "symfony"
             ],
-            "time": "2017-01-26 12:32:33"
+            "time": "2017-01-26 22:32:15"
         },
         {
             "name": "silverbackis/bw-base-bundle",

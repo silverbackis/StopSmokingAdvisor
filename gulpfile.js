@@ -194,7 +194,6 @@ var tasks = {
 
     return combiner.obj(
         jsFilter_incMaps,
-          //debug({title: 'tasks.js:build'}),
           include({
             includePaths: scriptIncludePaths
           }),
@@ -202,6 +201,7 @@ var tasks = {
         jsFilter_incMaps.restore,
 
         jsFilter,
+          debug({title: 'tasks.js:build'}),
           sourcemaps.init({loadMaps:true}),
             concat(concatFilename),
           sourcemaps.write(".",sourcemap_ops(publicDir,true)),
@@ -214,7 +214,10 @@ var tasks = {
 
     return combiner.obj(
         jsFilter,
-          //debug({title: 'tasks.js_min'}),
+          include({
+            includePaths: scriptIncludePaths
+          }),
+          debug({title: 'tasks.js_min'}),
           sourcemaps.init({loadMaps:true}),
             uglify(),
             concat(concatFilename),
@@ -336,11 +339,9 @@ function deleteUnusedBuildFolders(){
     /**
      * Compress task
      */
-    gulp.task(compressTaskName,function(){
-      var srcArray = [
-        dest.build.symfony + '/' + filename + '/*'
-      ];
-      return gulp.src(srcArray)
+    gulp.task(compressTaskName,function(){      
+      var pageFiles = cfg.dest==='css' ? dest.build.symfony + '/' + filename + '/*' : (cfg.includeBower ? bowerFiles.concat(cfg.src) : cfg.src);
+      return gulp.src(pageFiles)
         .pipe(gulpif(cfg.dest==='css',tasks.css_min(
           dest.public.symfony + "/" + cfg.dest, filename.replace(".css",".min.css"), dest.manifest.symfony + "/" + cfg.dest
         )))
@@ -370,7 +371,8 @@ if(argv.files===false){
   });
   gulp.task('build:bower', gulp.series('compile:bower', function() { 
     //fetch files that have been built - not the uncompressed file as we won't get the right maping
-    return gulp.src([dest.build.bower + "/*", dest.public.bower + "/compiled-*.js", "!"+dest.public.bower + "/compiled-*.min.js"])
+    return gulp.src([dest.public.bower + '/!(*-*).+(js|css)'])
+    .pipe(debug({title: 'build:bower'}))
     .pipe(tasks.css_min(dest.public.bower, 'compiled.min.css', dest.manifest.bower))
     .pipe(tasks.js_min(dest.public.bower, 'compiled.min.js', dest.manifest.bower));
   }));
