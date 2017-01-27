@@ -1,6 +1,7 @@
 var $video = $(".video"),
 $videoCover = $(".video-cover"),
 $homeRight = $(".home-right"),
+$homeLeft = $(".home-left"),
 curBreakpoint,
 isMobile = false;
 
@@ -9,10 +10,18 @@ largeBreaks = ['md', 'lg', 'xl'];
 
 var reflow = (function reflowF(e){
 	if(!isMobile){
-		var maxWidth = $homeRight.height()/9*16;
+		var minHeight = $(".home-left-hmid").outerHeight();
+		$homeRight.add($homeLeft).css({
+			minHeight: minHeight+"px"
+		});
+
+		var rightHeight = $homeRight.height(),
+		maxWidth = rightHeight/9*16;
+
 		$video.css({
 			maxWidth: maxWidth+"px",
-			width: $(window).width()*0.58
+			width: $(window).width()*0.58,
+			minHeight: minHeight+"px"
 		});
 		return reflowF;
 	}
@@ -26,7 +35,11 @@ function changeLayout(type){
 			$homeRight.hide();
 			$video.css({
 				maxWidth: "",
-				width: ""
+				width: "",
+				minHeight: ""
+			});
+			$homeRight.add($homeLeft).css({
+				minHeight: ""
 			});
 		break;
 		case "desktop":
