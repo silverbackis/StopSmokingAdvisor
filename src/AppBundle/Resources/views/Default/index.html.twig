@@ -3,67 +3,104 @@
 
 {% block body %}
 <div class="site-wrapper">
-    <div class="container-fluid">
-        <div class="row no-gutters main-home-row">
-            <div class="col home-left">
-                <span class="home-left-table">
-                    <span class="align-middle home-left-table-cell">
-                        <div class="d-inline-block home-left-hmid">
-                            <div class="d-inline-block w-100 home-inner-mobile">
-                                <h1 class="ssa-logo">Stop Smoking Advisor</h1>
+    <div class="page-wrapper home-wrapper">
+        <div class="container-fluid home-container" id="home-container">
+            <div class="row no-gutters main-home-row">
+                <div class="col home-left">
+                    <span class="home-left-table">
+                        <span class="align-middle home-left-table-cell">
+                            <div class="d-inline-block home-left-hmid">
+                                <div class="d-inline-block w-100 home-inner-mobile">
+                                    <h1 class="ssa-logo">Stop Smoking Advisor</h1>
+                                </div>
+                                <div class="w-100 mobile-video-holder"></div>
+                                <div class="d-inline-block w-100 home-inner-mobile">
+                                    <span class="home-text">
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                        <p>accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae </p>
+                                    </span>
+                                </div>
                             </div>
-                            <div class="w-100 mobile-video-holder"></div>
-                            <div class="d-inline-block w-100 home-inner-mobile">
-                                <span class="home-text">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    <p>accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae </p>
-                                </span>
-                            </div>
+                        </span>
+                        <span class="copy-notice">
+                            &copy; Stop Smoking Advisor {{ "now"|date("Y") }} | 
+                            <a href="/terms">Ts &amp; Cs</a> | 
+                            <a href="https://www.britishwebsites.co.uk/" target="_blank">Site by British Websites</a>
+                        </span>
+                    </span>
+                </div>
+                <div class="col-12 col-md-auto home-right">
+                    <div class="video">
+                        <div class="video-cover">
+                            <img src="{{ asset('bundles/app/images/main_image.png') }}" alt="Stop Smoking Advisor - Video intro cover image" class="video-cover-image" />
                         </div>
-                    </span>
-                    <span class="copy-notice">
-                        &copy; Stop Smoking Advisor {{ "now"|date("Y") }} | 
-                        <a href="/terms">Ts &amp; Cs</a> | 
-                        <a href="https://www.britishwebsites.co.uk/" target="_blank">Site by British Websites</a>
-                    </span>
-                </span>
-            </div>
-            <div class="col-12 col-md-auto home-right">
-                <div class="video">
-                    <div class="video-cover">
-                        <img src="{{ asset('bundles/app/images/main_image.png') }}" alt="Stop Smoking Advisor - Video intro cover image" class="video-cover-image" />
+                        <a class="play-button" href="#">
+                            Play
+                            <span class="play-icon"></span>
+                        </a>
                     </div>
-                    <a class="play-button" href="#">
-                        Play
-                        <span class="play-icon"></span>
+                </div>
+            </div>
+            <div class="bottom-links">
+                <div class="d-inline-block main-home-link-outer">
+                    <a class="main-home-link login" href="#login">
+                        <span class="align-middle main-home-link-cell">
+                            <span class="d-inline-block" style="position: relative;">
+                                <span class="d-inline-block">
+                                    Login
+                                    <div class="login-logos">
+                                        <img src="{{ asset('bundles/app/images/login_logo_f.png') }}" width="15" alt="Login with Facebook" />
+                                        <img src="{{ asset('bundles/app/images/login_logo_t.png') }}" width="34.5" alt="Login with Twitter" />
+                                        <img src="{{ asset('bundles/app/images/login_logo_g.png') }}" width="28.5" alt="Login with Google" />
+                                    </div>
+                                </span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="d-inline-block main-home-link-outer">
+                    <a class="main-home-link register" href="#register">
+                        <span class="align-middle main-home-link-cell">
+                            <span class="d-inline-block">Sign up</span>
+                        </span>
                     </a>
                 </div>
             </div>
         </div>
-        <div class="bottom-links">
-            <div class="d-inline-block main-home-link-outer">
-                <a class="main-home-link login" href="#">
-                    <span class="align-middle main-home-link-cell">
-                        <span class="d-inline-block" style="position: relative;">
-                            <span class="d-inline-block">
-                                Login
-                                <div class="login-logos">
-                                    <img src="{{ asset('bundles/app/images/login_logo_f.png') }}" width="15" alt="Login with Facebook" />
-                                    <img src="{{ asset('bundles/app/images/login_logo_t.png') }}" width="34.5" alt="Login with Twitter" />
-                                    <img src="{{ asset('bundles/app/images/login_logo_g.png') }}" width="28.5" alt="Login with Google" />
-                                </div>
-                            </span>
+    </div>
+    <div class="page-wrapper login-wrapper">
+        <div class="container-fluid login-container" id="login-container">
+            <a class="close-page-icon" href="#"></a>
+            <table class="w-100 h-100">
+                <tr>
+                    <td class="align-middle">
+                        <span class="container inner-form-container">
+                            <h3 class="form-header">Login</h3>
+                            <input type="email" class="form-control home-form-control form-control-lg" placeholder="Enter email">
+                            <input type="password" class="form-control home-form-control form-control-lg" placeholder="Enter password">
+                            <button type="submit" class="btn btn-login">Enter site</button>
                         </span>
-                    </span>
-                </a>
-            </div>
-            <div class="d-inline-block main-home-link-outer">
-                <a class="main-home-link register" href="#">
-                    <span class="align-middle main-home-link-cell">
-                        <span class="d-inline-block">Sign up</span>
-                    </span>
-                </a>
-            </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="page-wrapper register-wrapper">
+        <div class="container-fluid register-container align-middle" id="register-container">
+            <a class="close-page-icon" href="#"></a>
+            <table class="w-100 h-100">
+                <tr>
+                    <td class="align-middle">
+                        <span class="container inner-form-container">
+                            <h3 class="form-header">Sign up</h3>
+                            <input type="email" class="form-control home-form-control form-control-lg" placeholder="Enter email">
+                            <input type="password" class="form-control home-form-control form-control-lg" placeholder="Enter password">
+                            <input type="password" class="form-control home-form-control form-control-lg" placeholder="Repeat password">
+                            <button type="submit" class="btn btn-register">Enter site</button>
+                        </span>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>

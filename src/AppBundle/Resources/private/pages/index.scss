@@ -9,7 +9,21 @@ body {
   height: 100%;
 }
 
+.site-wrapper {
+  display: table;
+  height: 100%;
+  min-height: 100%;
+  perspective: 1000px;
+  text-align: center;
+  width: 100%;
+}
+
 .container-fluid {
+  height: 100%;
+}
+
+.home-container {
+  box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.2);
   padding: 0;
 }
 
@@ -18,8 +32,8 @@ body {
   padding-bottom: 250px;
 }
 
-.site-wrapper {
-  display: table;
+.page-wrapper{
+  display: table-row;
   height: 100%;
   min-height: 100%;
   text-align: center;
@@ -218,6 +232,108 @@ body {
   display: inline-block;
   margin: 0 8px;
   position: relative;
+}
+
+.login-wrapper,
+.register-wrapper {
+  height: 100%;
+  left: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.login-wrapper {
+  background: $teal;
+}
+
+.register-wrapper {
+  background: $pink;
+}
+
+.close-page-icon {
+  background: url($asset-image-base + 'icon_close.png') 50% 50% no-repeat;
+  background-size: 37px 37px;
+  height: 37px;
+  position: absolute;
+  right: 40px;
+  top: 40px;
+  width: 37px;
+}
+
+.inner-form-container {
+  display: inline-block;
+  max-width: 600px;
+  padding: 90px 15px;
+}
+
+.form-header {
+  font-family: 'Comfortaa', cursive;
+  font-size: 60px;
+  font-weight: normal;
+  margin: 0 0 30px 0;
+}
+
+.home-form-control {
+  background: $gray;
+  background: rgba(255, 255, 255, 0.25);
+  border: 0;
+  border-radius: 0;
+  color: $white;
+  font-size: 28px;
+  font-weight: 300;
+  margin-top: 10px;
+}
+
+.home-form-control:focus {
+  background: rgba(255, 255, 255, 0.3);
+  color: $white;
+}
+
+.home-form-control::-webkit-input-placeholder {
+  color: $white;
+  opacity: 0.4;
+}
+
+.home-form-control::-moz-placeholder {
+  @extends .home-form-control::-webkit-input-placeholder;
+}
+
+.home-form-control::-ms-input-placeholder {
+  @extends .home-form-control::-webkit-input-placeholder;
+}
+
+.home-form-control::-moz-placeholder {
+  @extends .home-form-control::-webkit-input-placeholder;
+}
+
+.btn-login,
+.btn-register {
+  background: $teal-dark;
+  border-radius: 0;
+  color: $white;
+  cursor: pointer;
+  font-family: 'Comfortaa', cursive;
+  font-size: 26px;
+  margin-top: 10px;
+  padding: 0.75rem 1.5rem;
+  width: 100%;
+}
+
+.btn-login:hover {
+  background: $white;
+  color: $teal-dark;
+}
+
+.btn-register {
+  background: $red;
+}
+
+.btn-register:hover {
+  background: $white;
+  color: $red;
 }
 
 .mobile-video-holder {
