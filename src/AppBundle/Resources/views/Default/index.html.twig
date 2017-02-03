@@ -32,10 +32,16 @@
                 <div class="col-12 col-md-auto home-right">
                     <div class="video">
                         <div class="video-cover">
-                            <img src="{{ asset('bundles/app/images/main_image.png') }}" alt="Stop Smoking Advisor - Video intro cover image" class="video-cover-image" />
+                            <div class="video-center">
+                                <img src="{{ asset('bundles/app/images/16-9-spacer.png') }}" alt="Stop Smoking Advisor - Video intro cover image" class="video-spacer-image" />
+                                <div id="videoPlayer"></div>
+                            </div>
                         </div>
+
                         <a class="play-button" href="#">
-                            Play
+                            <span class="d-inline-block w-100" style="perspective: 1000px;">
+                                <span class="link-text-size">Play</span>
+                            </span>
                             <span class="play-icon"></span>
                         </a>
                     </div>
@@ -47,7 +53,7 @@
                         <span class="align-middle main-home-link-cell">
                             <span class="d-inline-block" style="position: relative;">
                                 <span class="d-inline-block">
-                                    Login
+                                    <span class="link-text-size">Login</span>
                                     <div class="login-logos">
                                         <img src="{{ asset('bundles/app/images/login_logo_f.png') }}" width="15" alt="Login with Facebook" />
                                         <img src="{{ asset('bundles/app/images/login_logo_t.png') }}" width="34.5" alt="Login with Twitter" />
@@ -61,47 +67,92 @@
                 <div class="d-inline-block main-home-link-outer">
                     <a class="main-home-link register" href="#register">
                         <span class="align-middle main-home-link-cell">
-                            <span class="d-inline-block">Sign up</span>
+                            <span class="d-inline-block">
+                                <span class="link-text-size">Sign up</span>
+                            </span>
                         </span>
                     </a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="page-wrapper login-wrapper">
-        <div class="container-fluid login-container" id="login-container">
-            <a class="close-page-icon" href="#"></a>
-            <table class="w-100 h-100">
-                <tr>
-                    <td class="align-middle">
-                        <span class="container inner-form-container">
-                            <h3 class="form-header">Login</h3>
-                            <input type="email" class="form-control home-form-control form-control-lg" placeholder="Enter email">
-                            <input type="password" class="form-control home-form-control form-control-lg" placeholder="Enter password">
-                            <button type="submit" class="btn btn-login">Enter site</button>
-                        </span>
-                    </td>
-                </tr>
-            </table>
-        </div>
+</div>
+<div class="page-wrapper login-wrapper">
+    <div class="container-fluid login-container" id="login-container">
+        <a class="close-page-icon" href="#home"></a>
+        <table class="w-100 h-100">
+            <tr>
+                <td class="align-middle">
+                    <span class="container inner-form-container">
+                        <h3 class="form-header">Login</h3>
+                        <input type="email" class="form-control home-form-control form-control-lg" placeholder="Enter email">
+                        <input type="password" class="form-control home-form-control form-control-lg" placeholder="Enter password">
+                        <button type="submit" class="btn btn-login"><span class="link-text-size">Enter site</span></button>
+
+                        <div class="social-logins">
+                            <a href="#" class="social-login-link face-link">
+                                <div class="social-icon"></div>
+                                <div class="align-middle social-link-cell">
+                                    <span class="text">
+                                        Login with Facebook
+                                    </span>
+                                </div>
+                            </a>
+                            <a href="#" class="social-login-link twit-link">
+                                <div class="social-icon"></div>
+                                <div class="align-middle social-link-cell">
+                                    <span class="text">
+                                        Login with Twitter
+                                    </span>
+                                </div>
+                            </a>
+                            <a href="#" class="social-login-link goog-link">
+                                <div class="social-icon"></div>
+                                <div class="align-middle social-link-cell">
+                                    <span class="text">
+                                        Login with Google
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </span>
+                </td>
+            </tr>
+        </table>
     </div>
-    <div class="page-wrapper register-wrapper">
-        <div class="container-fluid register-container align-middle" id="register-container">
-            <a class="close-page-icon" href="#"></a>
-            <table class="w-100 h-100">
-                <tr>
-                    <td class="align-middle">
-                        <span class="container inner-form-container">
-                            <h3 class="form-header">Sign up</h3>
-                            <input type="email" class="form-control home-form-control form-control-lg" placeholder="Enter email">
-                            <input type="password" class="form-control home-form-control form-control-lg" placeholder="Enter password">
-                            <input type="password" class="form-control home-form-control form-control-lg" placeholder="Repeat password">
-                            <button type="submit" class="btn btn-register">Enter site</button>
-                        </span>
-                    </td>
-                </tr>
-            </table>
-        </div>
+</div>
+<div class="page-wrapper register-wrapper">
+    <div class="container-fluid register-container align-middle" id="register-container">
+        <a class="close-page-icon" href="#home"></a>
+        <table class="w-100 h-100">
+            <tr>
+                <td class="align-middle">
+                    <span class="container inner-form-container">
+                        <h3 class="form-header">Sign up</h3>
+                        <div class="form-group has-danger">
+                            <input type="email" id="register-email" class="form-control form-control-lg form-control-danger home-form-control" placeholder="Enter email">
+                            <div class="form-control-feedback">This email is already registered / invalid etc.</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="register-pass1" class="form-control form-control-lg home-form-control" placeholder="Enter password">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="register-pass2" class="form-control form-control-lg home-form-control" placeholder="Repeat password">
+                        </div>
+
+                        <small id="passwordHelp" class="form-text password-help">
+                            Passwords must include at least:
+                            <ul>
+                                <li id="pw-letter"><span class="list-tick"></span> <span class="list-text">1 letter</span></li>
+                                <li id="pw-number"><span class="list-tick"></span> <span class="list-text">1 number</span></li>
+                                <li id="pw-6"><span class="list-tick"></span> <span class="list-text">6 characters</span></li>
+                            </ul>
+                        </small>
+                        <button type="submit" class="btn btn-register"><span class="link-text-size">Enter site</span></button>
+                    </span>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
 {% endblock %}

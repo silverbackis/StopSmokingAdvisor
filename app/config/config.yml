@@ -131,6 +131,15 @@ bw_assets:
         assets: ['@AppBundle/Resources/private/greensock/TweenMax.min.js', '@AppBundle/Resources/private/bootstrap/*', '@AppBundle/Resources/private/bootstrap-toolkit.js', '@AppBundle/Resources/private/_variables.scss']
     remote:
         gsap: false
+        jwplayer:
+            enabled: true
+            version: null
+            base: //content.jwplatform.com/libraries/
+            files:
+                js:
+                    enabled: true
+                    extension: js
+                    file: 8g2baDMg.js
 
 bw_base:
     page:

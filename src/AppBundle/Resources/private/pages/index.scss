@@ -1,6 +1,8 @@
 //custom bootstrap variables
 @import '../variables';
 @import '../bootstrap/bootstrap';
+$hfcbg: rgba(255, 255, 255, .2);
+$hfcbgon: rgba(255, 255, 255, .25);
 
 html,
 body {
@@ -9,12 +11,23 @@ body {
   height: 100%;
 }
 
+.body-anim {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.body-behind {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 .site-wrapper {
   display: table;
   height: 100%;
   min-height: 100%;
   overflow: hidden;
   perspective: 1000px;
+  position: relative;
   text-align: center;
   width: 100%;
 }
@@ -33,7 +46,7 @@ body {
   padding-bottom: 250px;
 }
 
-.page-wrapper{
+.page-wrapper {
   display: table-row;
   height: 100%;
   min-height: 100%;
@@ -48,8 +61,8 @@ body {
 .home-left {
   background: $gray-lightest;
   color: $gray;
-  z-index: 2;
   height: 100%;
+  z-index: 2;
 }
 
 .home-left-table {
@@ -131,7 +144,8 @@ body {
   width: 100%;
 }
 
-.video-cover-image {
+.video-center,
+.video-center>.jwplayer {
   bottom: -9999px;
   height: 100%;
   left: -9999px;
@@ -139,6 +153,10 @@ body {
   position: absolute;
   right: -9999px;
   top: -9999px;
+}
+
+.video-spacer-image {
+  display: none;
 }
 
 .play-button {
@@ -171,6 +189,7 @@ body {
   height: 100%;
   position: absolute;
   right: 0;
+  top: 0;
   width: 90px;
 }
 
@@ -211,6 +230,41 @@ body {
   color: $white;
 }
 
+a,
+button {
+  perspective: 1000px;
+}
+
+.btn:focus,
+.btn.focus {
+  box-shadow: none;
+}
+
+.link-text-size {
+  backface-visibility: hidden;
+  display: inline-block;
+  transform: translateZ(0);
+  transform-origin: 50% 50%;
+  transition: transform .4s, opacity .6s;
+}
+
+a:hover .link-text-size,
+button:hover .link-text-size {
+  transform: translateZ(100px);
+}
+
+a:active:hover .link-text-size,
+button:active:hover .link-text-size {
+  opacity: 1;
+  transform: translateZ(150px);
+}
+
+.link-clicked .link-text-size,
+.link-clicked .link-text-size, {
+  opacity: 0;
+  transform: translateZ(-4000px) !important;
+}
+
 .login {
   background: $teal;
 }
@@ -237,21 +291,98 @@ body {
 
 .login-wrapper,
 .register-wrapper {
-  height: 100%;
+  display: none;
   left: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 0;
-  position: absolute;
+  position: fixed;
   top: 0;
-  width: 100%;
   z-index: 2;
+}
+
+.wrapper-anim {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.wrapper-show {
+  display: inline-block;
+}
+
+.login-container,
+.register-container {
+  min-width: 320px;
 }
 
 .login-wrapper {
   background: $teal;
 }
 
+.social-logins {
+  margin-top: 45px;
+}
+
+.social-login-link {
+  background-color: $teal-dark;
+  background-color: $teal-dark-50;
+  display: table;
+  color: $teal-lighter;
+  font-family: 'Comfortaa', cursive;
+  font-size: 22px;
+  height: 65px;
+  transition: color .3s;
+  width: 100%;
+}
+
+.social-login-link:hover {
+  color: $white;
+  text-decoration: none;
+}
+
+.twit-link {
+  margin: 10px 0;
+}
+
+.social-icon {
+  background-color: $teal-dark;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  display: table-cell;
+  height: 100%;
+  width: 125px;
+}
+
+.face-link>.social-icon {
+  background-image: url($asset-image-base + 'login_logo_f.png');
+  background-size: 15px auto;
+}
+
+.twit-link>.social-icon {
+  background-image: url($asset-image-base + 'login_logo_t.png');
+  background-size: 34.5px auto;
+}
+
+.goog-link>.social-icon {
+  background-image: url($asset-image-base + 'login_logo_g.png');
+  background-size: 28.5px auto;
+}
+
+.social-link-cell {
+  display: table-cell;
+  height: 100%;
+  padding-left: 25px;
+  text-align: left;
+}
+
 .register-wrapper {
   background: $pink;
+
+  .form-control-feedback {
+    margin-top: 0;
+    padding: 5px 10px;
+    text-align: left;
+  }
 }
 
 .close-page-icon {
@@ -262,6 +393,7 @@ body {
   right: 40px;
   top: 40px;
   width: 37px;
+  z-index: 10;
 }
 
 .inner-form-container {
@@ -274,12 +406,12 @@ body {
   font-family: 'Comfortaa', cursive;
   font-size: 60px;
   font-weight: normal;
-  margin: 0 0 30px 0;
+  margin: 0 0 30px;
 }
 
 .home-form-control {
-  background: $gray;
-  background: rgba(255, 255, 255, 0.25);
+  background-color: $gray;
+  background-color: $hfcbg;
   border: 0;
   border-radius: 0;
   color: $white;
@@ -289,24 +421,20 @@ body {
 }
 
 .home-form-control:focus {
-  background: rgba(255, 255, 255, 0.3);
+  background-color: $hfcbgon;
   color: $white;
 }
 
 .home-form-control::-webkit-input-placeholder {
   color: $white;
-  opacity: 0.4;
+  opacity: .4;
 }
 
 .home-form-control::-moz-placeholder {
   @extends .home-form-control::-webkit-input-placeholder;
 }
 
-.home-form-control::-ms-input-placeholder {
-  @extends .home-form-control::-webkit-input-placeholder;
-}
-
-.home-form-control::-moz-placeholder {
+.home-form-control:-ms-input-placeholder {
   @extends .home-form-control::-webkit-input-placeholder;
 }
 
@@ -319,22 +447,56 @@ body {
   font-family: 'Comfortaa', cursive;
   font-size: 26px;
   margin-top: 10px;
-  padding: 0.75rem 1.5rem;
+  padding: .75rem 1.5rem;
   width: 100%;
-}
-
-.btn-login:hover {
-  background: $white;
-  color: $teal-dark;
 }
 
 .btn-register {
   background: $red;
 }
 
+.btn-login:hover,
 .btn-register:hover {
-  background: $white;
-  color: $red;
+  color: $white;
+}
+
+.form-text {
+  color: $white;
+  font-size: 18px;
+  margin-top: 5px;
+  text-align: left;
+}
+
+.password-help>ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.password-help>ul>li {
+  margin: 0;
+  padding: 0;
+}
+
+.list-tick {
+  background: url($asset-image-base + 'icon_tick.png') 50% 50% no-repeat;
+  background-size: 11.5px auto;
+  display: inline-block;
+  height: 100%;
+  margin-right: 5px;
+  min-height: 27px;
+  opacity: .5;
+  transition: opacity .3s;
+  vertical-align: top;
+  width: 12px;
+}
+
+.valid>.list-tick {
+  opacity: 1;
+}
+
+.has-danger .form-control-feedback {
+  background: $red;
+  color: $white;
 }
 
 .mobile-video-holder {
@@ -343,13 +505,18 @@ body {
     width: 100%;
   }
 
-  .video-cover-image {
+  .video-center {
     bottom: auto;
     height: auto;
     left: auto;
     position: relative;
     right: auto;
     top: auto;
+    width: 100%;
+  }
+
+  .video-spacer-image {
+    display: inline-block;
     width: 100%;
   }
 }
@@ -389,7 +556,6 @@ body {
     width: 50px;
   }
 
-
   .bottom-links {
     height: auto;
     position: relative;
@@ -408,7 +574,7 @@ body {
   .login>.main-home-link-cell>.d-inline-block {
     margin-top: 10px;
   }
-  
+
   .main-home-link {
     font-size: 50px;
   }
@@ -416,5 +582,40 @@ body {
   .login-logos {
     margin-top: 10px;
     position: relative;
+  }
+
+  .close-page-icon {
+    right: 30px;
+    top: 30px;
+  }
+
+  .form-header {
+    font-size: 50px;
+  }
+
+  .social-login-link {
+    height: 50px;
+  }
+
+  .social-icon {
+    width: 65px;
+  }
+
+  .social-link-cell {
+    padding-left: 10px;
+  }
+
+  .social-login-link {
+    font-size: 16px;
+  }
+
+  .btn-login,
+  .btn-register,
+  .home-form-control {
+    font-size: 21px;
+  }
+
+  .form-control-lg {
+    padding: .75rem 1rem;
   }
 }
