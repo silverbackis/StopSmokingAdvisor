@@ -548,6 +548,12 @@ button:active:hover .link-text-size,
   }
 }
 
+@include media-breakpoint-up(md) {
+  .site-wrapper {
+    overflow: hidden;
+  }
+}
+
 @include media-breakpoint-down(sm) {
   .main-home-row {
     height: auto;
