@@ -11,21 +11,34 @@ body {
   height: 100%;
 }
 
-.body-anim {
-  overflow-x: hidden;
-  overflow-y: auto;
+//.body-anim {
+//  overflow-x: hidden;
+//  overflow-y: auto;
+//}
+
+//.body-behind {
+//  overflow-x: auto;
+//  overflow-y: hidden;
+//}
+
+.home-behind .home-outer,
+.home-anim .home-outer {
+  display: inline-block;
+  overflow: hidden;
+  position: fixed;
 }
 
-.body-behind {
-  overflow-x: auto;
-  overflow-y: hidden;
+.home-outer {
+  display: table;
+  height: 100%;
+  position: relative;
+  width: 100%;
 }
 
 .site-wrapper {
   display: table;
   height: 100%;
   min-height: 100%;
-  overflow: hidden;
   perspective: 1000px;
   position: relative;
   text-align: center;
@@ -245,22 +258,28 @@ button {
   display: inline-block;
   transform: translateZ(0);
   transform-origin: 50% 50%;
-  transition: transform .4s, opacity .6s;
+}
+
+.link-text-size,
+.close-page-icon {
+  transition: transform .6s, opacity .65s;
 }
 
 a:hover .link-text-size,
-button:hover .link-text-size {
+button:hover .link-text-size,
+.close-page-icon:hover {
   transform: translateZ(100px);
 }
 
 a:active:hover .link-text-size,
-button:active:hover .link-text-size {
+button:active:hover .link-text-size,
+.close-page-icon:active:hover {
   opacity: 1;
   transform: translateZ(150px);
 }
 
 .link-clicked .link-text-size,
-.link-clicked .link-text-size, {
+.close-page-icon.link-clicked {
   opacity: 0;
   transform: translateZ(-4000px) !important;
 }
@@ -291,9 +310,10 @@ button:active:hover .link-text-size {
 
 .login-wrapper,
 .register-wrapper {
+  backface-visibility: hidden;
   display: none;
   left: 0;
-  overflow: auto;
+  overflow: hidden;
   -webkit-overflow-scrolling: touch;
   padding: 0;
   position: fixed;
@@ -303,11 +323,12 @@ button:active:hover .link-text-size {
 
 .wrapper-anim {
   display: inline-block;
-  overflow: hidden;
 }
 
 .wrapper-show {
-  display: inline-block;
+  display: table;
+  height: 100%;
+  position: relative;
 }
 
 .login-container,
@@ -385,15 +406,21 @@ button:active:hover .link-text-size {
   }
 }
 
-.close-page-icon {
-  background: url($asset-image-base + 'icon_close.png') 50% 50% no-repeat;
-  background-size: 37px 37px;
-  height: 37px;
+.close-link {
+  display: inline-block;
+  perspective: 1000px;
   position: absolute;
   right: 40px;
   top: 40px;
-  width: 37px;
   z-index: 10;
+}
+
+.close-page-icon {
+  background: url($asset-image-base + 'icon_close.png') 50% 50% no-repeat;
+  background-size: 37px 37px;
+  display: inline-block;
+  height: 37px;
+  width: 37px;
 }
 
 .inner-form-container {

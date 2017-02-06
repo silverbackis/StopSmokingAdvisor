@@ -213,21 +213,19 @@ introVideo;
 /**
  * Intro animation
  */
+$(".opacity-0").css({
+	opacity: "",
+	visibility: ""
+});
 var introTimeline = new TimelineLite({
 	paused:true, 
-	delay:0.6
+	delay:1.6
 })
 .from(".home-left", 0.45, { opacity:0, x:-30 })
 .from(".home-right", 0.45, { opacity:0, y:-30 }, "-=0.15")
 .from(".bottom-links", 0.45, { opacity:0, y:30 }, "-=0.15")
 .from(".play-button", 0.45, { opacity:0, x:"20%" });
-$(".site-wrapper").css({
-	display: "none"
-});
 $(function(){
-	$(".site-wrapper").css({
-		display: ""
-	});
 	introTimeline.play();
 });
 
@@ -235,6 +233,8 @@ $(function(){
  * Changing home pages
  */
 (function(){
+	var scrollTops = {};
+
 	function showPage(pageKey){
 		if(!tweens[pageKey]){
 			console.warn("Cannot show page, tween does not exist for that page", pageKey);
@@ -245,41 +245,35 @@ $(function(){
 		var $wrapper = $(tweens[pageKey].getChildren()[0]._targets[0]),
 		slideNewPage = function(){
 			pageStatus.showing = pageKey;
-			$wrapper
-				.addClass("wrapper-anim");
-			$("body")
-				.removeClass("body-behind")
-				.addClass("body-anim");
+			$wrapper.addClass("wrapper-anim");
 			tweens[pageKey].eventCallback("onComplete", function(){
-				$("body")
-					.removeClass("body-anim")
-					.addClass("body-behind");
-
 				$wrapper
-					.removeClass("wrapper-anim")
-					.addClass("wrapper-show");
+					.addClass("wrapper-show")
+					.scrollTop(0);
 
-				if($(".site-wrapper").height()>$("body").height()){
-					$wrapper.css({
-						overflowY: "scroll",
-						overflowX: "auto"
-					});
+				$("body").css({
+					overflowY: ""
+				});
+
+				if(scrollTops[pageKey]){
+					$("body").scrollTop(scrollTops[pageKey]);
 				}
 			});
 			tweens[pageKey].play();
 		};
 		
 		if(pageStatus.showing) {
-			resetScroll();
-			//prevent function from resetting home page
-			var hidePageKey = pageStatus.showing;
-			tweens[pageStatus.showing].eventCallback("onReverseComplete", function(){
-				hideWrapper(hidePageKey);
+			$.when(resetScroll(true)).done(function(){
+				//prevent function from resetting home page
+				var hidePageKey = pageStatus.showing;
+				tweens[pageStatus.showing].eventCallback("onReverseComplete", function(){
+					hideWrapper(hidePageKey);
+				});
+				//continue/start the current page from sliding away
+				tweens[pageStatus.showing].reverse();
+				//call function to show the new page straight away - do not wait for home to zoom out
+				slideNewPage();
 			});
-			//continue/start the current page from sliding away
-			tweens[pageStatus.showing].reverse();
-			//call function to show the new page straight away - do not wait for home to zoom out
-			slideNewPage();
 		}else{
 			//home zoom out, and when complete show new page - override oncomplete function
 			//(could then click another link while the home page is zooming out and function will overwrite)
@@ -288,38 +282,58 @@ $(function(){
 		}
 	}
 
-	function resetScroll(){
-		var $wrapper = $(tweens[pageStatus.showing].getChildren()[0]._targets[0]);
-		$wrapper
-			.removeClass("wrapper-show")
-			.addClass("wrapper-anim")
-			.css({
-				overflowY: "",
-				overflowX: ""
-			});
+	function resetScroll(showAnotherPage){
+		var $wrapper = $(tweens[pageStatus.showing].getChildren()[0]._targets[0]),
+		dfrd = $.Deferred();
 
-		$("body")
-			.removeClass("body-behind")
-			.addClass("body-anim");
+		scrollTops[pageStatus.showing] = $("body").scrollTop();
+		//move to scrolltop 0 first to prevent ios flicker as positions change and url bar size change - force url bar to show
+		$("body").scrollTop(0);
+		$("body").scrollTop(scrollTops[pageStatus.showing]);
+
+		setTimeout(function(){
+			//add scrollbar if one will hide from this overlay, or the home page will be showing one
+			var bodyHeight = $("body").height();
+
+			if($wrapper.height()>bodyHeight || $(".site-wrapper").height()>bodyHeight){
+				$("body").css({
+					overflowY: "scroll"
+				});
+			}
+
+			if(!showAnotherPage){
+				$("body")
+					.removeClass("home-behind")
+					.scrollTop(scrollTops.body)
+					.css({
+						overflowY: ""
+					});
+			}
+
+			$wrapper
+				.removeClass("wrapper-show")
+				.addClass("wrapper-anim")
+				.scrollTop(scrollTops[pageStatus.showing]);
+			dfrd.resolve();
+		},180);
+		return dfrd.promise();
 	}
 
 	function hideWrapper(pageKey){
 		var $wrapper = $(tweens[pageKey].getChildren()[0]._targets[0]);
 		$wrapper.removeClass("wrapper-anim");
-		setTimeout(function(){
-			$("body").removeClass("body-anim");
-		}, 100);		
 	}
 
 	function showHome(){
 		if(pageStatus.showing){
-			resetScroll();
-			tweens[pageStatus.showing].eventCallback("onReverseComplete",function(){
-				hideWrapper(pageStatus.showing);
-				tweens['#home'].reverse();
-				pageStatus.showing = null;
+			$.when(resetScroll()).done(function(){
+				tweens[pageStatus.showing].eventCallback("onReverseComplete",function(){
+					hideWrapper(pageStatus.showing);
+					tweens['#home'].reverse();
+					pageStatus.showing = null;
+				});
+				tweens[pageStatus.showing].reverse();
 			});
-			tweens[pageStatus.showing].reverse();
 		}else{
 			tweens['#home'].reverse();
 		}
@@ -333,7 +347,20 @@ $(function(){
 		"#home": new TweenLite.to("#home-container", 0.4, { 
 			z: -80, 
 			paused: true, 
-			ease: Power2.easeInOut
+			ease: Power2.easeInOut, 
+			onStart: function(){
+				//keep scrollbar to prevent jumping just yet
+				if($(".home-outer").height()>$("body").height()){
+					$("body").css({
+						overflowY: "scroll"
+					});
+				}
+
+				scrollTops.body = $("body").scrollTop();
+				$("body")
+					.addClass("home-behind");
+				$(".home-outer").scrollTop(scrollTops.body);
+			}
 		}),
 		"#login": new TimelineLite({paused: true})
 			.from(
@@ -356,15 +383,20 @@ $(function(){
 	};
 
 	//unfocus links timeout when focussed so text no longer hides away
-	$(".link-text-size").parents("a, button").on("click",function(){
+	$(".link-text-size").parents("a, button").add(".close-page-icon").on("click",function(){
 		$a = $(this);
-		$a.removeClass("link-clicked").addClass("link-clicked");
-		if($a.data("resetTimeout")){
-			clearTimeout($a.data("resetTimeout"));
-		}
-		$a.data("resetTimeout",setTimeout(function(){
-			$a.removeClass("link-clicked");
-		},1200));
+		setTimeout(function(){
+			$a
+				.removeClass("link-clicked")
+				.addClass("link-clicked");
+
+			if($a.data("resetTimeout")){
+				clearTimeout($a.data("resetTimeout"));
+			}
+			$a.data("resetTimeout",setTimeout(function(){
+				$a.removeClass("link-clicked");
+			},1200));
+		},50);		
 	});
 
 	var hashChangeEvent = function(){
@@ -436,7 +468,3 @@ $(function(){
 		}
 	});
 })();
-
-
-
-
