@@ -247,7 +247,11 @@ var introTimeline = new TimelineLite({
 .from(".home-left", 0.45, { opacity: 0, x: -30 })
 .from(".home-right", 0.45, { opacity: 0, y: -30 }, "-=0.15")
 .from(".bottom-links", 0.45, { opacity: 0, y: 30 }, "-=0.15")
-.from(".play-button", 0.45, { opacity: 0, x: "20%" });
+.add(function(){
+	if(!videoPlaying){
+		new TweenLite.from(".play-button", 0.45, { opacity: 0, x: "20%" });
+	}
+});
 $(function(){
 	introTimeline.play();
 });
@@ -427,8 +431,8 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 	 * Hash change events, pages will change when hash on page changes
 	 */
 	(function(){
-		function hashChangeEvent(){
-			if(videoPlaying){
+		function hashChangeEvent(init){
+			if(init!==true && videoPlaying){
 				introVideo.pause();
 			}
 			if(location.hash==='#login' || location.hash==='#register'){
@@ -440,7 +444,7 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 
 		$(window).on('hashchange', hashChangeEvent);
 		introTimeline.eventCallback("onComplete",function(){
-			hashChangeEvent();
+			hashChangeEvent(true);
 		});
 
 	})();
