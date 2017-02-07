@@ -217,6 +217,8 @@ $(".opacity-0").css({
 	opacity: "",
 	visibility: ""
 });
+$(".opacity-0").removeClass("opacity-0");
+
 var introTimeline = new TimelineLite({
 	paused:true, 
 	delay:1.6
@@ -229,143 +231,45 @@ $(function(){
 	introTimeline.play();
 });
 
+
+/**
+ * Set and reset link shrinking on click
+ */
+$(".link-text-size").parents("a, button").add(".close-page-icon").on("click",function(){
+	var $a = $(this);
+	setTimeout(function(){
+		$a.removeClass("link-clicked").addClass("link-clicked");
+		if($a.data("resetTimeout")){
+			clearTimeout($a.data("resetTimeout"));
+		}
+		$a.data("resetTimeout",setTimeout(function(){
+			$a.removeClass("link-clicked");
+		},1200));
+	},50);
+});
+
 /**
  * Changing home pages
  */
 (function(){
-	var scrollTops = {};
-
-	function showPage(pageKey){
-		if(!tweens[pageKey]){
-			console.warn("Cannot show page, tween does not exist for that page", pageKey);
-			return;
-		}
-
-		pageStatus.selected = pageKey;
-		var $wrapper = $(tweens[pageKey].getChildren()[0]._targets[0]),
-		slideNewPage = function(){
-			pageStatus.showing = pageKey;
-			$wrapper.addClass("wrapper-anim");
-			tweens[pageKey].eventCallback("onComplete", function(){
-				$wrapper
-					.addClass("wrapper-show")
-					.scrollTop(0);
-
-				$("body").css({
-					overflowY: ""
-				});
-
-				if(scrollTops[pageKey]){
-					$("body").scrollTop(scrollTops[pageKey]);
+	/**
+	 * Page changing vars and timeline functions
+	 */
+	var tweens = {
+		"#home": new TweenLite
+			.to(
+				"#home-container", 
+				0.4, 
+				{ 
+					z: -80, 
+					paused: true, 
+					ease: Power2.easeInOut
 				}
-			});
-			tweens[pageKey].play();
-		};
-		
-		if(pageStatus.showing) {
-			$.when(resetScroll(true)).done(function(){
-				//prevent function from resetting home page
-				var hidePageKey = pageStatus.showing;
-				tweens[pageStatus.showing].eventCallback("onReverseComplete", function(){
-					hideWrapper(hidePageKey);
-				});
-				//continue/start the current page from sliding away
-				tweens[pageStatus.showing].reverse();
-				//call function to show the new page straight away - do not wait for home to zoom out
-				slideNewPage();
-			});
-		}else{
-			//home zoom out, and when complete show new page - override oncomplete function
-			//(could then click another link while the home page is zooming out and function will overwrite)
-			tweens['#home'].eventCallback("onComplete", slideNewPage);
-			tweens['#home'].play();
-		}
-	}
-
-	function resetScroll(showAnotherPage){
-		var $wrapper = $(tweens[pageStatus.showing].getChildren()[0]._targets[0]),
-		dfrd = $.Deferred();
-
-		scrollTops[pageStatus.showing] = $("body").scrollTop();
-		//move to scrolltop 0 first to prevent ios flicker as positions change and url bar size change - force url bar to show
-		$("body").scrollTop(0);
-		$("body").scrollTop(scrollTops[pageStatus.showing]);
-
-		setTimeout(function(){
-			//add scrollbar if one will hide from this overlay, or the home page will be showing one
-			var bodyHeight = $("body").height();
-
-			if($wrapper.height()>bodyHeight || $(".site-wrapper").height()>bodyHeight){
-				$("body").css({
-					overflowY: "scroll"
-				});
-			}
-
-			if(!showAnotherPage){
-				$("body")
-					.removeClass("home-behind")
-					.scrollTop(scrollTops.body)
-					.css({
-						overflowY: ""
-					});
-			}
-
-			$wrapper
-				.removeClass("wrapper-show")
-				.addClass("wrapper-anim")
-				.scrollTop(scrollTops[pageStatus.showing]);
-			dfrd.resolve();
-		},180);
-		return dfrd.promise();
-	}
-
-	function hideWrapper(pageKey){
-		var $wrapper = $(tweens[pageKey].getChildren()[0]._targets[0]);
-		$wrapper.removeClass("wrapper-anim");
-	}
-
-	function showHome(){
-		if(pageStatus.showing){
-			$.when(resetScroll()).done(function(){
-				tweens[pageStatus.showing].eventCallback("onReverseComplete",function(){
-					hideWrapper(pageStatus.showing);
-					tweens['#home'].reverse();
-					pageStatus.showing = null;
-				});
-				tweens[pageStatus.showing].reverse();
-			});
-		}else{
-			tweens['#home'].reverse();
-		}
-	}
-
-	var pageStatus = {
-		selected: null,
-		showing: null
-	},
-	tweens = {
-		"#home": new TweenLite.to("#home-container", 0.4, { 
-			z: -80, 
-			paused: true, 
-			ease: Power2.easeInOut, 
-			onStart: function(){
-				//keep scrollbar to prevent jumping just yet
-				if($(".home-outer").height()>$("body").height()){
-					$("body").css({
-						overflowY: "scroll"
-					});
-				}
-
-				scrollTops.body = $("body").scrollTop();
-				$("body")
-					.addClass("home-behind");
-				$(".home-outer").scrollTop(scrollTops.body);
-			}
-		}),
+			),
 		"#login": new TimelineLite({paused: true})
 			.from(
 				".login-wrapper", 
-				0.5, 
+				0.65, 
 				{ 
 					x: "-100%", 
 					ease: Power2.easeInOut
@@ -374,51 +278,151 @@ $(function(){
 		"#register": new TimelineLite({paused: true})
 			.from(
 				".register-wrapper", 
-				0.5, 
+				0.65, 
 				{ 
 					x: "100%", 
 					ease: Power2.easeInOut
 				}
 			),
+	},
+	v = {
+		scrollTops: {},
+		resetScrollTimeout: null,
+		pageStatus: {
+			showing: null
+		}
+	},	
+	f = {
+		getWrapper: function(viewKey){
+			return $(tweens[viewKey].getChildren()[0]._targets[0]).parent();
+		},
+		showView: function(viewKey){
+			var $wrapper = f.getWrapper(viewKey);
+			
+			//reset wrapper's scrolltop which may have been set when hidding and was changerd to fixed position
+			$wrapper.scrollTop(0);
+			
+			//set scroll position for new view
+			$("body").scrollTop(v.scrollTops[viewKey]);
+
+			v.pageStatus.selected = null;
+			v.pageStatus.showing = viewKey;
+			tweens[viewKey].play();
+		},
+		setViewFixed: function(viewKey, wrapperScrollTop){
+			var $oldWrapper = f.getWrapper(viewKey);
+			v.scrollTops[viewKey] = wrapperScrollTop;
+			
+			//wrapper to be fixed position, display inline-block and scroll to same Y as body
+			$oldWrapper.addClass("wrapper-anim-out").removeClass("wrapper-show");
+			$("."+viewKey.substring(1)+"-outer").scrollTop(v.scrollTops[viewKey]);
+		}
 	};
 
-	//unfocus links timeout when focussed so text no longer hides away
-	$(".link-text-size").parents("a, button").add(".close-page-icon").on("click",function(){
-		$a = $(this);
-		setTimeout(function(){
-			$a
-				.removeClass("link-clicked")
-				.addClass("link-clicked");
+	/**
+	 * Main showPage function
+	 */
+	function showPage(pageKey){
+		//if we request a page that doesn't exist, instead just go home and give console warning.
+		if(pageKey && !tweens[pageKey]){
+			console.warn("Cannot show page, tween does not exist for that page", pageKey);
+			pageKey = false;
+		}
 
-			if($a.data("resetTimeout")){
-				clearTimeout($a.data("resetTimeout"));
+		var $oldWrapper,
+		pageToHide,
+		wrapperScrollTop;
+		if(v.pageStatus.showing){
+			pageToHide = v.pageStatus.showing;
+			$oldWrapper = f.getWrapper(pageToHide);
+			wrapperScrollTop = $("body").scrollTop();
+		}
+
+		if(!pageKey){//go to default view - home
+			if(!pageToHide){
+				//no page to hide, reverse the home animation in (zoom back in)
+				tweens['#home'].reverse();
+			}else{
+				
+				//unfix the home screen
+				//fix position the view to animate out and hide overflow-x
+				$("body").removeClass("home-behind");
+				$("body").scrollTop(v.scrollTops.body);	
+
+				$oldWrapper.removeClass("wrapper-show").addClass("wrapper-anim-out");
+				
+				//fix view and set scroll position
+				f.setViewFixed(pageToHide, wrapperScrollTop);
+
+				tweens[pageToHide].eventCallback("onReverseComplete",function(){
+					$oldWrapper.removeClass("wrapper-anim-out");
+					tweens['#home'].reverse();
+				});
+				tweens[pageToHide].reverse();
+
+				v.pageStatus.showing = null;
 			}
-			$a.data("resetTimeout",setTimeout(function(){
-				$a.removeClass("link-clicked");
-			},1200));
-		},50);		
-	});
+		}else{//show a page
+			//deal with view if one was selected, but now started to be shown yet
+			if(v.pageStatus.selected){
+				var $selectedWrapper = f.getWrapper(v.pageStatus.selected);
+				$selectedWrapper.removeClass("wrapper-show");
+			}
+			v.pageStatus.selected = pageKey;
+			
+			//make wrapper relative pos and display table (final state)
+			//do this before making body fixed
+			var $wrapper = f.getWrapper(pageKey);
+			$wrapper.addClass("wrapper-show");
+			
+			//set scrollTop variable for the new view if not set already
+			if(!v.scrollTops[pageKey]){
+				v.scrollTops[pageKey] = 0;
+			}
 
-	var hashChangeEvent = function(){
-		if(videoPlaying){
-			introVideo.pause();
+			if(!pageToHide) {
+				//set home fixed
+				v.scrollTops.body = $("body").scrollTop();
+				$("body").addClass("home-behind");
+				$(".home-outer").scrollTop(v.scrollTops.body);				
+
+				//shrink home page - when complete, slide in the new page
+				tweens['#home'].eventCallback("onComplete", f.showView, [pageKey]);
+				tweens['#home'].play();
+			}else{
+				//hide current page to fixed pos
+				f.setViewFixed(pageToHide, wrapperScrollTop);
+				tweens[pageToHide].eventCallback("onReverseComplete",function(){
+					$oldWrapper.removeClass("wrapper-anim-out");
+				});
+				tweens[pageToHide].reverse();
+
+				f.showView(pageKey);
+			}
 		}
-		if(location.hash==='#login' || location.hash==='#register'){
-			showPage(location.hash);
-		}else{
-			showHome();
+	}
+
+	/**
+	 * Hash change events, pages will change when hash on page changes
+	 */
+	(function(){
+		function hashChangeEvent(){
+			if(videoPlaying){
+				introVideo.pause();
+			}
+			if(location.hash==='#login' || location.hash==='#register'){
+				showPage(location.hash);
+			}else{
+				showPage();
+			}
 		}
-	};
 
-	$(window).on('hashchange', hashChangeEvent);
+		$(window).on('hashchange', hashChangeEvent);
+		introTimeline.eventCallback("onComplete",function(){
+			hashChangeEvent();
+		});
 
-	introTimeline.eventCallback("onComplete",function(){
-		hashChangeEvent();
-	});
-
-	$(".social-login-link").on("click", function(e){
-		e.preventDefault();
-	});
+	})();
 })();
 
 /**
@@ -468,3 +472,10 @@ $(function(){
 		}
 	});
 })();
+
+/**
+ * TEMPORARY
+ */
+$(".social-login-link").on("click", function(e){
+	e.preventDefault();
+});

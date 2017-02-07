@@ -21,10 +21,17 @@ body {
 //  overflow-y: hidden;
 //}
 
+.overlay-anim.home-behind {
+  overflow-x: hidden;
+}
+
 .home-behind .home-outer,
 .home-anim .home-outer {
   display: inline-block;
   overflow: hidden;
+}
+
+.home-behind .home-outer {
   position: fixed;
 }
 
@@ -33,6 +40,7 @@ body {
   height: 100%;
   position: relative;
   width: 100%;
+  z-index: 1;
 }
 
 .site-wrapper {
@@ -308,92 +316,112 @@ button:active:hover .link-text-size,
   position: relative;
 }
 
+.wrapper-outer {
+  backface-visibility: hidden;
+  display: none;
+  height: 100%;
+  min-width: 320px;
+  overflow: hidden;
+  pointer-events: none;
+  position: relative;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+.wrapper-outer.wrapper-show {
+  display: table;
+}
+
+.wrapper-outer.wrapper-anim-out {
+  display: inline-block;
+  position: fixed;
+}
+
 .login-wrapper,
 .register-wrapper {
   backface-visibility: hidden;
   display: none;
+  height: 100%;
   left: 0;
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
   padding: 0;
+  pointer-events: auto;
   position: fixed;
   top: 0;
+  width: 100%;
   z-index: 2;
 }
 
-.wrapper-anim {
-  display: inline-block;
+.wrapper-show,
+.wrapper-anim-out {
+  .login-wrapper,
+  .register-wrapper {
+    display: table;
+    position: relative;
+  }
 }
 
-.wrapper-show {
-  display: table;
-  height: 100%;
-  position: relative;
-}
-
-.login-container,
-.register-container {
-  min-width: 320px;
-}
 
 .login-wrapper {
   background: $teal;
-}
 
-.social-logins {
-  margin-top: 45px;
-}
+  .social-logins {
+    margin-top: 45px;
+  }
 
-.social-login-link {
-  background-color: $teal-dark;
-  background-color: $teal-dark-50;
-  display: table;
-  color: $teal-lighter;
-  font-family: 'Comfortaa', cursive;
-  font-size: 22px;
-  height: 65px;
-  transition: color .3s;
-  width: 100%;
-}
+  .social-login-link {
+    background-color: $teal-dark;
+    background-color: $teal-dark-50;
+    display: table;
+    color: $teal-lighter;
+    font-family: 'Comfortaa', cursive;
+    font-size: 22px;
+    height: 65px;
+    transition: color .3s;
+    width: 100%;
+  }
 
-.social-login-link:hover {
-  color: $white;
-  text-decoration: none;
-}
+  .social-login-link:hover {
+    color: $white;
+    text-decoration: none;
+  }
 
-.twit-link {
-  margin: 10px 0;
-}
+  .twit-link {
+    margin: 10px 0;
+  }
 
-.social-icon {
-  background-color: $teal-dark;
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
-  display: table-cell;
-  height: 100%;
-  width: 125px;
-}
+  .social-icon {
+    background-color: $teal-dark;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: table-cell;
+    height: 100%;
+    width: 125px;
+  }
 
-.face-link>.social-icon {
-  background-image: url($asset-image-base + 'login_logo_f.png');
-  background-size: 15px auto;
-}
+  .face-link>.social-icon {
+    background-image: url($asset-image-base + 'login_logo_f.png');
+    background-size: 15px auto;
+  }
 
-.twit-link>.social-icon {
-  background-image: url($asset-image-base + 'login_logo_t.png');
-  background-size: 34.5px auto;
-}
+  .twit-link>.social-icon {
+    background-image: url($asset-image-base + 'login_logo_t.png');
+    background-size: 34.5px auto;
+  }
 
-.goog-link>.social-icon {
-  background-image: url($asset-image-base + 'login_logo_g.png');
-  background-size: 28.5px auto;
-}
+  .goog-link>.social-icon {
+    background-image: url($asset-image-base + 'login_logo_g.png');
+    background-size: 28.5px auto;
+  }
 
-.social-link-cell {
-  display: table-cell;
-  height: 100%;
-  padding-left: 25px;
-  text-align: left;
+  .social-link-cell {
+    display: table-cell;
+    height: 100%;
+    padding-left: 25px;
+    text-align: left;
+  }
 }
 
 .register-wrapper {
@@ -404,6 +432,12 @@ button:active:hover .link-text-size,
     padding: 5px 10px;
     text-align: left;
   }
+}
+
+.inner-form-container {
+  display: inline-block;
+  max-width: 600px;
+  padding: 90px 15px;
 }
 
 .close-link {
@@ -421,12 +455,6 @@ button:active:hover .link-text-size,
   display: inline-block;
   height: 37px;
   width: 37px;
-}
-
-.inner-form-container {
-  display: inline-block;
-  max-width: 600px;
-  padding: 90px 15px;
 }
 
 .form-header {
@@ -626,20 +654,19 @@ button:active:hover .link-text-size,
     font-size: 50px;
   }
 
-  .social-login-link {
-    height: 50px;
-  }
+  .login-wrapper {
+    .social-login-link {
+      font-size: 16px;
+      height: 50px;
+    }
 
-  .social-icon {
-    width: 65px;
-  }
+    .social-icon {
+      width: 65px;
+    }
 
-  .social-link-cell {
-    padding-left: 10px;
-  }
-
-  .social-login-link {
-    font-size: 16px;
+    .social-link-cell {
+      padding-left: 10px;
+    }
   }
 
   .btn-login,
