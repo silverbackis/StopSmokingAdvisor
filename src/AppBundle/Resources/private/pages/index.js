@@ -36,8 +36,8 @@ introVideo;
 			});
 			
 			rightHeight = $homeRight.height();
-			maxWidth = (rightHeight/9)*16;
 			windowWidth = $(window).width();
+			maxWidth = windowWidth;//(rightHeight/9)*16;
 			videoWidth = windowWidth*0.58;
 
 			if(maxWidth>windowWidth){
@@ -158,12 +158,33 @@ introVideo;
 			introVideo = jwplayer("videoPlayer");
 			introVideo.setup({
 			    sources: [
-			    	{file: "//content.jwplatform.com/videos/kSxmP2Z8-hx4c5Uw3.mp4"},
-			    	{file: "//content.jwplatform.com/videos/kSxmP2Z8-PSjFUP8I.mp4"},
-			    	{file: "//content.jwplatform.com/manifests/kSxmP2Z8.m3u8?sig=952df8e8981048a30731097a970402cc&exp=1486145446"}
+			    	{
+			    		file: "//content.jwplatform.com/manifests/JpuXFVbD.m3u8?sig=6eb4779cc858265f3c43748c9b87831e&exp=14864758134",
+			    		label: "HLS"
+			    	},
+			    	/*{
+			    		file: "//content.jwplatform.com/videos/JpuXFVbD-hx4c5Uw3.mp4",
+			    		label: "180p"
+			    	},
+			    	{
+			    		file: "//content.jwplatform.com/videos/JpuXFVbD-PSjFUP8I.mp4",
+			    		label: "270p"
+			    	},
+			    	{
+			    		file: "//content.jwplatform.com/videos/JpuXFVbD-LX202PBh.mp4",
+			    		label: "406p"
+			    	},*/
+			    	{
+			    		file: "//content.jwplatform.com/videos/JpuXFVbD-xhTL5q8u.mp4",
+			    		label: "720p"
+			    	}/*,
+			    	{
+			    		file: "//content.jwplatform.com/videos/JpuXFVbD-aHTOGd7Q.mp4",
+			    		label: "1080p"
+			    	}*/
 			    ], 
-			    image: "//content.jwplatform.com/thumbs/kSxmP2Z8-480.jpg",
-			    mediaid: "kSxmP2Z8",
+			    image: "//content.jwplatform.com/thumbs/JpuXFVbD-1920.jpg",
+			    mediaid: "JpuXFVbD",
 			    abouttext: "Stop Smoking Advisor",
 				aboutlink: "https://www.stopsmokingadvisor.net",
 				height: "100%",
