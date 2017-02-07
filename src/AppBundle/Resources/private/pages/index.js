@@ -158,7 +158,7 @@ introVideo;
 		introVideo.setup({
 		    sources: [
 		    	{
-		    		file: "https://content.jwplatform.com/manifests/JpuXFVbD.m3u8?sig=9a7ff1a12cae1b77aedf3a71580f461d&exp=1486481289"//,
+		    		file: "https://content.jwplatform.com/manifests/JpuXFVbD.m3u8?sig=ea38f26da3a2609f827097776e7cfcbc"//,&exp=1486489400
 		    		//label: "HLS"
 		    	},
 		    	{
