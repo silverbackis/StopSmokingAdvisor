@@ -154,81 +154,62 @@ introVideo;
 	 * Video
 	 */
 	(function(){
-		$(function(){
-			introVideo = jwplayer("videoPlayer");
-			introVideo.setup({
-			    sources: [
-			    	{
-			    		file: "//content.jwplatform.com/manifests/JpuXFVbD.m3u8?sig=6eb4779cc858265f3c43748c9b87831e&exp=14864758134",
-			    		label: "HLS"
-			    	},
-			    	/*{
-			    		file: "//content.jwplatform.com/videos/JpuXFVbD-hx4c5Uw3.mp4",
-			    		label: "180p"
-			    	},
-			    	{
-			    		file: "//content.jwplatform.com/videos/JpuXFVbD-PSjFUP8I.mp4",
-			    		label: "270p"
-			    	},
-			    	{
-			    		file: "//content.jwplatform.com/videos/JpuXFVbD-LX202PBh.mp4",
-			    		label: "406p"
-			    	},*/
-			    	{
-			    		file: "//content.jwplatform.com/videos/JpuXFVbD-xhTL5q8u.mp4",
-			    		label: "720p"
-			    	}/*,
-			    	{
-			    		file: "//content.jwplatform.com/videos/JpuXFVbD-aHTOGd7Q.mp4",
-			    		label: "1080p"
-			    	}*/
-			    ], 
-			    image: "//content.jwplatform.com/thumbs/JpuXFVbD-1920.jpg",
-			    mediaid: "JpuXFVbD",
-			    abouttext: "Stop Smoking Advisor",
-				aboutlink: "https://www.stopsmokingadvisor.net",
-				height: "100%",
-	    		width: "auto",
-	    		preload: true
+		introVideo = jwplayer("videoPlayer");
+		introVideo.setup({
+		    sources: [
+		    	{
+		    		file: "https://content.jwplatform.com/manifests/JpuXFVbD.m3u8?sig=9a7ff1a12cae1b77aedf3a71580f461d&exp=1486481289"//,
+		    		//label: "HLS"
+		    	},
+		    	{
+		    		file: "//content.jwplatform.com/videos/JpuXFVbD-xhTL5q8u.mp4"//,
+		    		//label: "720p"
+		    	}
+		    ], 
+		    image: "//content.jwplatform.com/thumbs/JpuXFVbD-1920.jpg",
+		    mediaid: "JpuXFVbD",
+		    abouttext: "Stop Smoking Advisor",
+			aboutlink: "https://www.stopsmokingadvisor.net",
+			height: "100%",
+    		width: "auto",
+    		preload: true
+		});
+
+		introVideo.setControls(false);
+		introVideo.on('displayClick', function(){
+			introVideo.play();
+		});
+		
+		introVideo.on('ready', function(){
+			$(".play-button").on("click", function(e){
+				e.preventDefault();
+				e.stopPropagation();
+				introVideo.play(true);
+			});
+		
+			$(".video-cover .jw-flag-controls-disabled .jw-media").css({
+				cursor: "pointer"
 			});
 
-			introVideo.setControls(false);
-			introVideo.on('ready', function(){
-				$(".play-button").on("click", function(e){
-					e.preventDefault();
-					e.stopPropagation();
-					introVideo.play(true);
-				});
-
-				$(".video-cover").on("click", function(){
-					introVideo.play();
-				});
-			
-				$(".video-cover .jw-flag-controls-disabled .jw-media").css({
-					cursor: "pointer"
-				});
-
-				var vidPlay = function(){
-					new TweenLite.to(".play-button", 0.3, { x: "100%" });
-					//should try and increase vidth of the video column to 16x9 or as wide as the screen
-					//push the title and text out the way to the left
-					//should not apply to the mobile view
-					videoPlaying = true;
-					reflow('tween');
-				},
-				vidStopped = function(){
-					$(".play-button").removeClass("link-clicked");
-					new TweenLite.to(".play-button", 0.3, { x: "0%" });
-					videoPlaying = false;
-					reflow('tween');
-				};
-				introVideo.on("play", vidPlay);
-				introVideo.on("pause", vidStopped);
-				introVideo.on("complete", vidStopped);
-			});
+			var vidPlay = function(){
+				new TweenLite.to(".play-button", 0.3, { x: "100%" });
+				//should try and increase vidth of the video column to 16x9 or as wide as the screen
+				//push the title and text out the way to the left
+				//should not apply to the mobile view
+				videoPlaying = true;
+				reflow('tween');
+			},
+			vidStopped = function(){
+				$(".play-button").removeClass("link-clicked");
+				new TweenLite.to(".play-button", 0.3, { x: "0%" });
+				videoPlaying = false;
+				reflow('tween');
+			};
+			introVideo.on("play", vidPlay);
+			introVideo.on("pause", vidStopped);
+			introVideo.on("complete", vidStopped);
 		});
 	})();
-
 })(jQuery, ResponsiveBootstrapToolkit);
 
 /**
@@ -239,7 +220,7 @@ $(".opacity-0").css({
 	visibility: ""
 });
 $(".opacity-0").removeClass("opacity-0");
-
+var playButtonTween = new TweenLite.from(".play-button", 0.45, { opacity: 0, x: "20%", paused: true });
 var introTimeline = new TimelineLite({
 	paused: true, 
 	delay: 0.6
@@ -249,7 +230,9 @@ var introTimeline = new TimelineLite({
 .from(".bottom-links", 0.45, { opacity: 0, y: 30 }, "-=0.15")
 .add(function(){
 	if(!videoPlaying){
-		new TweenLite.from(".play-button", 0.45, { opacity: 0, x: "20%" });
+		playButtonTween.play();
+	}else{
+		TweenLite.set(".play-button", { opacity: 1 });
 	}
 });
 $(function(){
