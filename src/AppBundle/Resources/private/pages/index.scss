@@ -165,8 +165,18 @@ body {
   width: 100%;
 }
 
+.video-cover-bg {
+  background: url('//content.jwplatform.com/thumbs/JpuXFVbD-1920.jpg') 50% 50% no-repeat $gray-dark;
+  background-size: 100% auto;
+  filter: blur(35px);
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
 .video-center,
 .video-center>.jwplayer {
+  background: transparent;
   bottom: -9999px;
   height: 100%;
   left: -9999px;

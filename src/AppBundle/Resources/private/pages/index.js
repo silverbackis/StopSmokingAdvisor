@@ -37,7 +37,7 @@ introVideo;
 			
 			rightHeight = $homeRight.height();
 			windowWidth = $(window).width();
-			maxWidth = windowWidth;//(rightHeight/9)*16;
+			maxWidth = videoPlaying ? windowWidth : (rightHeight/9)*16;
 			videoWidth = windowWidth*0.58;
 
 			if(maxWidth>windowWidth){
@@ -57,7 +57,7 @@ introVideo;
 				if(doTween){
 					timeline.to($topRow[0], 0.3, topRowObj, 0);
 				}else{
-					TweenLite.set($topRow[0],topRowObj);
+					TweenLite.set($topRow[0], topRowObj);
 				}
 				
 				useVideoWidth = maxWidth;
@@ -241,13 +241,13 @@ $(".opacity-0").css({
 $(".opacity-0").removeClass("opacity-0");
 
 var introTimeline = new TimelineLite({
-	paused:true, 
-	delay:1.6
+	paused: true, 
+	delay: 0.6
 })
-.from(".home-left", 0.45, { opacity:0, x:-30 })
-.from(".home-right", 0.45, { opacity:0, y:-30 }, "-=0.15")
-.from(".bottom-links", 0.45, { opacity:0, y:30 }, "-=0.15")
-.from(".play-button", 0.45, { opacity:0, x:"20%" });
+.from(".home-left", 0.45, { opacity: 0, x: -30 })
+.from(".home-right", 0.45, { opacity: 0, y: -30 }, "-=0.15")
+.from(".bottom-links", 0.45, { opacity: 0, y: 30 }, "-=0.15")
+.from(".play-button", 0.45, { opacity: 0, x: "20%" });
 $(function(){
 	introTimeline.play();
 });
