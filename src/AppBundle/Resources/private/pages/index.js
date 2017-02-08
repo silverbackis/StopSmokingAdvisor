@@ -1,4 +1,19 @@
 /**
+ * Preload images
+ */
+$.fn.preload = function() {
+    this.each(function(){
+    	var img = new Image();
+        img.src = this;
+    });
+};
+var preloadImages = [];
+$(".preload-bg").each(function(){
+	preloadImages.push($(this).css("background-image").replace('url(','').replace(')','').replace(/\"/gi, ""));
+});
+$(preloadImages).preload();
+
+/**
  * Layout reflow
  */
 var videoPlaying = false,

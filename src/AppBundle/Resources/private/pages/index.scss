@@ -168,21 +168,8 @@ body {
   width: 100%;
 }
 
-.video-cover-bg {
-  background: url($asset-image-base + 'main_image_blur.png') 50% 50% no-repeat $gray-dark;
-  background-size: 100% auto;
-  height: 120%;
-  left: -10%;
-  position: absolute;
-  top: -10%;
-  width: 120%;
-  width: 120vw;
-  z-index: 1;
-}
-
 .video-center,
 .video-center>.jwplayer {
-  background: transparent;
   bottom: -9999px;
   height: 100%;
   left: -9999px;
@@ -190,7 +177,16 @@ body {
   position: absolute;
   right: -9999px;
   top: -9999px;
-  z-index: 2;
+}
+
+.video-cover {
+  background: url($asset-image-base + 'main_image_blur.png') 50% 50% no-repeat;
+  background-size: 100% auto;
+}
+
+.video-center>.jwplayer,
+.video-center>.jwplayer>.jw-preview {
+  background-color: transparent;
 }
 
 .video-spacer-image {
