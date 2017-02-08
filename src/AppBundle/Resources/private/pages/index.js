@@ -106,6 +106,8 @@ introVideo;
 			}
 			
 			return reflowF;
+		}else if(tweenCompleteFunction){
+			tweenCompleteFunction();
 		}
 	})();
 
