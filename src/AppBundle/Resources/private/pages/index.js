@@ -145,6 +145,7 @@ introVideo;
 		}
 		if(restartVideo){
 			setTimeout(function(){
+				videoPlaying = true;
 				introVideo.play(true);
 			},10);
 		}
