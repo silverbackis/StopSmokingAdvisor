@@ -180,15 +180,15 @@ introVideo;
 		introVideo.setup({
 		    sources: [
 		    	{
-		    		file: "https://content.jwplatform.com/manifests/JpuXFVbD.m3u8?sig=ea38f26da3a2609f827097776e7cfcbc",
+		    		file: "//content.jwplatform.com/manifests/JpuXFVbD.m3u8?sig=ea38f26da3a2609f827097776e7cfcbc",
 		    		label: "HLS"
 		    	},
 		    	{
-		    		file: "http://content.jwplatform.com/videos/JpuXFVbD-aHTOGd7Q.mp4",
+		    		file: "//content.jwplatform.com/videos/JpuXFVbD-aHTOGd7Q.mp4",
 		    		label: "1080p"
 		    	},
 		    	{
-		    		file: "http://content.jwplatform.com/videos/JpuXFVbD-xhTL5q8u.mp4",
+		    		file: "//content.jwplatform.com/videos/JpuXFVbD-xhTL5q8u.mp4",
 		    		label: "720p"
 		    	}		    	
 		    ], 
