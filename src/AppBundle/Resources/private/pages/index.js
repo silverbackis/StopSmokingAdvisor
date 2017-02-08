@@ -23,7 +23,7 @@ introVideo;
 	var smallBreaks = ['xs', 'sm'],
 	largeBreaks = ['md', 'lg', 'xl'];
 
-	var reflow = (function reflowF(evt){
+	var reflow = (function reflowF(evt, tweenCompleteFunction){
 		var doTween = evt==='tween',
 		timeline;
 		if(doTween){
@@ -80,6 +80,11 @@ introVideo;
 			};
 
 			if(doTween){
+				if(tweenCompleteFunction){
+					timeline.eventCallback("onComplete", tweenCompleteFunction);
+				}else{
+					timeline.eventCallback("onComplete", null);
+				}
 				timeline.to($video[0], 0.3, videoCSSObj, 0).play();
 			}else{
 				TweenLite.set($video[0], videoCSSObj);
@@ -158,13 +163,17 @@ introVideo;
 		introVideo.setup({
 		    sources: [
 		    	{
-		    		file: "https://content.jwplatform.com/manifests/JpuXFVbD.m3u8?sig=ea38f26da3a2609f827097776e7cfcbc"//,&exp=1486489400
-		    		//label: "HLS"
+		    		file: "https://content.jwplatform.com/manifests/JpuXFVbD.m3u8?sig=ea38f26da3a2609f827097776e7cfcbc",
+		    		label: "HLS"
 		    	},
 		    	{
-		    		file: "//content.jwplatform.com/videos/JpuXFVbD-xhTL5q8u.mp4"//,
-		    		//label: "720p"
-		    	}
+		    		file: "http://content.jwplatform.com/videos/JpuXFVbD-aHTOGd7Q.mp4",
+		    		label: "1080p"
+		    	},
+		    	{
+		    		file: "http://content.jwplatform.com/videos/JpuXFVbD-xhTL5q8u.mp4",
+		    		label: "720p"
+		    	}		    	
 		    ], 
 		    image: "//content.jwplatform.com/thumbs/JpuXFVbD-1920.jpg",
 		    mediaid: "JpuXFVbD",
@@ -172,40 +181,47 @@ introVideo;
 			aboutlink: "https://www.stopsmokingadvisor.net",
 			height: "100%",
     		width: "auto",
-    		preload: true
+    		preload: true,
+    		hlshtml: true
 		});
 
+		var vidPlay = function(){
+			new TweenLite.to(".play-button", 0.3, { x: "100%" });
+			videoPlaying = true;
+			reflow('tween', function(){
+				introVideo.play(true);
+			});
+		},
+		vidStopped = function(){
+			$(".play-button").removeClass("link-clicked");
+			new TweenLite.to(".play-button", 0.3, { x: "0%" });
+			videoPlaying = false;
+			reflow('tween');
+		};
 		introVideo.setControls(false);
 		introVideo.on('displayClick', function(){
-			introVideo.play();
+			if(videoPlaying){
+				introVideo.pause(true);
+			}else{
+				vidPlay();				
+			}
 		});
-		
+
 		introVideo.on('ready', function(){
 			$(".play-button").on("click", function(e){
 				e.preventDefault();
 				e.stopPropagation();
-				introVideo.play(true);
+				if(!videoPlaying){
+					vidPlay();
+				}
 			});
 		
 			$(".video-cover .jw-flag-controls-disabled .jw-media").css({
 				cursor: "pointer"
 			});
 
-			var vidPlay = function(){
-				new TweenLite.to(".play-button", 0.3, { x: "100%" });
-				//should try and increase vidth of the video column to 16x9 or as wide as the screen
-				//push the title and text out the way to the left
-				//should not apply to the mobile view
-				videoPlaying = true;
-				reflow('tween');
-			},
-			vidStopped = function(){
-				$(".play-button").removeClass("link-clicked");
-				new TweenLite.to(".play-button", 0.3, { x: "0%" });
-				videoPlaying = false;
-				reflow('tween');
-			};
-			introVideo.on("play", vidPlay);
+			
+			//introVideo.on("play", vidPlay);
 			introVideo.on("pause", vidStopped);
 			introVideo.on("complete", vidStopped);
 		});

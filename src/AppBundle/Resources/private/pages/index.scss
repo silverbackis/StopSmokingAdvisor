@@ -63,8 +63,10 @@ body {
 }
 
 .main-home-row {
+  backface-visibility: hidden;
   height: 100%;
   padding-bottom: 250px;
+  transform: translateZ(0);
 }
 
 .page-wrapper {
@@ -167,12 +169,14 @@ body {
 }
 
 .video-cover-bg {
-  background: url('//content.jwplatform.com/thumbs/JpuXFVbD-1920.jpg') 50% 50% no-repeat $gray-dark;
-  background-size: 110% 120%;
-  filter: blur(30px);
-  left: 0;
+  background: url($asset-image-base + 'main_image_blur.png') 50% 50% no-repeat $gray-dark;
+  background-size: 100% auto;
+  height: 120%;
+  left: -10%;
   position: absolute;
-  top: 0;
+  top: -10%;
+  width: 120%;
+  width: 120vw;
   z-index: 1;
 }
 
@@ -593,6 +597,10 @@ button:active:hover .link-text-size,
 }
 
 @include media-breakpoint-up(md) {
+  body {
+    overflow-x: hidden;
+  }
+
   .site-wrapper {
     overflow: hidden;
   }
