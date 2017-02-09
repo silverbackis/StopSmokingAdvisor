@@ -472,7 +472,7 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
  */
 (function(){
 	var $inputs = {
-		regPass: $("#register-pass1")
+		regPass: $("#fos_user_registration_form_plainPassword_first")
 	};
 	$inputs.regPass.on("change keyup", function(){
 		var pw = $inputs.regPass.val(),
@@ -513,6 +513,51 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 			}
 		}
 	});
+})();
+
+/**
+ * Form ajax post
+ */
+(function(){
+	$.fn.ajaxForm = function() {
+	    this.each(function(){
+	    	$form = $(this);
+	    	var submitFunction = function(e){
+	    		e.preventDefault();
+	    		var formData = $( ":input", $form).serializeArray();
+	    		$.ajax({
+		    		type: "POST",
+					url: $form.attr("action"),
+					data: formData,
+					success: function(data){
+						console.log(data);
+					},
+					statusCode: {
+					    400: function(response) {
+							$.each(response.responseJSON, function(inputID, inputError){
+								var $input = $("#"+inputID),
+								$feedback = $input.next();
+								if($feedback.is(".form-control-feedback")){
+									$feedback.html(inputError);
+								}
+								
+							});
+					    }
+					},
+					error: function(err){
+						if(err.status!==400){
+							alert("Sorry, an unknown error occurred. Please try again.");
+							console.warn(arguments);
+						}
+					},
+					dataType: 'json'
+		    	});
+	    	};
+	    	$form.on("submit", submitFunction);
+	    });
+	};
+
+	$(".fos_user_registration_register").ajaxForm();
 })();
 
 /**

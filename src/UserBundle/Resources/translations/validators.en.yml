@@ -1,0 +1,4 @@
+fos_user:
+    password:
+        letter: 'Your password must contain at least 1 letter'
+        number: 'Your password must contain at least 1 number'

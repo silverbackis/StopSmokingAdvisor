@@ -1,3 +1,22 @@
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
+
+login:
+    path: /login
+    defaults:
+        _controller: FrameworkBundle:Redirect:urlRedirect
+        path: /#login
+        permanent: true
+    methods:  [GET]
+
+register:
+    path: /register
+    defaults:
+        _controller: FrameworkBundle:Redirect:urlRedirect
+        path: /#register
+        permanent: true
+    methods:  [GET]
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
