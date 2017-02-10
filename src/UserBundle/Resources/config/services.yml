@@ -1,9 +1,13 @@
 services:
-    login_register:
-        class: UserBundle\EventListener\LoginRegisterListener
+    user_bundle.register_listener:
+        class: UserBundle\EventListener\RegisterListener
         arguments: ["@request_stack"]
         tags:
             - { name: kernel.event_subscriber }
+
+    user_bundle.authentication_handler:
+        class: UserBundle\AuthenticationHandler
+        arguments: ["@router", "@session", "@translator", "%login_default_target%", "%login_admin_target%"]
 
     app.form.registration:
         class: UserBundle\Form\RegistrationType

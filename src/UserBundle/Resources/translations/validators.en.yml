@@ -1,3 +1,4 @@
+"Bad credentials." : "Invalid username or password."
 fos_user:
     username:
         already_used: 'The username is already used.'

@@ -575,8 +575,8 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 				if(currentMessage===message && !noFlash){
 					$input.data("flashTimeline")
 						.clear()
-						.to($input.data("errorElements").$feedback[0], 0.4, {backgroundColor: $(".btn-register", $input.data("errorElements").$form).css("background")})
-						.to($input.data("errorElements").$feedback[0], 0.8, {backgroundColor: "transparent"});
+						.to($input.data("errorElements").$feedback[0], 0.3, {backgroundColor: $("button.btn", $input.data("errorElements").$form).css("background")})
+						.to($input.data("errorElements").$feedback[0], 0.9, {backgroundColor: "transparent"});
 				}
 				new TweenLite.to($input.data("errorElements").$feedback[0], 0.4, {opacity: 1, y: "0%"});
 				new TweenLite.to($input.data("errorElements").$formGroup[0], 0.4, {paddingBottom: $input.data("errorElements").$feedback.outerHeight()});
@@ -624,16 +624,27 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 		    		type: "POST",
 					url: $form.attr("action"),
 					data: formData,
-					success: function(data){
-						hidErr();
-
-						//successful registration - not just successful validation
-						if(!$input){
+					statusCode: {
+						200: function(response) {
+							//logged in
+					    	hidErr();
+							window.location.href = response.href;
+					    },
+					    401: function(response) {
+							//login/authorization failed
+					    	hidErr();
+					    	$("#password").errorMessage(response.responseJSON.message);
+					    },
+						201: function(response) {
+							//created
+					    	hidErr();
 							alert("You have registered!");
 							window.location.hash = '#home';
-						}
-					},
-					statusCode: {
+					    },
+					    202: function(response) {
+					    	//validation success
+					    	hidErr();
+					    },
 					    400: function(response) {
 					    	hidErr();
 							$.each(response.responseJSON, function(inputID, inputError){
@@ -643,7 +654,7 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 					    }
 					},
 					error: function(err){
-						if(err.status!==400){
+						if(err.status!==400 && err.status!==401){
 							alert("Sorry, an unknown error occurred. Please try again.");
 							console.warn(arguments);
 						}
@@ -692,13 +703,18 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 	    		}
 	    		submitFunction(overrideData, null, e.type);
 	    	});
-
-			$inputs.errorMessage("init").on("keyup blur", inputEvent);
+	    	if($form.attr("name")=='fos_user_registration_form'){
+				$inputs.errorMessage("init").on("keyup blur", inputEvent);
+			}else{
+				$inputs.errorMessage("init").on("keyup", function(){
+					$inputs.errorMessage("hide");
+				});
+			}
 	    });
 	    return this;
 	};
 
-	$(".fos_user_registration_register").ajaxForm();
+	$(".fos_user_registration_register, .fos_user_security_check").ajaxForm();
 })();
 
 /**

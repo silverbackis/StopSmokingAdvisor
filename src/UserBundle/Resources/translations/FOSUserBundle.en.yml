@@ -1,9 +1,9 @@
 security:
     login:
-        username: 'Username'
-        password: 'Password'
+        username: 'Enter username'
+        password: 'Enter password'
         remember_me: 'Remember me'
-        submit: 'Log in'
+        submit: 'Enter site'
 
 registration:
     check_email: 'An email has been sent to %email%. It contains an activation link you must click to activate your account.'
