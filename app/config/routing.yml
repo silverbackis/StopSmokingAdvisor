@@ -2,7 +2,7 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
-login:
+login_route:
     path: /login
     defaults:
         _controller: FrameworkBundle:Redirect:urlRedirect
@@ -10,7 +10,7 @@ login:
         permanent: true
     methods:  [GET]
 
-register:
+register_route:
     path: /register
     defaults:
         _controller: FrameworkBundle:Redirect:urlRedirect
