@@ -519,28 +519,126 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
  * Form ajax post
  */
 (function(){
+	$.fn.errorMessage = function(message, noFlash){
+		this.each(function(){
+			var $input = $(this);
+
+			var f = {
+				init: function(){
+					//only initialise data on inputs which have the correct error message structure
+					if(!$input.next().is(".form-control-feedback") || $input.parents(".form-group").length<1){
+						return false;
+					}
+					var $feedback = $input.next();
+					//set the elements to be used for error messages
+					$input
+						.data("errorElements", {
+							$feedback: $feedback,
+							$formGroup: $input.parents(".form-group"),
+							$form: $input.parents("form")
+						})
+						.data("isError", false)
+						.data("flashTimeline", new TimelineLite({ 
+							onComplete: function(){ 
+								$feedback.css({backgroundColor: ""}); 
+							}
+						}))
+						.data("validateTimeout", null);
+					return true;
+				},
+				public_hide: function(){
+					$input.data("isError", false);
+
+					new TweenLite.to($input.data("errorElements").$feedback[0], 0.4, {opacity: 0, y: "-100%", onComplete:function(){
+						$input.data("errorElements").$feedback.empty();
+					}});
+					new TweenLite.to($input.data("errorElements").$formGroup[0], 0.4, {paddingBottom: 0});
+				}
+			};
+
+			if(typeof $input.data("errorElements")=='undefined' || message=='init'){
+				var initSuccess = f.init();
+				if(message=='init' || !initSuccess){
+					return;
+				}
+			}		
+
+			if(typeof f['public_'+message]=='function'){
+				f['public_'+message]();
+			}else{
+				$input.data("isError", true);
+				var currentMessage = $input
+					.data("errorElements").$feedback.html();
+				$input
+					.data("errorElements").$feedback.html(message);
+
+				if(currentMessage===message && !noFlash){
+					$input.data("flashTimeline")
+						.clear()
+						.to($input.data("errorElements").$feedback[0], 0.4, {backgroundColor: $(".btn-register", $input.data("errorElements").$form).css("background")})
+						.to($input.data("errorElements").$feedback[0], 0.8, {backgroundColor: "transparent"});
+				}
+				new TweenLite.to($input.data("errorElements").$feedback[0], 0.4, {opacity: 1, y: "0%"});
+				new TweenLite.to($input.data("errorElements").$formGroup[0], 0.4, {paddingBottom: $input.data("errorElements").$feedback.outerHeight()});
+			}
+		});
+		return this;
+	};
+
 	$.fn.ajaxForm = function() {
 	    this.each(function(){
-	    	$form = $(this);
-	    	var submitFunction = function(e){
-	    		e.preventDefault();
-	    		var formData = $( ":input", $form).serializeArray();
+	    	var $form = $(this),
+	    	$inputs = $( ":input", $form ).not("[type=submit]");
+
+	    	var submitFunction = function(overrideData, $input, eventType){
+	    		var serializedData = $input ? $input.serializeArray() : $inputs.serializeArray(),
+	    		hidErr = function(){
+	    			if($input){
+			    		$input.errorMessage("hide");
+			    	}else{
+			    		$inputs.errorMessage("hide");
+			    	}
+			    },
+			    formData = {};
+
+	    		if($input){
+	    			serializedData.push({
+	    				name: "task[input]",
+	    				value: $input.attr("id")
+	    			});
+	    			serializedData.push({
+	    				name: "task[submit]",
+	    				value: 'no'
+	    			});
+	    		}
+
+			    $.each(serializedData, function(){
+			    	formData[this.name] = this.value;
+				});
+
+	    		if(overrideData && typeof overrideData=='object'){
+	    			formData = $.extend(formData, overrideData);
+	    		}
+
 	    		$.ajax({
 		    		type: "POST",
 					url: $form.attr("action"),
 					data: formData,
 					success: function(data){
-						console.log(data);
+						hidErr();
+
+						//successful registration - not just successful validation
+						if(!$input){
+							alert("You have registered!");
+							window.location.hash = '#home';
+						}
 					},
 					statusCode: {
 					    400: function(response) {
+					    	hidErr();
 							$.each(response.responseJSON, function(inputID, inputError){
-								var $input = $("#"+inputID),
-								$feedback = $input.next();
-								if($feedback.is(".form-control-feedback")){
-									$feedback.html(inputError);
-								}
-								
+								var $input = $("#"+inputID);
+								$input.errorMessage(inputError, eventType==='keyup' ? true : false);
 							});
 					    }
 					},
@@ -552,9 +650,52 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 					},
 					dataType: 'json'
 		    	});
+	    	},
+	    	inputEvent = function(e){
+	    		var $input = $(this);
+
+	    		//do not submit for validation if it is keyup, and not already an error
+	    		if(e.type=='keyup' && !$input.data("isError")){
+	    			return;
+	    		}
+
+	    		//clear keyup timeout
+	    		if($input.data("validateTimeout")){
+	    			clearTimeout($input.data("validateTimeout"));
+	    		}
+
+	    		$input.data(
+	    			"validateTimeout",
+	    			setTimeout(function(){
+		    			var overrideData = {};
+
+		    			//if validating the first password field, simulate the second password field matching
+		    			if($input.attr("id")==="fos_user_registration_form_plainPassword_first"){
+		    				overrideData['fos_user_registration_form[plainPassword][second]'] = $input.val();
+		    			}else if($input.attr("id")==="fos_user_registration_form_plainPassword_second"){
+		    				//set the second password value first so we can check if it matches the first
+		    				overrideData['fos_user_registration_form[plainPassword][second]'] = $input.val();
+		    				//change to validate the first password field
+		    				$input = $("#fos_user_registration_form_plainPassword_first");
+		    			}
+
+		    			submitFunction(overrideData, $input, e.type);
+		    		}, e.type=='keyup' ? 200 : 0)
+		    	);
 	    	};
-	    	$form.on("submit", submitFunction);
+
+	    	$form.on("submit", function(e){
+	    		e.preventDefault();
+	    		var overrideData = {};
+	    		if($form.attr("name")=='fos_user_registration_form'){
+	    			overrideData['fos_user_registration_form[username]'] = $("#fos_user_registration_form_email").val();
+	    		}
+	    		submitFunction(overrideData, null, e.type);
+	    	});
+
+			$inputs.errorMessage("init").on("keyup blur", inputEvent);
 	    });
+	    return this;
 	};
 
 	$(".fos_user_registration_register").ajaxForm();

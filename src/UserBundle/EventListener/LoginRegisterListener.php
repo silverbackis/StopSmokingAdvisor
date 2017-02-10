@@ -51,38 +51,51 @@ class LoginRegisterListener implements EventSubscriberInterface
     }
 
     public function onRegisterFailure(FormEvent $event){
+        $HTTPCode = Response::HTTP_BAD_REQUEST;
+
+        $request = $this->requestStack->getCurrentRequest();
         //FormInterface
         $form = $event->getForm();
-
-        //ForErrorIterator
-        $errorIterator = $form->getErrors(true);
-
         $data = [];
-        while($errorIterator->valid()){
-            $currentError = $errorIterator->current();
-            $currentOrigin = $currentError->getOrigin();
-
-            $currentField = [ $currentOrigin->getName() ];
-            while( $p = $currentOrigin->getParent() ) {
-                array_unshift($currentField, $p->getName() );
-                $currentOrigin = $p;
+        $task = $request->request->get('task');
+        //would always fail registering on input validation because not all fields have been submitted - so let's check the field in question
+        if( $task['submit']=='no' ){
+            $fieldID = $task['input'];
+            $inputRef = explode("_",str_replace("fos_user_registration_form_", "", $fieldID));
+            $formField = $form;
+            foreach($inputRef as $inputRefPart){
+                $formField = $formField[$inputRefPart];
             }
-
-            $fieldID = join("_",$currentField);
-            
-            if(!isset($data[$fieldID])){
-                $request = $this->requestStack->getCurrentRequest();
+            $currentError = $formField->getErrors()->current();
+            if($currentError){
                 $data[$fieldID] = $currentError->getMessage();
+            }else{
+                $HTTPCode = Response::HTTP_ACCEPTED;   
             }
-            //$data[$fieldName][] = 
-            $errorIterator->next();
+                    
+        }else{
+            //FormErrorIterator
+            $errorIterator = $form->getErrors(true);            
+            while($errorIterator->valid()){
+                $currentError = $errorIterator->current();
+                $currentOrigin = $currentError->getOrigin();
+
+                $currentField = [ $currentOrigin->getName() ];
+                while( $p = $currentOrigin->getParent() ) {
+                    array_unshift($currentField, $p->getName() );
+                    $currentOrigin = $p;
+                }
+
+                $fieldID = join("_",$currentField);
+                
+                if(!isset($data[$fieldID])){
+                    $data[$fieldID] = $currentError->getMessage();
+                }
+                //$data[$fieldName][] = 
+                $errorIterator->next();
+            }
         }
-        //$data = $this->getErrorMessages($form);
-        
-        //foreach($allErrors as $error){
-        //    $data[] = $error->getCause();
-        //}
-        $response = new Response($this->serializer->serialize($data, 'json'), Response::HTTP_BAD_REQUEST);
+        $response = new Response($this->serializer->serialize($data, 'json'), $HTTPCode);
         $this->setResponse($response, $event);
     }
 

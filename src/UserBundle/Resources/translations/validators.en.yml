@@ -1,4 +1,23 @@
 fos_user:
+    username:
+        already_used: 'The username is already used.'
+        blank: 'Please enter your username.'
+        short: 'Your username is too short.'
+        long: 'Your username is too long.'
+    email:
+        already_used: 'Your email is already registered. <a href="#login">Try logging in</a>.'
+        blank: 'Please enter your email.'
+        short: 'Your email is too short.'
+        long: 'Your email is too long.'
+        invalid: 'Your email is not valid.'
     password:
+        blank: 'Please enter a password.'
+        short: 'Your password is too short.'
+        mismatch: 'The entered passwords don''t match.'
         letter: 'Your password must contain at least 1 letter'
         number: 'Your password must contain at least 1 number'
+    new_password:
+        blank: 'Please enter a new password.'
+        short: 'Your new password is too short.'
+    current_password:
+        invalid: 'The entered password is invalid.'

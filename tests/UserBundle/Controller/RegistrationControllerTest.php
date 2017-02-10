@@ -62,14 +62,56 @@ class RegistrationControllerTest extends WebTestCase
         return self::$application->run($input, $output);
     }
 
-    private function makePOSTRequest($data)
+    private function makePOSTRequest($data, $validationInputVar=false)
     {
+        $data = [ 
+            'fos_user_registration_form' => $data
+        ];
+        if($validationInputVar){
+            $data['task'] = [ 
+                'submit' => 'no',
+                'input' => $validationInputVar
+            ];
+        }
         $this->client->request(
             'POST', 
             '/register/',
-            [ 'fos_user_registration_form' => $data ]
+            $data
         );
         return $this->client;
+    }
+
+    public function testValidField()
+    {
+        $inputID = 'fos_user_registration_form_plainPassword_first';
+        $data = [
+            'plainPassword' => [
+                'first' => 'test12345',
+                'second' => 'test12345'
+            ]
+        ];
+        $client = $this->makePOSTRequest($data, $inputID);
+        $response = $client->getResponse();
+
+        $this->assertEquals(202, $response->getStatusCode());
+        $this->assertEquals('[]', $response->getContent());
+    }
+
+    public function testInvalidField()
+    {
+        $inputID = 'fos_user_registration_form_email';
+        $data = [
+            'email' => 'notanemail'
+        ];
+        $client = $this->makePOSTRequest($data, $inputID);
+        $response = $client->getResponse();
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $decoded = json_decode($response->getContent(), true);
+        $this->assertInternalType('array', $decoded);
+        $this->assertEquals(1, sizeof($decoded));
+        $this->assertTrue(isset($decoded[$inputID]));
     }
 
     public function testRegisterNewUser()
@@ -86,8 +128,8 @@ class RegistrationControllerTest extends WebTestCase
         $client = $this->makePOSTRequest($data);
         $response = $client->getResponse();
 
-        $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
-        $this->assertInternalType('array', json_decode($response->getContent(), true), 'When successful register POST, we should receive JSON back.');
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertInternalType('array', json_decode($response->getContent(), true));
     }
     
     public function testRegisterInvalidEmail()
@@ -103,7 +145,7 @@ class RegistrationControllerTest extends WebTestCase
         $response = $client->getResponse();
  
         $this->assertEquals(400, $response->getStatusCode());
-        $this->assertInternalType('array', json_decode($response->getContent(), true), 'When invalid register POST, we should receive valid JSON back.');
+        $this->assertInternalType('array', json_decode($response->getContent(), true));
     }
 
     public function testRegisterInvalidPassword()

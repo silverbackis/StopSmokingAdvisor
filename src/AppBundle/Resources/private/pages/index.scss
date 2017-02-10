@@ -3,6 +3,7 @@
 @import '../bootstrapCSS/bootstrap';
 $hfcbg: rgba(255, 255, 255, .2);
 $hfcbgon: rgba(255, 255, 255, .25);
+$form-icon-warning-white: str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{$white}' d='M4.4 5.324h-.8v-2.46h.8zm0 1.42h-.8V5.89h.8zM3.76.63L.04 7.075c-.115.2.016.425.26.426h7.397c.242 0 .372-.226.258-.426C6.726 4.924 5.47 2.79 4.253.63c-.113-.174-.39-.174-.494 0z'/%3E%3C/svg%3E"), "#", "%23") !default;
 
 html,
 body {
@@ -162,6 +163,8 @@ body {
 }
 
 .video-cover {
+  background: url($asset-image-base + 'main_image_blur.png') 50% 50% no-repeat;
+  background-size: 100% auto;
   height: 100%;
   overflow: hidden;
   position: relative;
@@ -177,11 +180,6 @@ body {
   position: absolute;
   right: -9999px;
   top: -9999px;
-}
-
-.video-cover {
-  background: url($asset-image-base + 'main_image_blur.png') 50% 50% no-repeat;
-  background-size: 100% auto;
 }
 
 .video-center>.jwplayer,
@@ -341,15 +339,15 @@ button:active:hover .link-text-size,
   top: 0;
   width: 100%;
   z-index: 2;
-}
 
-.wrapper-outer.wrapper-show {
-  display: table;
-}
+  &.wrapper-show {
+    display: table;
+  }
 
-.wrapper-outer.wrapper-anim-out {
-  display: inline-block;
-  position: fixed;
+  &.wrapper-anim-out {
+    display: inline-block;
+    position: fixed;
+  }
 }
 
 .login-wrapper,
@@ -440,12 +438,6 @@ button:active:hover .link-text-size,
 
 .register-wrapper {
   background: $pink;
-
-  .form-control-feedback {
-    margin-top: 0;
-    padding: 5px 10px;
-    text-align: left;
-  }
 }
 
 .inner-form-container {
@@ -478,6 +470,10 @@ button:active:hover .link-text-size,
   margin: 0 0 30px;
 }
 
+.form-group {
+  position: relative;
+}
+
 .home-form-control {
   background-color: $gray;
   background-color: $hfcbg;
@@ -487,6 +483,8 @@ button:active:hover .link-text-size,
   font-size: 28px;
   font-weight: 300;
   margin-top: 10px;
+  position: relative;
+  z-index: 2;
 }
 
 .home-form-control:focus {
@@ -563,9 +561,23 @@ button:active:hover .link-text-size,
   opacity: 1;
 }
 
-.has-danger .form-control-feedback {
-  background: $red;
-  color: $white;
+.form-control-feedback {
+  background: $form-icon-warning-white 5px 50% no-repeat;
+  background-size: 15px auto;
+  margin-top: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 5px 10px 5px 30px;
+  position: absolute;
+  text-align: left;
+  transform: translateY(-100%);
+  width: 100%;
+  z-index: 1;
+}
+
+.form-control-feedback>a {
+  color: inherit;
+  text-decoration: underline;
 }
 
 .mobile-video-holder {
