@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
+use Symfony\Component\Security\Core\Security;
 
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
 {
@@ -67,7 +68,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 			return $response;
 		} else {
 			// set authentication exception to session
-			$request->getSession()->set(SecurityContextInterface::AUTHENTICATION_ERROR, $exception);
+			$request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
 			return new RedirectResponse( $this->router->generate( 'login_route' ) );
 		}
 	}
