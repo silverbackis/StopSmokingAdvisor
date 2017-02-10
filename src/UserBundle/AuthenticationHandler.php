@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
-use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
@@ -25,7 +25,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 	$translator,
 	$admin_login_path;
 
-	public function __construct(RouterInterface $router, Session $session, DataCollectorTranslator $translator, $login_path, $admin_login_path)
+	public function __construct(RouterInterface $router, Session $session, TranslatorInterface $translator, $login_path, $admin_login_path)
 	{
 		$this->router  = $router;
 		$this->session = $session;
