@@ -2,7 +2,7 @@
 # http://symfony.com/doc/current/security.html
 security:
     access_denied_url: /#login
-    
+
     # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         fos_userbundle:
@@ -11,7 +11,7 @@ security:
     encoders:
         FOS\UserBundle\Model\UserInterface:
             algorithm:  bcrypt
-            cost:       15
+            cost:       13
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -37,7 +37,7 @@ security:
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        #- { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: ROLE_ADMIN }
         - { path: ^/account/, role: ROLE_USER }
         - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
