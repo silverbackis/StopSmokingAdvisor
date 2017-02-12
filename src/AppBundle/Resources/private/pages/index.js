@@ -716,10 +716,3 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 
 	$(".fos_user_registration_register, .fos_user_security_check").ajaxForm();
 })();
-
-/**
- * TEMPORARY
- */
-$(".social-login-link").on("click", function(e){
-	e.preventDefault();
-});

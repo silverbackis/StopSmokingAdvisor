@@ -395,7 +395,9 @@ button:active:hover .link-text-size,
     width: 100%;
   }
 
-  .social-login-link:hover {
+  .social-login-link:hover,
+  .social-login-link:active,
+  .social-login-link:focus {
     color: $white;
     text-decoration: none;
   }

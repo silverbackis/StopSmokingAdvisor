@@ -105,7 +105,7 @@
                             </form>
 
                             <div class="social-logins">
-                                <a href="#" class="social-login-link face-link">
+                                <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="social-login-link face-link">
                                     <div class="social-icon"></div>
                                     <div class="align-middle social-link-cell">
                                         <span class="text">
@@ -121,7 +121,7 @@
                                         </span>
                                     </div>
                                 </a>
-                                <a href="#" class="social-login-link goog-link">
+                                <a href="{{ path('hwi_oauth_service_redirect', {'service': 'google' }) }}" class="social-login-link goog-link">
                                     <div class="social-icon"></div>
                                     <div class="align-middle social-link-cell">
                                         <span class="text">
