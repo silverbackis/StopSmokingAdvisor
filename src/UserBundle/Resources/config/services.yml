@@ -1,7 +1,7 @@
 services:
     user_bundle.register_listener:
         class: UserBundle\EventListener\RegisterListener
-        arguments: ["@request_stack", "%fos_user.resetting.retry_ttl%", "@translator"]
+        arguments: ["@request_stack", "%fos_user.resetting.retry_ttl%", "@translator", "%login_default_target%", "@security.token_storage", "@session", "@router"]
         tags:
             - { name: kernel.event_subscriber }
 

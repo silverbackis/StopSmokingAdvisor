@@ -651,8 +651,7 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 						201: function(response) {
 							//created
 					    	hidErr();
-							alert("You have registered!");
-							window.location.hash = '#home';
+							window.location.href = response.href;
 					    },
 					    202: function(response) {
 					    	//validation success

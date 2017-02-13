@@ -115,4 +115,13 @@ class DefaultController extends Controller
             'form' => $form->createView(),
         ));
     }
+
+    /**
+     * @Route("/register/confirmed", name="confirmed_action")
+     */
+    public function confirmedAction()
+    {
+        $this->addFlash('notice', 'You have already confirmed your account.');
+        return $this->redirectToRoute('homepage');
+    }
 }
