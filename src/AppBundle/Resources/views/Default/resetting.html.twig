@@ -1,0 +1,43 @@
+{% extends '@BWBase/base.html.twig' %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block stylesheets %} {{ parent() }} {{ addLocalAssets(['@App/Resources/private/pages/index.scss']) }} {% endblock %}
+{% block body %}
+<div class="wrapper-outer login-outer wrapper-show">
+    <div class="page-wrapper login-wrapper">
+        <div class="container-fluid login-container" id="login-container">
+            <a href="/" class="close-link"><span class="close-page-icon preload-bg"></span></a>
+            <table class="w-100 h-100">
+                <tr>
+                    <td class="align-middle">
+                        <span class="container inner-form-container">
+                            <h3 class="form-header">Reset Password</h3>
+                            {{ form_start(form, { 'action': path('fos_user_resetting_reset', {'token': token}), 'attr': { 'class': 'fos_user_resetting_reset' } }) }}
+                                {% if not form.vars.valid %}
+                                <div class="alert alert-danger" role="alert">
+                                    <strong>Password reset failed!</strong>
+                                    {{ form_errors(form.plainPassword.first) }}
+                                </div>
+                                {% endif %}
+
+                                <div class="form-control-feedback display-email">{{ userEmail }}</div>
+                                <div class="form-group">
+                                    {{ form_widget(form.plainPassword.first, { 'attr': {'class': 'form-control form-control-lg home-form-control', 'placeholder': 'form.password'} }) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form_widget(form.plainPassword.second, { 'attr': {'class': 'form-control form-control-lg home-form-control', 'placeholder': 'form.password_confirmation'} }) }}
+                                </div>
+                                {{ form_widget(form) }}
+                                <button type="submit" id="_submit" name="_submit" class="btn btn-login">
+                                    <span class="link-text-size">{{ 'resetting.reset.submit'|trans }}</span>
+                                </button>
+                            </form>
+                            {{ form_end(form) }}
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

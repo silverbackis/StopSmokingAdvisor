@@ -1,7 +1,7 @@
 services:
     user_bundle.register_listener:
         class: UserBundle\EventListener\RegisterListener
-        arguments: ["@request_stack"]
+        arguments: ["@request_stack", "%fos_user.resetting.retry_ttl%", "@translator"]
         tags:
             - { name: kernel.event_subscriber }
 

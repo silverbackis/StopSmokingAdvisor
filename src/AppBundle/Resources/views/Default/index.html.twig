@@ -90,18 +90,40 @@
                     <td class="align-middle">
                         <span class="container inner-form-container">
                             <h3 class="form-header">Login</h3>
-                            <form action="{{ path("fos_user_security_check") }}" method="post" class="fos_user_security_check">
-                                <input type="email" class="form-control home-form-control form-control-lg" id="username" name="_username" placeholder="{{ 'form.email'|trans }}" />
+                            <form action="{{ path("fos_user_security_check") }}" data-loginAction="{{ path("fos_user_security_check") }}" data-forgotAction="{{ path('fos_user_resetting_send_email') }}" method="post" class="fos_user_security_check" id="loginForm">
                                 <div class="form-group">
-                                    <input type="password" class="form-control home-form-control form-control-lg" id="password" name="_password" placeholder="{{ 'security.login.password'|trans }}"  />
+                                    <input type="email" class="form-control home-form-control form-control-lg" id="username" name="_username" placeholder="{{ 'form.email'|trans }}" />
                                     <div class="form-control-feedback"></div>
                                 </div>
-                                <button type="submit" id="_submit" name="_submit" class="btn btn-login">
-                                    <span class="link-text-size">{{ 'security.login.submit'|trans }}</span>
-                                </button>
-                                {% if csrf_token %}
-                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
-                                {% endif %}
+                                <div id="forgotAccordion" role="tablist" aria-multiselectable="true">
+                                    <div class="card">
+                                        <div id="loginCollapse" class="collapse show">
+                                            <div class="form-group">
+                                                <input type="password" class="form-control home-form-control form-control-lg" id="password" name="_password" placeholder="{{ 'security.login.password'|trans }}"  />
+                                                <div class="form-control-feedback"></div>
+                                            </div>
+                                            <button type="submit" id="_submit" name="_submit" class="btn btn-login">
+                                                <span class="link-text-size">{{ 'security.login.submit'|trans }}</span>
+                                            </button>
+                                            <div class="form-control-feedback forgot-password">
+                                                <a data-toggle="collapse" data-parent="#forgotAccordion" href="#forgotCollapse">Forgot your password?</a>
+                                            </div>
+                                            {% if csrf_token %}
+                                                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div id="forgotCollapse" class="collapse">
+                                            <button type="submit" id="_submit" name="_submit" class="btn btn-login">
+                                                <span class="link-text-size">{{ 'resetting.request.submit'|trans }}</span>
+                                            </button>
+                                            <div class="form-control-feedback forgot-password">
+                                                <a class="collapsed" data-toggle="collapse" data-parent="#forgotAccordion" href="#loginCollapse" id="showLoginForm">Remembered your password?</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
 
                             <div class="social-logins">
@@ -178,6 +200,24 @@
             </table>
         </div>
     </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="resettingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">An email is coming...</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal_notice">Sorry, no further information has been loaded.</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Got it</button>
+      </div>
+    </div>
+  </div>
 </div>
 <!-- use javascript to hide the elements that need hiding for animating in -->
 <script>

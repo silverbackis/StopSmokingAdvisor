@@ -1,6 +1,14 @@
-app:
-    resource: "@AppBundle/Controller/"
+default:
+    resource: "@AppBundle/Controller/DefaultController.php"
     type:     annotation
+account:
+    resource: "@AppBundle/Controller/AccountController.php"
+    type:     annotation
+    prefix:   /account
+admin:
+    resource: "@AppBundle/Controller/AdminController.php"
+    type:     annotation
+    prefix:   /admin
 
 #HWIOAuthBundle routes
 hwi_oauth_security:
@@ -26,7 +34,7 @@ twitter_login:
     path: /login/check-twitter
 
 # Redirect login/register URLs
-login_route:
+override_login_route:
     path: /login
     defaults:
         _controller: FrameworkBundle:Redirect:urlRedirect
@@ -34,7 +42,15 @@ login_route:
         permanent: true
     methods:  [GET]
 
-register_route:
+override_password_reset:
+    path: /resetting/request
+    defaults:
+        _controller: FrameworkBundle:Redirect:urlRedirect
+        path: /#login
+        permanent: true
+    methods:  [GET]
+
+override_register_route:
     path: /register
     defaults:
         _controller: FrameworkBundle:Redirect:urlRedirect
@@ -43,5 +59,17 @@ register_route:
     methods:  [GET]
 
 #FOSUserBundle Routing
-fos_user:
-    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+
+fos_user_register:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /register
+
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /resetting
+
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /profile

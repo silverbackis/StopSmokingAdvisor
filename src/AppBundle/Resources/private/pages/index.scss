@@ -12,6 +12,25 @@ body {
   height: 100%;
 }
 
+.modal-content {
+  color: $gray-dark;
+}
+
+.modal-title {
+  color: $teal-dark;
+}
+
+.btn-primary {
+  background: $teal-dark;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+  background: $teal;
+}
 //.body-anim {
 //  overflow-x: hidden;
 //  overflow-y: auto;
@@ -76,6 +95,12 @@ body {
   min-height: 100%;
   text-align: center;
   width: 100%;
+
+  .card {
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+  }
 }
 
 .site-wrapper>.container-fluid {
@@ -474,6 +499,48 @@ button:active:hover .link-text-size,
 
 .form-group {
   position: relative;
+
+  .form-control-feedback {
+    background: $form-icon-warning-white 5px 50% no-repeat;
+    background-size: 15px auto;
+    margin-top: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 5px 10px 5px 30px;
+    position: absolute;
+    text-align: left;
+    transform: translateY(-100%);
+    width: 100%;
+    z-index: 1;
+  }
+
+  .form-control-feedback>a {
+    text-decoration: underline;
+  }
+}
+
+.form-control-feedback>a {
+  color: inherit;
+}
+
+.forgot-password {
+  text-align: left;
+}
+
+.display-email {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.alert-danger>ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  >li {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .home-form-control {
@@ -561,25 +628,6 @@ button:active:hover .link-text-size,
 
 .valid>.list-tick {
   opacity: 1;
-}
-
-.form-control-feedback {
-  background: $form-icon-warning-white 5px 50% no-repeat;
-  background-size: 15px auto;
-  margin-top: 0;
-  opacity: 0;
-  overflow: hidden;
-  padding: 5px 10px 5px 30px;
-  position: absolute;
-  text-align: left;
-  transform: translateY(-100%);
-  width: 100%;
-  z-index: 1;
-}
-
-.form-control-feedback>a {
-  color: inherit;
-  text-decoration: underline;
 }
 
 .mobile-video-holder {

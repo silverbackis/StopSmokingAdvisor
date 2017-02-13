@@ -519,6 +519,19 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
  * Form ajax post
  */
 (function(){
+	$('#loginCollapse').on('show.bs.collapse', function () {
+		$("#loginForm").attr("action", $("#loginForm").attr("data-loginAction"));
+		$("#username").attr("name", "_username");
+	});
+	$('#forgotCollapse').on('show.bs.collapse', function () {
+		$("#loginForm").attr("action", $("#loginForm").attr("data-forgotAction"));
+		$("#username").attr("name", "username");
+	});
+	$('#resettingModal').on('hidden.bs.modal', function (e) {
+		if(!$('#loginCollapse').hasClass("show")){
+			$("#showLoginForm").trigger("click.bs.collapse.data-api");
+		}
+	});
 	$.fn.errorMessage = function(message, noFlash){
 		this.each(function(){
 			var $input = $(this);
@@ -644,6 +657,10 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 					    202: function(response) {
 					    	//validation success
 					    	hidErr();
+					    	if(response.message){
+					    		$("#modal_notice").html(response.message);
+					    		$('#resettingModal').modal();
+					    	}
 					    },
 					    400: function(response) {
 					    	hidErr();

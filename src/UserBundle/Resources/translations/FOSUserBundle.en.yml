@@ -13,23 +13,26 @@ registration:
     flash:
         user_created: 'The user has been created successfully.'
     email:
-        subject: 'Welcome %username%!'
+        subject: 'Welcome%name%!'
         message: |
-            Hello %username%!
+            Hello%name%,
 
             To finish activating your account - please visit %confirmationUrl%.
             
             This link can only be used once to validate your account.
 
             Regards,
-            the Team.
+            Stop Smoking Advisor.
 
 resetting:
     check_email: |
         An email has been sent. It contains a link you must click to reset your password.
-        Note: You can only request a new password within %tokenLifetime% hours.
 
-        If you don't get an email check your spam folder or try again.
+        <b>If the email does not appear in your inbox shortly, please check your spam folder.</b>
+    ttl_error: |
+        You can only request this email once every %tokenLifetime% hours. Please check your inbox and spam folder or try again later.
+    nouser_error: |
+        That email address does not exist in our database
     request:
         username: 'Username or email address'
         submit: 'Reset password'
@@ -40,12 +43,12 @@ resetting:
     email:
         subject: 'Reset Password'
         message: |
-            Hello %username%!
+            Hello%name%,
 
             To reset your password - please visit %confirmationUrl%
 
             Regards,
-            the Team.
+            Stop Smoking Advisor.
 
 form:
     group_name: 'Group name'
