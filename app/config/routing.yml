@@ -2,6 +2,30 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
+#HWIOAuthBundle routes
+hwi_oauth_security:
+    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
+    prefix: /login
+
+hwi_oauth_connect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
+    prefix: /login
+
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+    prefix:   /login
+
+#OAuth Callbacks
+facebook_login:
+    path: /login/check-facebook
+
+google_login:
+    path: /login/check-google
+
+twitter_login:
+    path: /login/check-twitter
+
+# Redirect login/register URLs
 login_route:
     path: /login
     defaults:
@@ -18,24 +42,6 @@ register_route:
         permanent: true
     methods:  [GET]
 
+#FOSUserBundle Routing
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
-
-#HWIOAuthBundle routes
-hwi_oauth_security:
-    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
-    prefix: /login
-
-hwi_oauth_connect:
-    resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
-    prefix: /login
-
-hwi_oauth_redirect:
-    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
-    prefix:   /login
-
-facebook_login:
-    path: /login/check-facebook
-
-google_login:
-    path: /login/check-google

@@ -35,12 +35,13 @@ security:
                 resource_owners:
                     facebook:           "/login/check-facebook"
                     google:             "/login/check-google"
+                    twitter:            "/login/check-twitter"
                 login_path:        /#login
                 failure_path:      /#login
                 oauth_user_provider:
                     #this is my custom user provider, created from FOSUBUserProvider - will manage the
                     #automatic user registration on your site, with data from the provider (facebook. google, etc.)
-                    service: my_user_provider
+                    service: userbundle.oauth_user_provider
             logout:       true
             anonymous:    true
     access_control:
