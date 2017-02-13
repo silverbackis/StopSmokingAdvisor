@@ -217,7 +217,6 @@ hwi_oauth:
             scope:               "email"
             options:
                 csrf: true
-                display: popup #dialog is optimized for popup window
                 auth_type: rerequest # Re-asking for Declined Permissions
         google:
             type:                google
