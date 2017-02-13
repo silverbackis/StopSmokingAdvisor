@@ -40,6 +40,19 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/terms", name="terms_page")
+     */
+    public function termsAction(Request $request)
+    {
+        $seoPage = $this->container->get('sonata.seo.page');
+        $seoPage->setTitle("Terms &amp; Privacy - ".$seoPage->getTitle());
+
+        return $this->render('@App/Default/terms.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+        ]);
+    }
+
+    /**
      * @Route("/admin/manage", name="manage")
      */
     public function manageAction(Request $request)
