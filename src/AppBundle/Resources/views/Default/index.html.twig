@@ -112,7 +112,7 @@
                                                 <input type="password" class="form-control home-form-control form-control-lg" id="password" name="_password" placeholder="{{ 'security.login.password'|trans }}"  />
                                                 <div class="form-control-feedback"></div>
                                             </div>
-                                            <button type="submit" id="_submit" name="_submit" class="btn btn-login">
+                                            <button type="submit" id="_submit" name="_submit" class="btn btn-login" data-size-reset="false">
                                                 <span class="link-text-size">{{ 'security.login.submit'|trans }}</span>
                                             </button>
                                             <div class="form-control-feedback forgot-password">
@@ -200,7 +200,7 @@
                                         <li id="pw-6"><span class="list-tick"></span> <span class="list-text">6 characters</span></li>
                                     </ul>
                                 </small>
-                                <button type="submit" class="btn btn-register">
+                                <button type="submit" class="btn btn-register" data-size-reset="false">
                                     <span class="link-text-size">{{ 'registration.submit'|trans }}</span>
                                 </button>
                             {{ form_end(form) }}

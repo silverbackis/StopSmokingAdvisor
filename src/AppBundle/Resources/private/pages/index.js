@@ -277,18 +277,33 @@ $(function(){
 /**
  * Set and reset link shrinking on click
  */
-$(".link-text-size").parents("a, button").add(".close-page-icon").on("click",function(){
-	var $a = $(this);
-	setTimeout(function(){
-		$a.removeClass("link-clicked").addClass("link-clicked");
-		if($a.data("resetTimeout")){
-			clearTimeout($a.data("resetTimeout"));
+$.fn.linkTextSize = function(action) {
+	this.each(function(){
+		var $el = $(this);
+		switch(action){
+			default:
+				$el.on("click", function(){
+					setTimeout(function(){
+						$el.removeClass("link-clicked").addClass("link-clicked");
+						var resetTime = (typeof $el.attr("data-size-reset")=='undefined' ? 1200 : ($el.attr("data-size-reset")=='false' ? false : $el.attr("data-size-reset")/1));
+						if(resetTime!==false) {
+							if($el.data("resetTimeout")){
+								clearTimeout($el.data("resetTimeout"));
+							}
+							$el.data("resetTimeout",setTimeout(function(){
+								$el.linkTextSize('reset');
+							},resetTime));
+						}
+					}, 50);
+				});
+			break;
+			case "reset":
+				$el.removeClass("link-clicked");
+			break;
 		}
-		$a.data("resetTimeout",setTimeout(function(){
-			$a.removeClass("link-clicked");
-		},1200));
-	},50);
-});
+	});
+};
+$(".link-text-size").parents("a, button").add(".close-page-icon").linkTextSize();
 
 /**
  * Changing home pages
@@ -586,10 +601,12 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 					.data("errorElements").$feedback.html(message);
 
 				if(currentMessage===message && !noFlash){
+					var flashCol = $("button.btn", $input.data("errorElements").$form).css("backgroundColor");
 					$input.data("flashTimeline")
 						.clear()
-						.to($input.data("errorElements").$feedback[0], 0.3, {backgroundColor: $("button.btn", $input.data("errorElements").$form).css("background")})
-						.to($input.data("errorElements").$feedback[0], 0.9, {backgroundColor: "transparent"});
+						.set($input.data("errorElements").$feedback[0], {backgroundColor: "rgba(255, 255, 255, 0)"})
+						.to($input.data("errorElements").$feedback[0], 0.3, {backgroundColor: flashCol})
+						.to($input.data("errorElements").$feedback[0], 0.6, {backgroundColor: "rgba(100, 100, 100, 0)"}, "+=0.3");
 				}
 				new TweenLite.to($input.data("errorElements").$feedback[0], 0.4, {opacity: 1, y: "0%"});
 				new TweenLite.to($input.data("errorElements").$formGroup[0], 0.4, {paddingBottom: $input.data("errorElements").$feedback.outerHeight()});
@@ -611,6 +628,9 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 			    	}else{
 			    		$inputs.errorMessage("hide");
 			    	}
+			    },
+			    buttonTextReset = function(){
+			    	$("button[type=submit]", $form).linkTextSize('reset');
 			    },
 			    formData = {};
 
@@ -646,6 +666,7 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 					    401: function(response) {
 							//login/authorization failed
 					    	hidErr();
+					    	buttonTextReset();
 					    	$("#password").errorMessage(response.responseJSON.message);
 					    },
 						201: function(response) {
@@ -663,6 +684,7 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 					    },
 					    400: function(response) {
 					    	hidErr();
+					    	buttonTextReset();
 							$.each(response.responseJSON, function(inputID, inputError){
 								var $input = $("#"+inputID);
 								$input.errorMessage(inputError, eventType==='keyup' ? true : false);
@@ -672,6 +694,7 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").on("click",fun
 					error: function(err){
 						if(err.status!==400 && err.status!==401){
 							alert("Sorry, an unknown error occurred. Please try again.");
+					    	buttonTextReset();
 							console.warn(arguments);
 						}
 					},
