@@ -19,4 +19,3 @@
 sftp-config.json
 composer.lock
 .DS_Store
-/src/AppBundle/Resources/private/bower/
