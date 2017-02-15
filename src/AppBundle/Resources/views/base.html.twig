@@ -3,7 +3,7 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa:300|Open+Sans:300,400" />
     {% stylesheets 
-        '@BaseCSS'
+        '@AppBundle/Resources/private/bootstrap/bootstrap.scss'
         filter='compass'
         filter='cssrewrite'
         filter='?uglifycss'
@@ -14,7 +14,11 @@
 
 {% block javascripts %}
     {% javascripts
-        '@BaseJS'
+        '@AppBundle/Resources/private/greensock/TweenMax.min.js'
+        '@AppBundle/Resources/private/bower/jquery/dist/jquery.min.js'
+        '@AppBundle/Resources/private/bower/tether/dist/js/tether.min.js'
+        '@AppBundle/Resources/private/bower/bootstrap/dist/js/bootstrap.min.js'
+        '@AppBundle/Resources/private/bootstrap-toolkit/bootstrap-toolkit.js'
         filter='?uglifyjs2' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}

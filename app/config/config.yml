@@ -158,19 +158,6 @@ assetic:
             bin: /usr/local/bin/uglifycss
         uglifyjs2:
             bin: /usr/local/bin/uglifyjs
-    assets:
-        BaseJS:
-            inputs:
-                - '@AppBundle/Resources/private/greensock/TweenMax.min.js'
-                - '@AppBundle/Resources/private/bower/jquery/dist/jquery.min.js'
-                - '@AppBundle/Resources/private/bower/tether/dist/js/tether.min.js'
-                - '@AppBundle/Resources/private/bower/bootstrap/dist/js/bootstrap.min.js'
-                - '@AppBundle/Resources/private/bootstrap-toolkit/bootstrap-toolkit.js'
-        BaseCSS:
-            inputs:
-                - '@AppBundle/Resources/private/bootstrap/bootstrap.scss'
-            options:
-                output: 'assetic/BaseCSS.css'
 
 irozgar_gulp_rev_versions:
     manifest_path: "../src/AppBundle/Resources/assets/rev-manifest.json"
