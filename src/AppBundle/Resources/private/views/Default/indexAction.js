@@ -20,7 +20,15 @@ var videoPlaying = false,
 introVideo;
 
 (function($, viewport){
-	viewport.use('bootstrap4');
+	var bootstrap4Divs = {
+      'xs': $('<div class="device-xs d-block hidden-sm-up"></div>'),
+      'sm': $('<div class="device-sm d-block hidden-xs-down hidden-md-up"></div>'),
+      'md': $('<div class="device-md d-block hidden-sm-down hidden-lg-up"></div>'),
+      'lg': $('<div class="device-lg d-block hidden-md-down hidden-xl-up"></div>'),
+      'xl': $('<div class="device-xl d-block hidden-lg-down"></div>')
+    };    
+    viewport.use('bootstrap4', bootstrap4Divs);
+
 	var $video = $(".video"),
 	$videoCover = $(".video-cover"),
 	$homeRight = $(".home-right"),
@@ -152,23 +160,25 @@ introVideo;
 	}
 	
 	$(function(){
-		viewport.onChange(function(newBreakpoint, oldBreakpoint) {
-			if(oldBreakpoint===null){
-				if(smallBreaks.indexOf(newBreakpoint)!==-1){
-					//first setup for mobile - default layout is desktop will not need modifications
-					changeLayout('mobile');
+		viewport.breakpointChanged(
+			function(newBreakpoint, oldBreakpoint) {
+				if(oldBreakpoint===null){
+					if(smallBreaks.indexOf(newBreakpoint)!==-1){
+						//first setup for mobile - default layout is desktop will not need modifications
+						changeLayout('mobile');
+					}
+				}else{
+					if(smallBreaks.indexOf(newBreakpoint)!==-1 && largeBreaks.indexOf(oldBreakpoint)!==-1){
+						//gone down to mobile layout
+						changeLayout('mobile');
+						
+					}else if(largeBreaks.indexOf(newBreakpoint)!==-1 && smallBreaks.indexOf(oldBreakpoint)!==-1){
+						//gone up to desktop layout
+						changeLayout('desktop');
+					}
 				}
-			}else{
-				if(smallBreaks.indexOf(newBreakpoint)!==-1 && largeBreaks.indexOf(oldBreakpoint)!==-1){
-					//gone down to mobile layout
-					changeLayout('mobile');
-					
-				}else if(largeBreaks.indexOf(newBreakpoint)!==-1 && smallBreaks.indexOf(oldBreakpoint)!==-1){
-					//gone up to desktop layout
-					changeLayout('desktop');
-				}
-			}
-	    });
+		    }
+	    );
 	    $(window).resize(reflow);
 	});
 

@@ -32,7 +32,7 @@ class RegistrationControllerTest extends WebTestCase
         //create and update the database schema
         self::runCommand('doctrine:database:create');
         self::runCommand('doctrine:schema:update --force');
-        //self::runCommand('doctrine:fixtures:load --no-interaction');
+        self::runCommand('doctrine:fixtures:load --no-interaction');
         
         //Remove the test user if already in the database - tests will fail if user already exists
         $container = $client

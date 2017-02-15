@@ -14,7 +14,9 @@
 !var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
+/web/static/orig/
 /node_modules/
 sftp-config.json
 composer.lock
 .DS_Store
+/src/AppBundle/Resources/private/bower/

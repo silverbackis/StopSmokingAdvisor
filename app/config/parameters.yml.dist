@@ -17,3 +17,14 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    login_default_target: ~
+    login_admin_target: ~
+
+    #Oauth IDs and Secrets
+    facebook_app_id: ~
+    facebook_app_secret: ~
+    google_app_id: ~
+    google_app_secret: ~
+    twitter_app_id: ~
+    twitter_app_secret: ~

@@ -1,7 +1,7 @@
 {
-  "name": "bwcore-assets-bundle",
+  "name": "gulp-for-symfony",
   "version": "1.0.0",
-  "description": "This Symfony 3 bundle provides tools so you can manage resources, either loaded directly from external URLs/CDNs, or locally using Bower and/or Gulp.",
+  "description": "Gulp for Symfony website assets",
   "main": "gulpfile.js",
   "directories": {
     "test": "tests"
@@ -9,42 +9,21 @@
   "dependencies": {},
   "devDependencies": {
     "gulp": "gulpjs/gulp#4.0",
-
-    "child_process": "^1.0.2",
-    "fs": "0.0.1-security",
-    "del": "^2.2.2",
-    "path": "^0.12.7",
-    "rev-del": "git+https://github.com/silverbackis/rev-del.git",
-    "stream-combiner2": "^1.1.1",
-    "through2": "^2.0.3",
-    "yargs": "^6.6.0",
-
-    "main-bower-files": "^2.13.1",
-    "gulp-autoprefixer": "^3.1.1",
-    "gulp-clean-css": "^2.3.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-debug": "^3.0.0",
-    "gulp-filter": "^5.0.0",
-    "gulp-if": "^2.0.2",
-    "gulp-include": "^2.3.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-rev-delete-original": "^0.2.2",
+    "gulp-debug": "^3.1.0",
     "gulp-rev": "^7.1.2",
-    "gulp-sass": "^3.1.0",
-    "gulp-sourcemaps": "^2.4.0",
-    "gulp-uglify": "^2.0.0"    
+    "rev-del": "^1.0.5"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/silverbackis/BW-AssetsBundle.git"
+    "url": "git+https://github.com/silverbackis/"
   },
   "author": "Daniel West <daniel@silverback.is>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/silverbackis/BW-AssetsBundle/issues"
+    "url": "https://github.com/silverbackis/"
   },
-  "homepage": "https://github.com/silverbackis/BW-AssetsBundle#readme"
+  "homepage": "https://github.com/silverbackis/"
 }

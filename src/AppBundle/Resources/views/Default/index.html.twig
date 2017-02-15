@@ -1,7 +1,24 @@
-{% extends '@BWBase/base.html.twig' %}
+{% extends '@App/base.html.twig' %}
 {% trans_default_domain 'FOSUserBundle' %}
-
-{% block stylesheets %} {{ parent() }} {{ addLocalAssets(['@App/Resources/private/pages/index.*']) }} {% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 
+        '@AppBundle/Resources/private/views/Default/indexAction.scss'
+        filter='compass' 
+        filter='cssrewrite' 
+        filter='?uglifycss' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+{% block javascripts %}
+    {% javascripts
+        '//content.jwplatform.com/libraries/8g2baDMg.js'
+        '@baseJS'
+        '@AppBundle/Resources/private/views/Default/indexAction.js'
+        filter='?uglifyjs2' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
 {% block body %}
 <div class="home-outer opacity-0">
     <div class="site-wrapper">

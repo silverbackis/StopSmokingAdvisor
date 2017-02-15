@@ -1,5 +1,5 @@
 <?php
-/*
+
 namespace UserBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
@@ -16,17 +16,21 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $this->container = $container;
     }
 
+    private function generateAdminUser($username, $email)
+    {
+        $user = new User();
+        $user->setUsername($username);
+        $user->setEmail($email);
+        $user->setPlainPassword(bin2hex(random_bytes(20)));
+        $user->setRoles(array('ROLE_ADMIN'));
+        $user->setEnabled(true);
+        return $user;
+    }
     public function load(ObjectManager $manager)
     {
-    	$tokenGenerator = $this->container->get('fos_user.util.token_generator');
-		$password = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
-
-        $userAdmin = new User();
-        $userAdmin->setUsername('randomuser');
-        $userAdmin->setEmail('no@email.com');
-        $userAdmin->setPassword($password);
-
-        $manager->persist($userAdmin);
+        $manager->persist($this->generateAdminUser('daniel', 'daniel@silverback.is'));
+        $manager->persist($this->generateAdminUser('matthew', 'matthew@silverback.is'));
+        $manager->persist($this->generateAdminUser('robert', 'robertwest100@googlemail.com'));
         $manager->flush();
     }
-}*/
+}

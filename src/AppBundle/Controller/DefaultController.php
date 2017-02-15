@@ -4,8 +4,7 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-//Use `BWCore\AssetsBundle\Controller\DefaultController` instead of `Symfony\Bundle\FrameworkBundle\Controller\Controller`
-use BW\AssetsBundle\Controller\DefaultController as Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FOS\UserBundle\Form\Factory\FactoryInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\HttpFoundation\RedirectResponse;

@@ -1,0 +1,31 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="condition")
+ */
+class Condition
+{
+	/**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="string", length=150, nullable=false)
+     * @ORM\OneToOne(targetEntity="Page")
+     */
+    protected $page;
+
+    /**
+     * @ORM\Column(type="string", length=150, nullable=false)
+     */
+    protected $condition;
+}
