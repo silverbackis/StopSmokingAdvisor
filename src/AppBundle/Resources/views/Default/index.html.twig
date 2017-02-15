@@ -12,8 +12,8 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <script src="//content.jwplatform.com/libraries/8g2baDMg.js"></script>
     {% javascripts
-        '//content.jwplatform.com/libraries/8g2baDMg.js'
         '@AppBundle/Resources/private/views/Default/indexAction.js'
         filter='?uglifyjs2' %}
         <script src="{{ asset_url }}"></script>
