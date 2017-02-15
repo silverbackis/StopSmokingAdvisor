@@ -11,9 +11,9 @@
     {% endstylesheets %}
 {% endblock %}
 {% block javascripts %}
+    {{ parent() }}
     {% javascripts
         '//content.jwplatform.com/libraries/8g2baDMg.js'
-        '@baseJS'
         '@AppBundle/Resources/private/views/Default/indexAction.js'
         filter='?uglifyjs2' %}
         <script src="{{ asset_url }}"></script>

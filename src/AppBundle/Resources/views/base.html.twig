@@ -1,10 +1,15 @@
 {% extends '@BWBase/base.html.twig' %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa:300|Open+Sans:300,400" crossorigin="anonymous"  />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa:300|Open+Sans:300,400" />
+    {% stylesheets 
+        '@BaseCSS' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
 {% endblock %}
+
 {% block javascripts %}
     {% javascripts filter='?uglifyjs2'
-        '@baseJS' %}
+        '@BaseJS' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}

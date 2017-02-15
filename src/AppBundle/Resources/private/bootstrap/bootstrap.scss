@@ -3,3 +3,10 @@
 
 // import bootstrap main scss
 @import 'bootstrap/scss/bootstrap';
+
+body,
+html {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
+  min-width: 320px;
+}

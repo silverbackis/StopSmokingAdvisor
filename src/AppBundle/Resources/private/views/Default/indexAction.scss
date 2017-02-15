@@ -1,6 +1,5 @@
 //custom bootstrap variables
 @import '../../bootstrap/bootstrap';
-@import '../../base';
 
 $hfcbg: rgba(255, 255, 255, .2);
 $hfcbgon: rgba(255, 255, 255, .25);
@@ -32,15 +31,6 @@ body {
 .btn-primary:active {
   background: $teal;
 }
-//.body-anim {
-//  overflow-x: hidden;
-//  overflow-y: auto;
-//}
-
-//.body-behind {
-//  overflow-x: auto;
-//  overflow-y: hidden;
-//}
 
 .overlay-anim.home-behind {
   overflow-x: hidden;

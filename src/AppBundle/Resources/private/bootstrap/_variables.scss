@@ -1,3 +1,10 @@
+$teal-light:  #53b5dd;
+$teal-lighter:  #a8d2e4;
+$teal-dark:   rgb(27, 130, 167);
+$teal-dark-50:  rgba(27, 130, 167, .5);
+$asset-url-base:  '/';
+$asset-image-base:  $asset-url-base + 'bundles/app/images/';
+
 // Variables
 //
 // Copy settings from this file into the provided `_custom.scss` to override
