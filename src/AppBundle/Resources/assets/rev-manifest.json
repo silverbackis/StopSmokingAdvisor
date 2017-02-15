@@ -1,8 +1,6 @@
 {
-	"assetic/BaseCSS.css": "static/rev/assetic/BaseCSS-5a6ffec31e.css",
-	"assetic/BaseJS.js": "static/rev/assetic/BaseJS-be6855b53b.js",
+	"css/2c35dc8.css": "static/rev/css/2c35dc8-5a6ffec31e.css",
 	"css/59682a0.css": "static/rev/css/59682a0-ab7669f1a6.css",
-	"css/de3b650.css": "static/rev/css/de3b650-5a6ffec31e.css",
-	"js/c6ab7f1.js": "static/rev/js/c6ab7f1-2786dc3b7c.js",
-	"js/f3675bf.js": "static/rev/js/f3675bf-be6855b53b.js"
+	"js/c6ab7f1.js": "static/rev/js/c6ab7f1-d544991d2f.js",
+	"js/e40eabd.js": "static/rev/js/e40eabd-be6855b53b.js"
 }
