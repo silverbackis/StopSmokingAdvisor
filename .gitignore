@@ -1,6 +1,4 @@
 /app/config/parameters.yml
-/build/
-/phpunit.xml
 /var/*
 !/var/cache
 /var/cache/*
@@ -13,7 +11,6 @@
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
 /vendor/
-/web/bundles/
 /src/AppBundle/Resources/assets/assetic/
 /node_modules/
 sftp-config.json

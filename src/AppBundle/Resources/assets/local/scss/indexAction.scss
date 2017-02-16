@@ -7,8 +7,6 @@ $form-icon-warning-white: str-replace(url("data:image/svg+xml;charset=utf8,%3Csv
 
 html,
 body {
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
   height: 100%;
 }
 
@@ -211,6 +209,10 @@ body {
   background-color: transparent;
 }
 
+.video-center .jw-flag-controls-disabled .jw-media {
+  cursor: pointer;
+}
+
 .video-spacer-image {
   display: none;
 }
@@ -223,7 +225,7 @@ body {
   height: 70px;
   line-height: 70px;
   margin-top: -35px;
-  max-width: 280px;
+  max-width: 220px;
   min-width: 200px;
   padding-right: 90px;
   position: absolute;
@@ -240,14 +242,37 @@ body {
   text-decoration: none;
 }
 
-.play-icon {
-  background: url($asset-image-base + 'icon_play.png') 50% 50% no-repeat $pink;
-  background-size: 30.5px 34.5px;
+.play-icon-outer {
   height: 100%;
   position: absolute;
   right: 0;
   top: 0;
   width: 90px;
+}
+
+.play-icon-bg {
+  background: $pink;
+  height: 100%;
+  left: 0;
+  position:absolute;
+  top: 0;
+  transition: transform $transition-dur;
+  width: 100%;
+}
+
+.video:hover .play-icon-bg {
+  transform: translateX(92%);
+}
+
+.play-icon {
+  background: url($asset-image-base + 'icon_play.png') 50% 50% no-repeat;
+  background-size: 30.5px 34.5px;
+  display: inline-block;
+  height: 100%;
+  left: 0;
+  position:absolute;
+  top: 0;
+  width: 100%;
 }
 
 .bottom-links {
@@ -415,7 +440,7 @@ button:active:hover .link-text-size,
     font-family: 'Comfortaa', cursive;
     font-size: 22px;
     height: 65px;
-    transition: color .3s;
+    transition: color $transition-dur;
     width: 100%;
   }
 
@@ -424,6 +449,9 @@ button:active:hover .link-text-size,
   .social-login-link:focus {
     color: $white;
     text-decoration: none;
+    .social-icon {
+      background-color: $white;
+    }
   }
 
   .twit-link {
@@ -436,6 +464,7 @@ button:active:hover .link-text-size,
     background-repeat: no-repeat;
     display: table-cell;
     height: 100%;
+    transition: background-color $transition-dur;
     width: 125px;
   }
 
@@ -519,11 +548,19 @@ button:active:hover .link-text-size,
 }
 
 .form-control-feedback>a {
-  color: inherit;
+  transition: color $transition-dur;
+  color: $teal-lighter;
+}
+
+.form-control-feedback>a:hover,
+.form-control-feedback>a:active,
+.form-control-feedback>a:focus {
+  text-decoration: none;
+  color: $white;
 }
 
 .forgot-password {
-  text-align: left;
+  text-align: right;
 }
 
 .display-email {
@@ -620,7 +657,7 @@ button:active:hover .link-text-size,
   margin-right: 5px;
   min-height: 27px;
   opacity: .5;
-  transition: opacity .3s;
+  transition: opacity $transition-dur;
   vertical-align: top;
   width: 12px;
 }
@@ -694,9 +731,12 @@ button:active:hover .link-text-size,
     width: 20%;
   }
 
+  .play-icon-outer {
+    width: 50px;
+  }
+
   .play-icon {
     background-size: auto 50%;
-    width: 50px;
   }
 
   .bottom-links {

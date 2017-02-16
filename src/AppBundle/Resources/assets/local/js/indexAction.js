@@ -53,13 +53,14 @@ introVideo;
 			timeline = new TimelineLite({paused:true});
 		}
 		if(!isMobile){
-			var minHeight = $(".home-left-hmid").outerHeight();
+			windowWidth = $(window).width();
+
+			var minHeight = Math.round(Math.max($(".home-left-hmid").outerHeight(), (windowWidth/100)*27.5));
 			$homeRight.add($homeLeft).css({
 				minHeight: minHeight+"px"
 			});
 			
 			rightHeight = $homeRight.height();
-			windowWidth = $(window).width();
 			maxWidth = videoPlaying ? windowWidth : (rightHeight/9)*16;
 			videoWidth = windowWidth*0.58;
 
@@ -227,27 +228,21 @@ introVideo;
 			reflow('tween');
 		};
 		introVideo.setControls(false);
-		introVideo.on('displayClick', function(){
+		var displayClickFn = function(){
 			if(videoPlaying){
 				introVideo.pause(true);
 			}else{
 				vidPlay();				
 			}
-		});
+		};
+		introVideo.on('displayClick', displayClickFn);
 
 		introVideo.on('ready', function(){
 			$(".play-button").on("click", function(e){
 				e.preventDefault();
 				e.stopPropagation();
-				if(!videoPlaying){
-					vidPlay();
-				}
+				displayClickFn();
 			});
-		
-			$(".video-cover .jw-flag-controls-disabled .jw-media").css({
-				cursor: "pointer"
-			});
-
 			
 			//introVideo.on("play", vidPlay);
 			introVideo.on("pause", vidStopped);
@@ -313,7 +308,7 @@ $.fn.linkTextSize = function(action) {
 		}
 	});
 };
-$(".link-text-size").parents("a, button").add(".close-page-icon").linkTextSize();
+$(".link-text-size").parents("a, button").add(".close-page-icon").not(".video").linkTextSize();
 
 /**
  * Changing home pages

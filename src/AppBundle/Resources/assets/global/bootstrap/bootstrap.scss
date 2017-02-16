@@ -9,4 +9,10 @@ html {
   font-family: 'Open Sans', sans-serif;
   font-size: 18px;
   min-width: 320px;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.alert-dismissible .close {
+	padding: 0.55rem 1.25rem;
 }

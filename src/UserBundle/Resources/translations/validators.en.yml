@@ -13,7 +13,7 @@ fos_user:
         invalid: 'Your email is not valid.'
     password:
         blank: 'Please enter a password.'
-        short: 'Your password is too short.'
+        short: 'Your password must be at least 6 characters long.'
         mismatch: 'The entered passwords don''t match.'
         letter: 'Your password must contain at least 1 letter'
         number: 'Your password must contain at least 1 number'

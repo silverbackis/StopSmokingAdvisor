@@ -75,7 +75,10 @@
                                 <span class="d-inline-block w-100" style="perspective: 1000px;">
                                     <span class="link-text-size">Play</span>
                                 </span>
-                                <span class="play-icon"></span>
+                                <span class="play-icon-outer" style="perspective: 1000px;">
+                                    <div class="play-icon-bg"></div>
+                                    <span class="play-icon link-text-size"></span>
+                                </span>
                             </a>
                         </div>
                     </div>
@@ -136,7 +139,7 @@
                                                 <span class="link-text-size">{{ 'security.login.submit'|trans }}</span>
                                             </button>
                                             <div class="form-control-feedback forgot-password">
-                                                <a data-toggle="collapse" data-parent="#forgotAccordion" href="#forgotCollapse">Forgot your password?</a>
+                                                <a data-toggle="collapse" data-parent="#forgotAccordion" href="#forgotCollapse">Forgot password?</a>
                                             </div>
                                             {% if csrf_token %}
                                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
@@ -149,7 +152,7 @@
                                                 <span class="link-text-size">{{ 'resetting.request.submit'|trans }}</span>
                                             </button>
                                             <div class="form-control-feedback forgot-password">
-                                                <a class="collapsed" data-toggle="collapse" data-parent="#forgotAccordion" href="#loginCollapse" id="showLoginForm">Remembered your password?</a>
+                                                <a class="collapsed" data-toggle="collapse" data-parent="#forgotAccordion" href="#loginCollapse" id="showLoginForm">Remembered password?</a>
                                             </div>
                                         </div>
                                     </div>

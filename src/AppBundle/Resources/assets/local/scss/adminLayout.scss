@@ -1,0 +1,62 @@
+//custom bootstrap variables
+@import 'bootstrap/bootstrap';
+
+body,
+html {
+  min-width: 800px;
+}
+
+.header-bar {
+	background: $white;
+	height: 100px;
+	padding-left: 40px;
+}
+
+.ssa-logo {
+	background: url($asset-image-base + 'logo.png') 50% 50% no-repeat;
+  background-size: 100% auto;
+  display: inline-block;
+  font-size: 0;
+  height: 100%;
+  overflow: hidden;
+  text-indent: -1000px;
+  width: 250px;
+}
+
+.logout-link {
+	background: $teal;
+	color: $white;
+	float: right;
+	font-size: 22px;
+	height: 100%;
+	line-height: 100px;
+	padding: 0 40px;
+	transition: background-color $transition-dur;
+
+	&:hover,
+	&:active,
+	&:focus {
+		background: $teal-dark;
+		color: $white;
+		text-decoration: none;
+	}
+}
+
+.popover {
+	color: $gray-dark;
+}
+
+.popover-content {
+	text-align: center;
+}
+
+.popover-content>.btn-group {
+	display: inline-block;
+
+	>.btn {
+		border: 0;
+	}
+	.btn + .btn {
+		margin-left: 0;
+	}
+}

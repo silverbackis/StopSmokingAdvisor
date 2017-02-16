@@ -1,4 +1,25 @@
 {% extends '@App/base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 
+        '@AppBundle/Resources/assets/local/scss/adminLayout.scss'
+        filter='compass' 
+        filter='cssrewrite' 
+        filter='?uglifycss' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+        '@AppBundle/Resources/assets/local/js/adminLayout.js'
+        filter='?uglifyjs2' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
 {% block body %}
 	{% for flash_message in app.session.flashBag.get('notice') %}
 	    <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -9,5 +30,11 @@
 	    </div>
 	{% endfor %}
 
-	Test admin page <a href="/logout">logout</a>
+	<div class="header-bar">
+		<h1 class="ssa-logo">Stop Smoking Advisor</h1>
+
+		<a href="#" id="logout" class="logout-link">
+			Logout
+		</a>
+	</div>
 {% endblock %}
