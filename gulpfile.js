@@ -1,4 +1,3 @@
-//Requirements
 var gulp = require('gulp'),
     rev = require('gulp-rev'),
     rev_del = require('rev-del'),
