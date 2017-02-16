@@ -3,10 +3,11 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa:300|Open+Sans:300,400" />
     {% stylesheets 
-        '@AppBundle/Resources/private/bootstrap/bootstrap.scss'
+        '@AppBundle/Resources/assets/global/bootstrap/bootstrap.scss'
         filter='compass'
         filter='cssrewrite'
         filter='?uglifycss'
+        name='BaseCSS'
          %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -14,12 +15,13 @@
 
 {% block javascripts %}
     {% javascripts
-        '@AppBundle/Resources/private/greensock/TweenMax.min.js'
-        '@AppBundle/Resources/private/bower/jquery/dist/jquery.min.js'
-        '@AppBundle/Resources/private/bower/tether/dist/js/tether.min.js'
-        '@AppBundle/Resources/private/bower/bootstrap/dist/js/bootstrap.min.js'
-        '@AppBundle/Resources/private/bootstrap-toolkit/bootstrap-toolkit.js'
-        filter='?uglifyjs2' %}
+        '@AppBundle/Resources/assets/global/greensock/TweenMax.min.js'
+        '@AppBundle/Resources/assets/global/bower/jquery/dist/jquery.min.js'
+        '@AppBundle/Resources/assets/global/bower/tether/dist/js/tether.min.js'
+        '@AppBundle/Resources/assets/global/bower/bootstrap/dist/js/bootstrap.min.js'
+        '@AppBundle/Resources/assets/global/bootstrap-toolkit/bootstrap-toolkit.js'
+        filter='?uglifyjs2'
+        name='BaseJS' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}

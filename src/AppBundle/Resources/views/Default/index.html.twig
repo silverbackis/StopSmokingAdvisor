@@ -3,7 +3,7 @@
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets 
-        '@AppBundle/Resources/private/views/Default/indexAction.scss'
+        '@AppBundle/Resources/assets/local/scss/indexAction.scss'
         filter='compass' 
         filter='cssrewrite' 
         filter='?uglifycss' %}
@@ -12,9 +12,9 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://content.jwplatform.com/libraries/8g2baDMg.js"></script>
     {% javascripts
-        '@AppBundle/Resources/private/views/Default/indexAction.js'
+        'https://content.jwplatform.com/libraries/8g2baDMg.js'
+        '@AppBundle/Resources/assets/local/js/indexAction.js'
         filter='?uglifyjs2' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}

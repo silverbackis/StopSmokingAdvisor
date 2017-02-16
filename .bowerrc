@@ -1,3 +1,3 @@
 {
-    "directory": "src/AppBundle/Resources/private/bower/"
+    "directory": "src/AppBundle/Resources/assets/global/bower/"
 }

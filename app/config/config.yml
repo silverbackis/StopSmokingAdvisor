@@ -33,9 +33,6 @@ framework:
     http_method_override: true
     assets:
         version_strategy: irozgar_gulp_rev_versions.asset.gulp_rev_version_strategy
-        packages:
-            gulp_rev:
-                base_path: '/static/rev/'
     php_errors:
         log: true
 
@@ -130,34 +127,22 @@ sonata_seo:
             #Possible twitter namespace??
             #xmlns:twitter: "http://api.twitter.com/"
 
-#bw_assets:
-#    local:
-#        includeBower: false
-#        assets: ['@AppBundle/Resources/private/greensock/TweenMax.min.js', '@AppBundle/Resources/private/_includes/full.js', '@AppBundle/Resources/private/bootstrapCSS/*', '@AppBundle/Resources/private/bootstrap-toolkit.js', '@AppBundle/Resources/private/_variables.scss']
-#    remote:
-#        gsap: false
-#        jwplayer:
-#            enabled: true
-#            version: null
-#            base: //content.jwplatform.com/libraries/
-#            files:
-#                js:
-#                    enabled: true
-#                    extension: js
-#                    file: 8g2baDMg.js
-
 assetic:
-    write_to: '%kernel.root_dir%/../web/static/orig'
+    write_to: '%kernel.root_dir%/../src/AppBundle/Resources/assets/assetic'
     filters:
         cssrewrite: ~
         compass:
             bin: /usr/local/bin/compass
             load_paths: 
-            - "%kernel.root_dir%/../src/AppBundle/Resources/private/bower/"
+            - "%kernel.root_dir%/../src/AppBundle/Resources/assets/global/"
         uglifycss:
             bin: /usr/local/bin/uglifycss
         uglifyjs2:
             bin: /usr/local/bin/uglifyjs
+    assets:
+        BaseCSS:
+            inputs:
+                - '@AppBundle/Resources/private/bootstrap/bootstrap.scss'
 
 irozgar_gulp_rev_versions:
     manifest_path: "../src/AppBundle/Resources/assets/rev-manifest.json"
