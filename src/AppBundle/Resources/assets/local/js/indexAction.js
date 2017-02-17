@@ -163,23 +163,19 @@ introVideo;
 	$(function(){
 		viewport.breakpointChanged(
 			function(newBreakpoint, oldBreakpoint) {
-				if(oldBreakpoint===null){
-					if(smallBreaks.indexOf(newBreakpoint)!==-1){
-						//first setup for mobile - default layout is desktop will not need modifications
-						changeLayout('mobile');
-					}
-				}else{
-					if(smallBreaks.indexOf(newBreakpoint)!==-1 && largeBreaks.indexOf(oldBreakpoint)!==-1){
-						//gone down to mobile layout
-						changeLayout('mobile');
-						
-					}else if(largeBreaks.indexOf(newBreakpoint)!==-1 && smallBreaks.indexOf(oldBreakpoint)!==-1){
-						//gone up to desktop layout
-						changeLayout('desktop');
-					}
+				if(smallBreaks.indexOf(newBreakpoint)!==-1 && largeBreaks.indexOf(oldBreakpoint)!==-1){
+					//gone down to mobile layout
+					changeLayout('mobile');
+					
+				}else if(largeBreaks.indexOf(newBreakpoint)!==-1 && smallBreaks.indexOf(oldBreakpoint)!==-1){
+					//gone up to desktop layout
+					changeLayout('desktop');
 				}
 		    }
 	    );
+	    if(smallBreaks.indexOf(viewport.current())!==-1) {
+	    	changeLayout('mobile');
+	    }
 	    $(window).resize(reflow);
 	});
 
@@ -192,19 +188,19 @@ introVideo;
 		introVideo.setup({
 		    sources: [
 		    	{
-		    		file: "//content.jwplatform.com/manifests/JpuXFVbD.m3u8?sig=ea38f26da3a2609f827097776e7cfcbc",
+		    		file: "https://content.jwplatform.com/manifests/JpuXFVbD.m3u8?sig=ea38f26da3a2609f827097776e7cfcbc",
 		    		label: "HLS"
 		    	},
 		    	{
-		    		file: "//content.jwplatform.com/videos/JpuXFVbD-aHTOGd7Q.mp4",
+		    		file: "https://content.jwplatform.com/videos/JpuXFVbD-aHTOGd7Q.mp4",
 		    		label: "1080p"
 		    	},
 		    	{
-		    		file: "//content.jwplatform.com/videos/JpuXFVbD-xhTL5q8u.mp4",
+		    		file: "https://content.jwplatform.com/videos/JpuXFVbD-xhTL5q8u.mp4",
 		    		label: "720p"
 		    	}		    	
 		    ], 
-		    image: "//content.jwplatform.com/thumbs/JpuXFVbD-1920.jpg",
+		    image: "https://content.jwplatform.com/thumbs/JpuXFVbD-1920.jpg",
 		    mediaid: "JpuXFVbD",
 		    abouttext: "Stop Smoking Advisor",
 			aboutlink: "https://www.stopsmokingadvisor.net",

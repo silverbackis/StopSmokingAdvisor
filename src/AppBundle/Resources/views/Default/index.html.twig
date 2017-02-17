@@ -14,8 +14,8 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="https://content.jwplatform.com/libraries/8g2baDMg.js"></script>
     {% javascripts
-        'https://content.jwplatform.com/libraries/8g2baDMg.js'
         '@AppBundle/Resources/assets/local/js/indexAction.js'
         filter='?uglifyjs2' %}
         <script src="{{ asset_url }}"></script>
