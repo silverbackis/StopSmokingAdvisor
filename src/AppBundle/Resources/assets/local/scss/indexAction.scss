@@ -71,11 +71,11 @@ body {
   padding: 0;
 
   .alert-holder {
-    position: absolute;
-    z-index: 10;
     left: 10px;
+    position: absolute;
     right: 10px;
     top: 10px;
+    z-index: 10;
   }
 }
 
@@ -254,7 +254,7 @@ body {
   background: $pink;
   height: 100%;
   left: 0;
-  position:absolute;
+  position: absolute;
   top: 0;
   transition: transform $transition-dur;
   width: 100%;
@@ -270,7 +270,7 @@ body {
   display: inline-block;
   height: 100%;
   left: 0;
-  position:absolute;
+  position: absolute;
   top: 0;
   width: 100%;
 }
@@ -434,9 +434,9 @@ button:active:hover .link-text-size,
 
   .social-login-link {
     background-color: $teal-dark;
-    background-color: $teal-dark-50;
-    display: table;
+    background-color: rgba($teal-dark, .5);
     color: $teal-lighter;
+    display: table;
     font-family: 'Comfortaa', cursive;
     font-size: 22px;
     height: 65px;
@@ -449,6 +449,7 @@ button:active:hover .link-text-size,
   .social-login-link:focus {
     color: $white;
     text-decoration: none;
+
     .social-icon {
       background-color: $white;
     }
@@ -548,15 +549,15 @@ button:active:hover .link-text-size,
 }
 
 .form-control-feedback>a {
-  transition: color $transition-dur;
   color: $teal-lighter;
+  transition: color $transition-dur;
 }
 
 .form-control-feedback>a:hover,
 .form-control-feedback>a:active,
 .form-control-feedback>a:focus {
-  text-decoration: none;
   color: $white;
+  text-decoration: none;
 }
 
 .forgot-password {

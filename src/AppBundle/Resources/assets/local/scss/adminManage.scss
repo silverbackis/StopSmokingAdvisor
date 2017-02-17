@@ -1,0 +1,325 @@
+//custom bootstrap variables
+@import 'bootstrap/variables';
+
+.bootstrap-select.show>.dropdown-menu>.dropdown-menu {
+  display: block;
+}
+
+.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+  font-size: 24px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+
+.dropdown-menu {
+  background: $white;
+  font-family: 'Comfortaa', cursive;
+
+  &.node {
+    background: $teal;
+    border: 0;
+    font-size: 15px;
+    line-height: normal;
+    margin-bottom: -2px;
+    margin-left: -5px;
+    min-width: 6rem;
+    padding: 0;
+
+    a {
+      color: $white;
+      padding: .4rem 1rem;
+
+      &:hover,
+      &:active,
+      &:focus {
+        background-color: $teal-light;
+      }
+    }
+
+    .dropdown-divider {
+      background-color: $teal-light;
+      margin: 0;
+    }
+
+    &::after {
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 7px solid $teal;
+      bottom: -7px;
+      content: '';
+      display: inline-block;
+      left: 11px;
+      position: absolute;
+    }
+  }
+
+  >li {
+    &.hidden {
+      display: none;
+    }
+  }
+
+  a {
+    background: 0 0;
+    border: 0;
+    clear: both;
+    display: block;
+    font-weight: 400;
+    padding: 3px 1.5rem;
+    text-align: inherit;
+    white-space: nowrap;
+    width: 100%;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.header-bar .dropdown-menu {
+  text-align: center;
+
+  a {
+    color: $teal;
+  }
+}
+
+.bottom-tree-area {
+  background: $gray-light;
+  height: 100%;
+  position: relative;
+  vertical-align: top;
+
+  .bottom-tree-container {
+    color: $teal;
+    font-size: 0;
+    height: 100%;
+    left: 0;
+    overflow: auto;
+    padding: 100px 80px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  ul {
+    display: inline-block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      margin: 0 32px 16px;
+      padding: 0;
+      position: relative;
+
+      &:not(:first-child)::before {
+        content: '';
+        position: absolute;
+        display: block;
+        border-left: 2px solid $teal;
+        width: 0;
+        height: 50%;
+        left: -32px;
+        top: 0;
+      }
+
+      &:not(:last-child)::after {
+        border-left: 2px solid $teal;
+        content: '';
+        display: block;
+        height: 100%;
+        left: -32px;
+        position: absolute;
+        top: 17px;
+        width: 0;
+      }
+
+      ul {
+        margin-left: 32px;
+
+        li:not(:last-child)::after {
+          top: 91px;
+        }
+
+        li:first-child .item-node::before {
+          left: -64px;
+          padding: 0 32px;
+        }
+      }
+    }
+  }
+}
+
+
+.session-starts {
+  border-right: 2px solid $teal;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 20px;
+  margin: .5em 16px 1em 0;
+  padding: 0 1em 0 0;
+  position: relative;
+  vertical-align: top;
+
+  &::after {
+    content: '';
+    display: block;
+    border-bottom: 2px solid $teal;
+    width: 0;
+    height: 0;
+    right: -18px;
+    top: -32px;
+    padding: 32px 8px 8px;
+    position: absolute;
+  }
+}
+
+.tree-node {
+  background: $white;
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  width: 260px;
+}
+
+.item-node {
+  &::before {
+    content: '';
+    display: block;
+    border-bottom: 2px solid $teal;
+    width: 0;
+    height: 0;
+    left: -32px;
+    top: 50%;
+    padding: 0 16px;
+    position: absolute;
+  }
+}
+
+.node-inner {
+  padding: 10px 35px 35px 10px;
+
+  .btn {
+    width: 100%;
+  }
+
+  .input-group {
+    margin-bottom: 5px;
+  }
+
+  .input-group-addon {
+    padding: 0;
+  }
+
+  .condition-add {
+    background-image: url($asset-image-base + 'cms_icon_add.png');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: 13.5px 13px;
+    display: inline-block;
+    font-size: 24px;
+    height: 100%;
+    line-height: 24px;
+    padding: 0 .75rem;
+    text-decoration: none !important;
+    width: 100%;
+  }
+}
+
+.node-bar {
+  background: $gray-lightest;
+  font-size: 0;
+  line-height: 0;
+  position: absolute;
+
+  &.bottom {
+    bottom: 0;
+    height: 25px;
+    left: 0;
+    padding-right: 25px;
+    text-align: center;
+    width: 100%;
+
+    .node-add {
+      height: 100%;
+      width: 35px;
+    }
+  }
+
+  &.right {
+    height: 100%;
+    right: 0;
+    top: 0;
+    width: 25px;
+
+    .node-add-group {
+      margin-top: -35px;
+      left: 0;
+      position: absolute;
+      top: 50%;
+      width: 100%;
+    }
+
+    .node-add {
+      height: 35px;
+      width: 100%;
+    }
+  }
+}
+
+.node-add {
+  background: 50% 50% no-repeat $teal-light;
+  display: inline-block;
+  opacity: .5;
+  overflow: hidden;
+  text-indent: -999px;
+  transition: opacity $transition-dur;
+
+  &.page {
+    background-image: url($asset-image-base + 'cms_icon_addNode.png');
+    background-size: 14px 13.5px;
+  }
+
+  &.link {
+    background-image: url($asset-image-base + 'cms_icon_linkNode.png');
+    background-size: 14.5px 14.5px;
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    opacity: 1;
+  }
+}
+
+.dropup {
+  display: inline-block;
+  height: 35px;
+  position: relative;
+  width: 100%;
+
+  .node-menu {
+    display: inline-block;
+    height: 100%;
+    position: relative;
+    width: 100%;
+
+    .icon {
+      background: url($asset-image-base + 'cms_icon_NodeMenu.png') 50% 100% no-repeat;
+      background-size: 100% 200%;
+      height: 14.5px;
+      left: 50%;
+      margin: -8px auto auto -8px;
+      position: absolute;
+      top: 50%;
+      width: 16px;
+    }
+  }
+
+  &.show .icon {
+    background-position: 50% 0;
+  }
+}

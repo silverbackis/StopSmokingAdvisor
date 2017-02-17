@@ -3,8 +3,9 @@
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets 
+    	'@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/css/bootstrap-select.css'
         '@AppBundle/Resources/assets/local/scss/adminLayout.scss'
-        filter='compass' 
+        '@AppBundle/Resources/assets/local/scss/adminManage.scss'
         filter='cssrewrite' 
         filter='?uglifycss' %}
         <link rel="stylesheet" href="{{ asset_url }}" />
@@ -14,6 +15,7 @@
 {% block javascripts %}
     {{ parent() }}
     {% javascripts
+    	'@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/js/bootstrap-select.min.js'
         '@AppBundle/Resources/assets/local/js/adminLayout.js'
         filter='?uglifyjs2' %}
         <script src="{{ asset_url }}"></script>
@@ -29,12 +31,224 @@
 	        <strong>{{ flash_message }}</strong>
 	    </div>
 	{% endfor %}
+	<table class="container-fluid w-100 h-100 page-container">
+		<tbody>
+			<tr class="top-table-row">
+				<td>
+					<div class="row no-gutters header-bar">
+						<div class="col-12 col-auto align-self-center">
+						  <h1 class="ssa-logo">Stop Smoking Advisor</h1>
+						</div>
+						<div class="col align-self-center">
+						  	<select class="selectpicker" data-style="btn-secondary">
+								<option>Session 1</option>
+								<option>Session 2</option>
+								<option>Session 3</option>
+								<option>Session 4</option>
+								<option>Session 5</option>
+								<option>Session 6</option>
+							</select>
+						</div>
+						<div class="col-12 col-auto align-self-center">
+							<a href="#" id="logout" class="logout-link">
+								Logout
+							</a>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr class="bottom-table-row">
+				<td class="bottom-tree-area">
+					<div class="bottom-tree-container">
+						<span class="session-starts">Session starts</span>
+						<ul class="node-tree">
+							<li>
+								<div class="tree-node">
+									<div class="item-node">
+										<div class="node-inner">
+											<div class="input-group">
+												<input type="text" class="form-control" placeholder="Page name" />
+											</div>
+											<div class="input-group">
+												<input type="text" class="form-control" placeholder="Condition" />
+												<span class="input-group-addon"><a href="#" class="btn btn-primary condition-add">&nbsp;</a></span>
+											</div>
+											<a href="#" class="btn btn-primary">Open</a>
+										</div>
+										<div class="node-bar bottom">
+											<a href="#" class="node-add page">Add Page</a>
+											<a href="#" class="node-add link">Add Link</a>
+										</div>
+										<div class="node-bar right">
+											<div class="btn-group dropup">
+												<div class="dropdown-menu node">
+											      <a class="dropdown-item" href="#">Move</a>
+											      <div class="dropdown-divider"></div>
+											      <a class="dropdown-item" href="#">Duplicate</a>
+											      <div class="dropdown-divider"></div>
+											      <a class="dropdown-item" href="#">Delete</a>
+											    </div>
+												<a href="#" class="node-menu" data-toggle="dropdown"><div class="icon">Menu</div></a>
+											</div>
+											<span class="node-add-group">
+												<a href="#" class="node-add page">Add Page</a>
+												<a href="#" class="node-add link">Add Link</a>
+											</span>
+										</div>
+									</div>
+								</div>
 
-	<div class="header-bar">
-		<h1 class="ssa-logo">Stop Smoking Advisor</h1>
-
-		<a href="#" id="logout" class="logout-link">
-			Logout
-		</a>
-	</div>
+								<ul class="node-tree">
+									<li>
+										<div class="tree-node">
+											<div class="item-node">
+												<div class="node-inner">
+													<div class="input-group">
+														<input type="text" class="form-control" placeholder="Page name" />
+													</div>
+													<div class="input-group">
+														<input type="text" class="form-control" placeholder="Condition" />
+														<span class="input-group-addon"><a href="#" class="btn btn-primary condition-add">&nbsp;</a></span>
+													</div>
+													<a href="#" class="btn btn-primary">Open</a>
+												</div>
+												<div class="node-bar bottom">
+													<a href="#" class="node-add page">Add Page</a>
+													<a href="#" class="node-add link">Add Link</a>
+												</div>
+												<div class="node-bar right">
+													<div class="btn-group dropup">
+														<div class="dropdown-menu node">
+													      <a class="dropdown-item" href="#">Move</a>
+													      <div class="dropdown-divider"></div>
+													      <a class="dropdown-item" href="#">Duplicate</a>
+													      <div class="dropdown-divider"></div>
+													      <a class="dropdown-item" href="#">Delete</a>
+													    </div>
+														<a href="#" class="node-menu" data-toggle="dropdown"><div class="icon">Menu</div></a>
+													</div>
+													<span class="node-add-group">
+														<a href="#" class="node-add page">Add Page</a>
+														<a href="#" class="node-add link">Add Link</a>
+													</span>
+												</div>
+											</div>
+										</div>
+									</li>
+									<li>
+										<div class="tree-node">
+											<div class="item-node">
+												<div class="node-inner">
+													<div class="input-group">
+														<input type="text" class="form-control" placeholder="Page name" />
+													</div>
+													<div class="input-group">
+														<input type="text" class="form-control" placeholder="Condition" />
+														<span class="input-group-addon"><a href="#" class="btn btn-primary condition-add">&nbsp;</a></span>
+													</div>
+													<a href="#" class="btn btn-primary">Open</a>
+												</div>
+												<div class="node-bar bottom">
+													<a href="#" class="node-add page">Add Page</a>
+													<a href="#" class="node-add link">Add Link</a>
+												</div>
+												<div class="node-bar right">
+													<div class="btn-group dropup">
+														<div class="dropdown-menu node">
+													      <a class="dropdown-item" href="#">Move</a>
+													      <div class="dropdown-divider"></div>
+													      <a class="dropdown-item" href="#">Duplicate</a>
+													      <div class="dropdown-divider"></div>
+													      <a class="dropdown-item" href="#">Delete</a>
+													    </div>
+														<a href="#" class="node-menu" data-toggle="dropdown"><div class="icon">Menu</div></a>
+													</div>
+													<span class="node-add-group">
+														<a href="#" class="node-add page">Add Page</a>
+														<a href="#" class="node-add link">Add Link</a>
+													</span>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<div class="tree-node">
+									<div class="item-node">
+										<div class="node-inner">
+											<div class="input-group">
+												<input type="text" class="form-control" placeholder="Page name" />
+											</div>
+											<div class="input-group">
+												<input type="text" class="form-control" placeholder="Condition" />
+												<span class="input-group-addon"><a href="#" class="btn btn-primary condition-add">&nbsp;</a></span>
+											</div>
+											<a href="#" class="btn btn-primary">Open</a>
+										</div>
+										<div class="node-bar bottom">
+											<a href="#" class="node-add page">Add Page</a>
+											<a href="#" class="node-add link">Add Link</a>
+										</div>
+										<div class="node-bar right">
+											<div class="btn-group dropup">
+												<div class="dropdown-menu node">
+											      <a class="dropdown-item" href="#">Move</a>
+											      <div class="dropdown-divider"></div>
+											      <a class="dropdown-item" href="#">Duplicate</a>
+											      <div class="dropdown-divider"></div>
+											      <a class="dropdown-item" href="#">Delete</a>
+											    </div>
+												<a href="#" class="node-menu" data-toggle="dropdown"><div class="icon">Menu</div></a>
+											</div>
+											<span class="node-add-group">
+												<a href="#" class="node-add page">Add Page</a>
+												<a href="#" class="node-add link">Add Link</a>
+											</span>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="tree-node">
+									<div class="item-node">
+										<div class="node-inner">
+											<div class="input-group">
+												<input type="text" class="form-control" placeholder="Page name" />
+											</div>
+											<div class="input-group">
+												<input type="text" class="form-control" placeholder="Condition" />
+												<span class="input-group-addon"><a href="#" class="btn btn-primary condition-add">&nbsp;</a></span>
+											</div>
+											<a href="#" class="btn btn-primary">Open</a>
+										</div>
+										<div class="node-bar bottom">
+											<a href="#" class="node-add page">Add Page</a>
+											<a href="#" class="node-add link">Add Link</a>
+										</div>
+										<div class="node-bar right">
+											<div class="btn-group dropup">
+												<div class="dropdown-menu node">
+											      <a class="dropdown-item" href="#">Move</a>
+											      <div class="dropdown-divider"></div>
+											      <a class="dropdown-item" href="#">Duplicate</a>
+											      <div class="dropdown-divider"></div>
+											      <a class="dropdown-item" href="#">Delete</a>
+											    </div>
+												<a href="#" class="node-menu" data-toggle="dropdown"><div class="icon">Menu</div></a>
+											</div>
+											<span class="node-add-group">
+												<a href="#" class="node-add page">Add Page</a>
+												<a href="#" class="node-add link">Add Link</a>
+											</span>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 {% endblock %}

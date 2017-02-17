@@ -1,62 +1,101 @@
 //custom bootstrap variables
-@import 'bootstrap/bootstrap';
+@import 'bootstrap/variables';
 
 body,
 html {
-  min-width: 800px;
-}
-
-.header-bar {
-	background: $white;
-	height: 100px;
-	padding-left: 40px;
-}
-
-.ssa-logo {
-	background: url($asset-image-base + 'logo.png') 50% 50% no-repeat;
-  background-size: 100% auto;
-  display: inline-block;
-  font-size: 0;
   height: 100%;
-  overflow: hidden;
-  text-indent: -1000px;
-  width: 250px;
+  min-width: 820px;
 }
 
-.logout-link {
-	background: $teal;
-	color: $white;
-	float: right;
-	font-size: 22px;
-	height: 100%;
-	line-height: 100px;
-	padding: 0 40px;
-	transition: background-color $transition-dur;
+a:focus,
+a:hover {
+  color: $white;
+}
 
-	&:hover,
-	&:active,
-	&:focus {
-		background: $teal-dark;
-		color: $white;
-		text-decoration: none;
-	}
+.btn {
+  font-family: 'Comfortaa', cursive;
+}
+
+td {
+  padding: 0;
 }
 
 .popover {
-	color: $gray-dark;
+  color: $gray-dark;
+}
+
+.popover-title {
+  font-size: .8rem;
+  padding: 4px 25px;
 }
 
 .popover-content {
-	text-align: center;
+  text-align: center;
 }
 
 .popover-content>.btn-group {
-	display: inline-block;
+  display: inline-block;
 
-	>.btn {
-		border: 0;
-	}
-	.btn + .btn {
-		margin-left: 0;
-	}
+  >.btn {
+    border: 0;
+  }
+
+  .btn + .btn {
+    margin-left: 0;
+  }
+}
+
+.col-auto {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.page-container {
+  padding: 0;
+}
+
+.top-table-row {
+  height: 0;
+
+  .header-bar {
+    background: $white;
+    position: relative;
+    text-align: center;
+    width: 100%;
+  }
+
+  .ssa-logo {
+    background: url($asset-image-base + 'logo.png') 50% 50% no-repeat;
+    background-size: 100% auto;
+    display: block;
+    font-size: 0;
+    height: 100px;
+    margin: 0 0 0 25px;
+    overflow: hidden;
+    text-indent: -1000px;
+    width: 250px;
+  }
+
+  .logout-link {
+    background: $teal;
+    color: $white;
+    display: inline-block;
+    font-size: 22px;
+    line-height: 100px;
+    margin-left: 100px;
+    transition: background-color $transition-dur;
+    width: 175px;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: $teal-dark;
+      color: $white;
+      text-decoration: none;
+    }
+  }
+}
+
+.bottom-table-row {
+  height: 100%;
 }

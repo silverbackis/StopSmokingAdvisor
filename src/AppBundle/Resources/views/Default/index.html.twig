@@ -5,7 +5,6 @@
     {{ parent() }}
     {% stylesheets 
         '@AppBundle/Resources/assets/local/scss/indexAction.scss'
-        filter='compass' 
         filter='cssrewrite' 
         filter='?uglifycss' %}
         <link rel="stylesheet" href="{{ asset_url }}" />

@@ -15,9 +15,8 @@ $(function(){
 	};
 	$('#logout').on('hide.bs.popover', function () {
 	  $(document).off("click", hidePopoverFn);
-	}).on('show.bs.popover', function () {
-	  $(document).on("click", hidePopoverFn);
 	}).on('shown.bs.popover', function () {
+	  $(document).on("click", hidePopoverFn);
 	  $(".logout-confirm").on("click", function(e){
 	  	e.stopPropagation();
 	  });
