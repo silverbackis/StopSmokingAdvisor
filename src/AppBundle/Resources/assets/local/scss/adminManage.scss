@@ -90,6 +90,7 @@
   height: 100%;
   position: relative;
   vertical-align: top;
+  white-space: nowrap;
 
   .bottom-tree-container {
     color: $teal;
@@ -103,45 +104,43 @@
     width: 100%;
   }
 
-  ul {
+  .node-tree {
     display: inline-block;
     list-style: none;
     margin: 0;
     padding: 0;
 
-    li {
+    >li {
       margin: 0 32px 16px;
       padding: 0;
       position: relative;
 
-      &:not(:first-child)::before {
+      //Join the line to left of li with line above as it will not quite reach at 100% height of previous li
+      &:not(:first-child)>.tree-node::before {
+        border-left: 3px solid $teal;
+        bottom: 92px;
         content: '';
-        position: absolute;
         display: block;
-        border-left: 2px solid $teal;
-        width: 0;
-        height: 50%;
+        height: 16px;
         left: -32px;
-        top: 0;
+        position: absolute;
+        width: 0;
       }
-
+      
+      //Long line left of li to link to li below
       &:not(:last-child)::after {
-        border-left: 2px solid $teal;
+        border-left: 3px solid $teal;
         content: '';
         display: block;
         height: 100%;
         left: -32px;
         position: absolute;
-        top: 17px;
+        top: 89px;
         width: 0;
       }
 
       ul {
         margin-left: 32px;
-
-        li:not(:last-child)::after {
-          top: 91px;
-        }
 
         li:first-child .item-node::before {
           left: -64px;
@@ -154,25 +153,28 @@
 
 
 .session-starts {
-  border-right: 2px solid $teal;
+  // vertical line right of the session starts label
+  border-right: 3px solid $teal;
   display: inline-block;
-  font-size: 1rem;
+  font-size: 18px;
   font-weight: 700;
   line-height: 20px;
-  margin: .5em 16px 1em 0;
-  padding: 0 1em 0 0;
+  margin: 81px 30px 1em 0;
+  padding: 0 .5rem 0 0;
   position: relative;
   vertical-align: top;
+  
 
+  //hoizontal line linking session starts to node tree
   &::after {
     content: '';
     display: block;
-    border-bottom: 2px solid $teal;
+    border-bottom: 3px solid $teal;
     width: 0;
     height: 0;
-    right: -18px;
-    top: -32px;
-    padding: 32px 8px 8px;
+    right: -35px;
+    top: 8px;
+    padding: 0 16px;
     position: absolute;
   }
 }
@@ -186,14 +188,17 @@
 }
 
 .item-node {
+  white-space: normal;
+  
+  // horizontal line out the back of the node
   &::before {
     content: '';
     display: block;
-    border-bottom: 2px solid $teal;
+    border-bottom: 3px solid $teal;
     width: 0;
     height: 0;
     left: -32px;
-    top: 50%;
+    top: 89px;
     padding: 0 16px;
     position: absolute;
   }
@@ -259,7 +264,7 @@
       margin-top: -35px;
       left: 0;
       position: absolute;
-      top: 50%;
+      top: 89px;
       width: 100%;
     }
 
