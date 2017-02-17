@@ -118,7 +118,7 @@
       //Join the line to left of li with line above as it will not quite reach at 100% height of previous li
       &:not(:first-child)>.tree-node::before {
         border-left: 3px solid $teal;
-        bottom: 92px;
+        top: 73px;
         content: '';
         display: block;
         height: 16px;
@@ -206,9 +206,26 @@
 
 .node-inner {
   padding: 10px 35px 35px 10px;
+  
+  .conditions {
+    margin-bottom: 5px;
+  }
 
   .btn {
     width: 100%;
+
+    &.btn-sm {
+      font-family: inherit;
+      font-size: 12px;
+      margin: 0 2px 5px 0;
+      width: auto;
+
+      &:focus,
+      &:active,
+      &:hover {
+        color: $red;
+      }
+    }
   }
 
   .input-group {
@@ -232,6 +249,7 @@
     text-decoration: none !important;
     width: 100%;
   }
+
 }
 
 .node-bar {
