@@ -45,6 +45,17 @@
 	Tree.prototype.getNodes = function(){
 		return this.nodes;
 	};
+	Tree.prototype.updateSortValues = function(){
+		$(this.nodes).each(function(index, node){
+			var nData = node.getData();
+			nData.sort = index+1;
+			node.setData(nData);
+		});
+	};
+	Tree.prototype.removeNodeIndex = function(nodeIndex){
+		this.nodes.splice(nodeIndex, 1);
+		this.updateSortValues();
+	};
 
 
 	// Node Object and proto
@@ -221,7 +232,7 @@
 		});
 	}
 	Node.prototype.getData = function(){
-		this.$node.data("nodeData");
+		return this.$node.data("nodeData");
 	};
 	Node.prototype.setData = function(data){
 		this.$node.data("nodeData", data);
@@ -256,7 +267,7 @@
 		}
 		else
 		{
-			this.tree.nodes.splice(this.nodeData.sort, 1);
+			this.tree.removeNodeIndex(this.nodeData.sort);
 		}
 		this.$node.remove();
 	};
