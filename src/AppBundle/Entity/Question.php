@@ -20,9 +20,7 @@ class Question
     protected $id;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
-     * @ORM\ManyToOne(targetEntity="Page", inversedBy="question")
-     * @ORM\JoinColumn(name="page_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="questions")
      */
     protected $page;
 
@@ -43,7 +41,7 @@ class Question
     protected $input_type;
 
     /**
-     * @ORM\OneToMany(targetEntity="Answer", mappedBy="question")
+     * @ORM\OneToMany(targetEntity="Answer", mappedBy="question", cascade={"all"})
      */
     protected $answer_options;
 
@@ -60,30 +58,6 @@ class Question
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set page
-     *
-     * @param integer $page
-     *
-     * @return Question
-     */
-    public function setPage($page)
-    {
-        $this->page = $page;
-
-        return $this;
-    }
-
-    /**
-     * Get page
-     *
-     * @return integer
-     */
-    public function getPage()
-    {
-        return $this->page;
     }
 
     /**
@@ -156,6 +130,30 @@ class Question
     public function getInputType()
     {
         return $this->input_type;
+    }
+
+    /**
+     * Set page
+     *
+     * @param \AppBundle\Entity\Page $page
+     *
+     * @return Question
+     */
+    public function setPage(\AppBundle\Entity\Page $page = null)
+    {
+        $this->page = $page;
+
+        return $this;
+    }
+
+    /**
+     * Get page
+     *
+     * @return \AppBundle\Entity\Page
+     */
+    public function getPage()
+    {
+        return $this->page;
     }
 
     /**

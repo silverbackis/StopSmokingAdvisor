@@ -5,10 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints as SSAPageAssert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="page")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Page
 {
@@ -18,11 +20,6 @@ class Page
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Condition", mappedBy="page")
-     */
-    protected $conditions;
 
     /**
      * @ORM\Column(type="integer", nullable=false, options={"default" : 1})
@@ -36,10 +33,31 @@ class Page
     protected $session = 1;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     * @ORM\OneToOne(targetEntity="Page")
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="children")
+     * @SSAPageAssert\PageExists
      */
     protected $parent;
+
+    /**
+     * @ORM\Column(type="integer", nullable=false, options={"default" : 1})
+     * @Assert\GreaterThanOrEqual(
+     *      value = 1,
+     *      message = "The sort value must be at least 1"
+     * )
+     */
+    protected $sort = 1;
+
+    /**
+     * @ORM\Column(type="string", length=4, nullable=false, options={"default" : "page"})
+     * @Assert\Choice(choices = {"page", "link"}, strict = true, message="Type must be `page` or `link`")
+     */
+    protected $type = 'page';
+
+    /**
+     * @ORM\OneToOne(targetEntity="Page")
+     * @SSAPageAssert\PageExists
+     */
+    protected $forward_to_page;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -57,14 +75,8 @@ class Page
     protected $draft = 1;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
-     * @ORM\OneToOne(targetEntity="Page")
-     */
-    protected $forward_to_page;
-
-    /**
      * @ORM\Column(type="string", length=50, nullable=false, options={"default" : "none"})
-     * @Assert\Choice({"none", "video", "image"})
+     * @Assert\Choice(choices = {"none", "video", "image"}, strict = true, message="Media type must be `none`, `video` or `image`")
      */
     protected $media_type = 'none';
 
@@ -74,19 +86,64 @@ class Page
     protected $media_path = 'none';
 
     /**
-     * @ORM\OneToMany(targetEntity="Question", mappedBy="page")
-     */
-    protected $questions;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     protected $text;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    protected $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    protected $last_updated;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Condition", mappedBy="page", cascade={"all"})
+     */
+    protected $conditions;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Question", mappedBy="page", cascade={"all"})
+     */
+    protected $questions;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Page", mappedBy="parent", cascade={"all"})
+     * @ORM\OrderBy({"sort" = "ASC"})
+     */
+    protected $children;
+
+    /**
+     * @SSAPageAssert\PageExists
+     */
+    public $parentID = null;
+    
+
     public function __construct()
     {
-    	$this->questions = new ArrayCollection();
         $this->conditions = new ArrayCollection();
+    	$this->questions = new ArrayCollection();
+        $this->children = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->createdAt = new \DateTime();
+        $this->last_updated = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedValue()
+    {
+        $this->last_updated = new \DateTime();
     }
 
     /**
@@ -100,51 +157,75 @@ class Page
     }
 
     /**
-     * Set parent
+     * Set session
      *
-     * @param integer $parent
+     * @param integer $session
      *
      * @return Page
      */
-    public function setParent($parent)
+    public function setSession($session)
     {
-        $this->parent = $parent;
+        $this->session = $session;
 
         return $this;
     }
 
     /**
-     * Get parent
+     * Get session
      *
      * @return integer
      */
-    public function getParent()
+    public function getSession()
     {
-        return $this->parent;
+        return $this->session;
     }
 
     /**
-     * Set pageName
+     * Set sort
      *
-     * @param string $pageName
+     * @param integer $sort
      *
      * @return Page
      */
-    public function setPageName($pageName)
+    public function setSort($sort)
     {
-        $this->page_name = $pageName;
+        $this->sort = $sort;
 
         return $this;
     }
 
     /**
-     * Get pageName
+     * Get sort
+     *
+     * @return integer
+     */
+    public function getSort()
+    {
+        return $this->sort;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Page
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
      *
      * @return string
      */
-    public function getPageName()
+    public function getType()
     {
-        return $this->page_name;
+        return $this->type;
     }
 
     /**
@@ -198,11 +279,11 @@ class Page
     /**
      * Set draft
      *
-     * @param \boolean $draft
+     * @param boolean $draft
      *
      * @return Page
      */
-    public function setDraft(bool $draft)
+    public function setDraft($draft)
     {
         $this->draft = $draft;
 
@@ -212,59 +293,11 @@ class Page
     /**
      * Get draft
      *
-     * @return \boolean
+     * @return boolean
      */
     public function getDraft()
     {
         return $this->draft;
-    }
-
-    /**
-     * Set session
-     *
-     * @param integer $session
-     *
-     * @return Page
-     */
-    public function setSession($session)
-    {
-        $this->session = $session;
-
-        return $this;
-    }
-
-    /**
-     * Get session
-     *
-     * @return integer
-     */
-    public function getSession()
-    {
-        return $this->session;
-    }
-
-    /**
-     * Set forwardToPage
-     *
-     * @param boolean $forwardToPage
-     *
-     * @return Page
-     */
-    public function setForwardToPage($forwardToPage)
-    {
-        $this->forward_to_page = $forwardToPage;
-
-        return $this;
-    }
-
-    /**
-     * Get forwardToPage
-     *
-     * @return boolean
-     */
-    public function getForwardToPage()
-    {
-        return $this->forward_to_page;
     }
 
     /**
@@ -339,5 +372,206 @@ class Page
         return $this->text;
     }
 
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return Page
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
 
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function setParentById(int $parentID = null)
+    {
+        $this->parentID = $parentID;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param \AppBundle\Entity\Page $parent
+     *
+     * @return Page
+     */
+    public function setParent(\AppBundle\Entity\Page $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \AppBundle\Entity\Page
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Set forwardToPage
+     *
+     * @param \AppBundle\Entity\Page $forwardToPage
+     *
+     * @return Page
+     */
+    public function setForwardToPage(\AppBundle\Entity\Page $forwardToPage = null)
+    {
+        $this->forward_to_page = $forwardToPage;
+
+        return $this;
+    }
+
+    /**
+     * Get forwardToPage
+     *
+     * @return \AppBundle\Entity\Page
+     */
+    public function getForwardToPage()
+    {
+        return $this->forward_to_page!==null ? $this->forward_to_page->getId() : null;
+    }
+
+    /**
+     * Add condition
+     *
+     * @param \AppBundle\Entity\Condition $condition
+     *
+     * @return Page
+     */
+    public function addCondition(\AppBundle\Entity\Condition $condition)
+    {
+        $this->conditions[] = $condition;
+
+        return $this;
+    }
+
+    /**
+     * Remove condition
+     *
+     * @param \AppBundle\Entity\Condition $condition
+     */
+    public function removeCondition(\AppBundle\Entity\Condition $condition)
+    {
+        $this->conditions->removeElement($condition);
+    }
+
+    /**
+     * Get conditions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getConditions()
+    {
+        return $this->conditions;
+    }
+
+    /**
+     * Add question
+     *
+     * @param \AppBundle\Entity\Question $question
+     *
+     * @return Page
+     */
+    public function addQuestion(\AppBundle\Entity\Question $question)
+    {
+        $this->questions[] = $question;
+
+        return $this;
+    }
+
+    /**
+     * Remove question
+     *
+     * @param \AppBundle\Entity\Question $question
+     */
+    public function removeQuestion(\AppBundle\Entity\Question $question)
+    {
+        $this->questions->removeElement($question);
+    }
+
+    /**
+     * Get questions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getQuestions()
+    {
+        return $this->questions;
+    }
+
+    /**
+     * Add child
+     *
+     * @param \AppBundle\Entity\Page $child
+     *
+     * @return Page
+     */
+    public function addChild(\AppBundle\Entity\Page $child)
+    {
+        $this->children[] = $child;
+
+        return $this;
+    }
+
+    /**
+     * Remove child
+     *
+     * @param \AppBundle\Entity\Page $child
+     */
+    public function removeChild(\AppBundle\Entity\Page $child)
+    {
+        $this->children->removeElement($child);
+    }
+
+    /**
+     * Get children
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * Set lastUpdated
+     *
+     * @param \DateTime $lastUpdated
+     *
+     * @return Page
+     */
+    public function setLastUpdated($lastUpdated)
+    {
+        $this->last_updated = $lastUpdated;
+
+        return $this;
+    }
+
+    /**
+     * Get lastUpdated
+     *
+     * @return \DateTime
+     */
+    public function getLastUpdated()
+    {
+        return $this->last_updated;
+    }
 }

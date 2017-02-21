@@ -19,7 +19,6 @@ class Answer
     protected $id;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
      * @ORM\ManyToOne(targetEntity="Question", inversedBy="answer")
      */
     protected $question;
@@ -42,30 +41,6 @@ class Answer
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set question
-     *
-     * @param integer $question
-     *
-     * @return Answer
-     */
-    public function setQuestion($question)
-    {
-        $this->question = $question;
-
-        return $this;
-    }
-
-    /**
-     * Get question
-     *
-     * @return integer
-     */
-    public function getQuestion()
-    {
-        return $this->question;
     }
 
     /**
@@ -114,5 +89,29 @@ class Answer
     public function getSaveValue()
     {
         return $this->save_value;
+    }
+
+    /**
+     * Set question
+     *
+     * @param \AppBundle\Entity\Question $question
+     *
+     * @return Answer
+     */
+    public function setQuestion(\AppBundle\Entity\Question $question = null)
+    {
+        $this->question = $question;
+
+        return $this;
+    }
+
+    /**
+     * Get question
+     *
+     * @return \AppBundle\Entity\Question
+     */
+    public function getQuestion()
+    {
+        return $this->question;
     }
 }

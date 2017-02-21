@@ -10,7 +10,22 @@ use UserBundle\Entity\User;
 
 class LoadUserData implements FixtureInterface, ContainerAwareInterface
 {
-    private $container;
+    private $container,
+    $adminUsers = array(
+        array(
+            'daniel',
+            'daniel@silverback.is'
+        ),
+        array(
+            'matthew',
+            'matthew@silverback.is'
+        ),
+        array(
+            'robert',
+            'robertwest100@googlemail.com'
+        )
+    );
+
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
@@ -26,11 +41,32 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $user->setEnabled(true);
         return $user;
     }
+
+    /**
+     * Helper method to return an already existing Locator from the database, else create and return a new one
+     *
+     * @param string        $name
+     * @param ObjectManager $manager
+     *
+     * @return Locator
+     */
+    protected function findOrCreateLocator($name, ObjectManager $manager)
+    {
+        return $manager->getRepository('UserBundle\Entity\User')->findOneBy(['username' => $name]) ?: new User();
+    }
+
     public function load(ObjectManager $manager)
     {
-        $manager->persist($this->generateAdminUser('daniel', 'daniel@silverback.is'));
-        $manager->persist($this->generateAdminUser('matthew', 'matthew@silverback.is'));
-        $manager->persist($this->generateAdminUser('robert', 'robertwest100@googlemail.com'));
+        foreach ($this->adminUsers as $userArray)
+        {
+            $locator = $this->findOrCreateLocator($userArray[0], $manager);
+
+            /** Check if the object is managed (so already exists in the database) **/
+            if (!$manager->contains($locator))
+            {
+                $manager->persist($this->generateAdminUser($userArray[0], $userArray[1]));
+            }
+        }
         $manager->flush();
     }
 }

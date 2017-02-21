@@ -142,7 +142,7 @@
       ul {
         margin-left: 32px;
 
-        li:first-child .item-node::before {
+        > li:first-child > .tree-node > .item-node::before {
           left: -64px;
           padding: 0 32px;
         }
@@ -345,4 +345,22 @@
   &.show .icon {
     background-position: 50% 0;
   }
+}
+
+.tree-icon-question-answer {
+  display: none;
+}
+
+.node-tree .node-tree > li:first-child > .tree-icon-question-answer {
+  background: url($asset-image-base + 'cms_icon_connect.png') 50% 50% no-repeat;
+  background-size: 17px 17.5px;
+  display: inline-block;
+  height: 18px;
+  left: -30px;
+  margin-left: -9px;
+  margin-top: -9px;
+  position: absolute;
+  top: 89px;
+  width: 18px;
+  z-index: 2;
 }

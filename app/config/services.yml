@@ -4,6 +4,22 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+  app.admin_manage:
+    class: AppBundle\Controller\AdminController
+    arguments: ["@templating", "@sonata.seo.page", "%kernel.root_dir%", "@app.admin_manage_actions"]
+
+  app.admin_manage_actions:
+    class: AppBundle\Utils\AdminManageActions
+    arguments: ["@doctrine.orm.entity_manager", "@validator"]
+  
+  app.validator.page_exists:
+    class: AppBundle\Validator\Constraints\PageExistsValidator
+    arguments: ["@doctrine.orm.entity_manager"]
+    tags:
+      - { name: validator.constraint_validator }
+
+  app.page_listener:
+    class: AppBundle\EventListener\PageParentSet
+    arguments: []
+    tags:
+      - { name: doctrine.event_subscriber, connection: default }
