@@ -198,13 +198,13 @@
 							$nodeAddPage.clone()
 							.on("click", function(e){
 								e.preventDefault();
-								f.ajax.addNode.call(_self, 'page', nodeParent, 1, true);
+								f.ajax.addNode.call(_self, 'page', nodeData.id, 1, true);
 							})
 						).append(
 							$nodeAddLink.clone()
 							.on("click", function(e){
 								e.preventDefault();
-								f.ajax.addNode.call(_self, 'link', nodeParent, 1, true);
+								f.ajax.addNode.call(_self, 'link', nodeData.id, 1, true);
 							})
 						)
 					)

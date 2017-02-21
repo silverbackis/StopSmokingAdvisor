@@ -72,7 +72,7 @@ class AdminManageActions
 			return $validResponse;
 		}
 
-		$this->updateOrder($data['parent'], $data['sort'], "+1");
+		$this->updateOrder($data['session'], $data['parent'], $data['sort'], "+1");
 
 	    //persist to the database
 	    $this->doctrine->persist($page);
@@ -105,7 +105,7 @@ class AdminManageActions
 			return $validResponse;
 		}
 
-    	$this->updateOrder($data['parent'], $data['sort'], "+1");
+    	$this->updateOrder($page->getSession(), $data['parent'], $data['sort'], "+1");
 
 	    //persist new page the database
 	    $this->doctrine->persist($pageCopy);
@@ -145,10 +145,10 @@ class AdminManageActions
 		$this->doctrine->flush();
 
 		//Update order of other entities where page is moving FROM
-		$this->updateOrder($oldInfo['parent'], $oldInfo['sort'], "-1", $page->getId());
+		$this->updateOrder($page->getSession(), $oldInfo['parent'], $oldInfo['sort'], "-1", $page->getId());
 
 	    //Update order of other entities where page is moving TO
-	    $this->updateOrder($data['parent'], $data['sort'], "+1", $page->getId());
+	    $this->updateOrder($page->getSession(), $data['parent'], $data['sort'], "+1", $page->getId());
 
 		$this->response->setContent($this->serializer->serialize($page, 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
 		$this->response->setStatusCode(JsonResponse::HTTP_OK);
@@ -186,7 +186,7 @@ class AdminManageActions
 		}
 
     	// update order of other items so no gaps in the order values
-	    $this->updateOrder((null == $page->getParent() ? null : $page->getParent()->getId()), $page->getSort(), "-1");
+	    $this->updateOrder($page->getSession(), (null == $page->getParent() ? null : $page->getParent()->getId()), $page->getSort(), "-1");
 	    
 	    // remove the page that was requested
     	$this->doctrine->remove($page);
@@ -275,7 +275,7 @@ class AdminManageActions
 	    return true;
 	}
 
-	private function updateOrder($parentID, $currentPageSort, $changeBy="+1", int $excludeId=null)
+	private function updateOrder($session, $parentID, $currentPageSort, $changeBy="+1", int $excludeId=null)
 	{
 		$qb = $this->doctrine->createQueryBuilder();
 
@@ -290,6 +290,9 @@ class AdminManageActions
 	    }
 	    $whereStr .= ' AND p.sort>= :cpsort';
 	    $qb->setParameter('cpsort', $currentPageSort);
+
+	    $whereStr .= ' AND p.session = :session';
+	    $qb->setParameter('session', $session);
 	    if($excludeId)
 	    {
 	    	$whereStr .= ' AND p.id!=:exclid';
