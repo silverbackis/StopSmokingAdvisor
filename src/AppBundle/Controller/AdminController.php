@@ -45,52 +45,70 @@ class AdminController
      * @Route("/pages/get/{session}", name="admin_manage_get_pages", requirements={"session": "\d+"})
      * @Method({"GET"})
      */
-    public function manageGetSessionPages($session, Request $request)
+    public function getSessionPages($session, Request $request)
     {
         return $this->adminManageActions->getSessionPages($session);
     }
 
     /**
-     * @Route("/page/add", name="admin_manage_add")
+     * @Route("/pages/search/{session}", name="admin_manage_search_pages", requirements={"session": "\d+"})
      * @Method({"POST"})
      */
-    public function manageAddAction(Request $request)
+    public function searchSessionPages($session, Request $request)
+    {
+        return $this->adminManageActions->searchSessionPages($session, $request);
+    }
+
+    /**
+     * @Route("/page/add", name="admin_manage_add_page")
+     * @Method({"POST"})
+     */
+    public function addPageAction(Request $request)
     {
         return $this->adminManageActions->addPage($request);
     }
 
     /**
-     * @Route("/page/delete/{pageID}", name="admin_manage_delete", requirements={"pageID": "\d+"})
+     * @Route("/page/update/{id}", name="admin_manage_update_page", requirements={"id": "\d+"})
+     * @Method({"POST"})
+     */
+    public function updatePageAction(int $id, Request $request)
+    {
+        return $this->adminManageActions->updatePage($id, $request);
+    }
+
+    /**
+     * @Route("/page/delete/{id}", name="admin_manage_delete_page", requirements={"id": "\d+"})
      * @Method({"GET"})
      */
-    public function manageDeleteAction($pageID, Request $request)
+    public function deletePageAction(int $id, Request $request)
     {
-        return $this->adminManageActions->deletePage($pageID);
+        return $this->adminManageActions->deletePage($id);
     }
 
     /**
-     * @Route("/page/move/{pageID}", name="admin_manage_move", requirements={"pageID": "\d+"})
+     * @Route("/page/move/{id}", name="admin_manage_move_page", requirements={"id": "\d+"})
      * @Method({"POST"})
      */
-    public function manageMoveAction($pageID, Request $request)
+    public function movePageAction(int $id, Request $request)
     {
-        return $this->adminManageActions->movePage($pageID, $request);
+        return $this->adminManageActions->movePage($id, $request);
     }
 
     /**
-     * @Route("/page/copy/{pageID}", name="admin_manage_copy", requirements={"pageID": "\d+"})
+     * @Route("/page/copy/{id}", name="admin_manage_copy_page", requirements={"id": "\d+"})
      * @Method({"POST"})
      */
-    public function manageCopyAction($pageID, Request $request)
+    public function copyPageAction(int $id, Request $request)
     {
-        return $this->adminManageActions->copyPage($pageID, $request);
+        return $this->adminManageActions->copyPage($id, $request);
     }
 
     /**
      * @Route("/condition/add", name="admin_manage_add_condition")
      * @Method({"POST"})
      */
-    public function manageConditionAddAction(Request $request)
+    public function addConditionAction(Request $request)
     {
         return $this->adminManageActions->addCondition($request);
     }
@@ -99,7 +117,7 @@ class AdminController
      * @Route("/condition/delete/{id}", name="admin_manage_delete_condition", requirements={"id": "\d+"})
      * @Method({"GET"})
      */
-    public function manageConditionDeleteAction($id, Request $request)
+    public function deleteConditionAction(int $id, Request $request)
     {
         return $this->adminManageActions->deleteCondition($id);
     }

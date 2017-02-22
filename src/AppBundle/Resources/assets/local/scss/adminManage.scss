@@ -1,6 +1,38 @@
 //custom bootstrap variables
 @import 'bootstrap/variables';
 
+.tree-alert {
+  background: $green;
+  color: $white;
+  display: none;
+  font-size: 16px;
+  margin: 0;
+  padding: .45rem 1.25rem;
+  width: 100%;
+  z-index: 2;
+
+  .target-action {
+    font-weight: 700;
+    text-transform: capitalize;
+  }
+}
+
+
+
+.show-targets {
+  .tree-alert {
+    display: block;
+  }
+
+  .node-target {
+    display: inline-block;
+  }
+
+  .node-add {
+    display: none;
+  }
+}
+
 .bootstrap-select.show>.dropdown-menu>.dropdown-menu {
   display: block;
 }
@@ -102,6 +134,7 @@
     position: absolute;
     top: 0;
     width: 100%;
+    z-index: 1;
   }
 
   .node-tree {
@@ -111,7 +144,7 @@
     padding: 0;
 
     >li {
-      margin: 0 32px 16px;
+      margin: 16px 32px 0;
       padding: 0;
       position: relative;
 
@@ -147,6 +180,10 @@
           padding: 0 32px;
         }
       }
+    }
+
+    >li:first-child {
+      margin-top: 0;
     }
   }
 }
@@ -185,6 +222,14 @@
   position: relative;
   vertical-align: top;
   width: 260px;
+
+  &.selected {
+    box-shadow: 0 0 1px 3px $green;
+
+    .node-target {
+      display: none;
+    }
+  }
 }
 
 .item-node {
@@ -206,7 +251,15 @@
 
 .node-inner {
   padding: 10px 35px 35px 10px;
-  
+
+  .node-goto-header {
+    color: $teal;
+    display: block;
+    font-family: 'Comfortaa', cursive;
+    font-size: 22px;
+    text-align: center;
+  }
+
   .conditions {
     margin-bottom: 5px;
   }
@@ -230,6 +283,19 @@
 
   .input-group {
     margin-bottom: 5px;
+
+    .dropdown-menu {
+      font-size: 14px;
+      max-height: 150px;
+      overflow: auto;
+      padding: 0;
+      width: 100%;
+      z-index: 4;
+
+      >a {
+        padding: .5rem .75rem;
+      }
+    }
   }
 
   .input-group-addon {
@@ -270,6 +336,11 @@
       height: 100%;
       width: 35px;
     }
+
+    .node-target {
+      height: 100%;
+      width: 70px;
+    }
   }
 
   &.right {
@@ -279,8 +350,8 @@
     width: 25px;
 
     .node-add-group {
-      margin-top: -35px;
       left: 0;
+      margin-top: -35px;
       position: absolute;
       top: 89px;
       width: 100%;
@@ -288,6 +359,11 @@
 
     .node-add {
       height: 35px;
+      width: 100%;
+    }
+
+    .node-target {
+      height: 70px;
       width: 100%;
     }
   }
@@ -316,6 +392,14 @@
   &:focus {
     opacity: 1;
   }
+}
+
+.node-target {
+  background: url($asset-image-base + 'cms_icon_target.png') 50% 50% no-repeat $green;
+  background-size: 17px 17px;
+  display: none;
+  overflow: hidden;
+  text-indent: -999px;
 }
 
 .dropup {

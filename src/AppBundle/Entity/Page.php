@@ -34,7 +34,6 @@ class Page
 
     /**
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="children")
-     * @SSAPageAssert\PageExists
      */
     protected $parent;
 
@@ -54,8 +53,7 @@ class Page
     protected $type = 'page';
 
     /**
-     * @ORM\OneToOne(targetEntity="Page")
-     * @SSAPageAssert\PageExists
+     * @ORM\ManyToOne(targetEntity="Page")
      */
     protected $forward_to_page;
 
@@ -446,8 +444,9 @@ class Page
      */
     public function getForwardToPage()
     {
-        return $this->forward_to_page!==null ? $this->forward_to_page->getId() : null;
+        return $this->forward_to_page;
     }
+
 
     /**
      * Add condition

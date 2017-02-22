@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use AppBundle\Entity\Page;
@@ -49,6 +50,30 @@ class AdminManageActions
 		return $this->response;
 	}
 
+
+	public function searchSessionPages(int $session, Request $request)
+	{
+		$data = $this->getData($request, ['search']);
+		if ($data instanceof JsonResponse) {
+			return $data;
+		}
+
+		$pages = $this->doctrine->createQueryBuilder()
+			->select('p.id, p.name')
+			->from('AppBundle\Entity\Page', 'p')
+			->where('p.session = :session')
+			->andWhere('p.name LIKE :search')
+			->setParameter('session', $session)
+   			->setParameter('search', $data['search'].'%')
+   			->orderBy('p.name', 'ASC')
+   			->getQuery()
+   			->getResult();
+
+   		$this->response->setContent($this->serializer->serialize($pages, 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
+		$this->response->setStatusCode(JsonResponse::HTTP_OK);
+		return $this->response;
+	}
+
 	public function addPage(Request $request)
 	{	
 		$data = $this->getData($request, ['session', 'sort', 'parent']);
@@ -77,6 +102,47 @@ class AdminManageActions
 	    //persist to the database
 	    $this->doctrine->persist($page);
 	    $this->doctrine->flush();
+
+		$this->response->setContent($this->serializer->serialize($page, 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
+		$this->response->setStatusCode(JsonResponse::HTTP_OK);
+		return $this->response;
+	}
+
+	public function updatePage(int $pageID, Request $request)
+	{
+		$data = $this->getData($request, ['name', 'admin_description', 'draft', 'media_type', 'media_path', 'text', 'forward_to_page'], true);
+		if ($data instanceof JsonResponse) {
+			return $data;
+		}
+
+		$page = $this->getPage($pageID);
+		if (!$page instanceof Page) {
+			return $page;
+		}
+
+		if(isset($data['forward_to_page']))
+		{
+			$forwardToPage = $this->getPage($data['forward_to_page']);
+			if (!$forwardToPage instanceof Page) {
+				return $forwardToPage;
+			}
+			$data['forward_to_page'] = $forwardToPage;
+		}
+
+		$ccConverter = new CamelCaseToSnakeCaseNameConverter();
+		foreach($data as $k=>$d)
+		{
+			$snake_case = "set_".$k;
+			$camelCase = $ccConverter->denormalize($snake_case);
+			$page->$camelCase($d);
+		}
+
+		// run validation
+		$validResponse = $this->validatePage($page);
+		if ($validResponse instanceof JsonResponse) {
+			return $validResponse;
+		}
+		$this->doctrine->flush();
 
 		$this->response->setContent($this->serializer->serialize($page, 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
 		$this->response->setStatusCode(JsonResponse::HTTP_OK);
@@ -178,7 +244,7 @@ class AdminManageActions
 			if($totalSessionRootNodes === 1)
 			{
 				$this->response->setData(array(
-	    			"errors"=>"You cannot delete this page because it will result in there being no pages in session ".$page->getSession()."."
+	    			"errors"=>["You cannot delete this page because it will result in there being no pages in session ".$page->getSession()."."]
 	    		));
 	    		$this->response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
 				return $this->response;
@@ -233,7 +299,7 @@ class AdminManageActions
     	if(null === $condition)
     	{
     		$this->response->setData(array(
-    			"errors"=>"The condition ID '$id' does not exist."
+    			"errors"=>["The condition ID '$id' does not exist."]
     		));
     		$this->response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
 			return $this->response;
@@ -248,19 +314,51 @@ class AdminManageActions
 		return $this->response;
 	}
 
-	private function getData(Request $request, array $requiredKeys = array())
+	private function getData(Request $request, array $requiredKeys = array(), $anyRequired = false)
 	{
 		$data = json_decode($request->getContent(), true);
+		$foundAnyKey = false;
+
+		// if true, only values in requiredKeys can be submitted
+		// first check we don't have any other values
+		if($anyRequired)
+		{
+			foreach($data as $k=>$d)
+			{
+				if(!in_array($k, $requiredKeys))
+				{
+					$this->response->setContent($this->serializer->serialize(array("errors"=>['The key `'.$k.'` was submitted but is not permitted']), 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
+					$this->response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
+					return $this->response;
+				}
+			}
+		}
+
+		// check the required fields, that at least the required fields all exist, or if $anyRequired is true, that at least 1 of them exist
 		foreach($requiredKeys as $rk)
 		{
-			if(!array_key_exists($rk, $data))
+			if(!$anyRequired && !array_key_exists($rk, $data))
 			{
 				$this->response->setContent($this->serializer->serialize(array("errors"=>['The key `'.$rk.'` is required for this action but it was not submitted']), 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
 				$this->response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
 				return $this->response;
 				break;
 			}
+			elseif($anyRequired && array_key_exists($rk, $data))
+			{
+				$foundAnyKey = true;
+				break;
+			}
 		}
+
+		// finish $anyRequired checks to see if a data key was found from $requiredKeys
+		if($anyRequired && !$foundAnyKey)
+		{
+			$this->response->setContent($this->serializer->serialize(array("errors"=>['None of the expected keys were submitted']), 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
+			$this->response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
+			return $this->response;
+		}
+
 		return $data;
 	}
 

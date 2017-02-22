@@ -72,9 +72,32 @@ class AdminControllerTest extends WebTestCase
     public function testGetSessionPages()
     {
     	$this->logIn();
+
         $crawler = $this->client->request(
             'GET', 
             '/admin/pages/get/1'
+        );
+
+        $decoded = $this->assertStandardResponse(200, $crawler);
+        // page fixtures data has 1 top level node in session 1
+        $this->assertEquals(1, sizeof($decoded));
+    }
+
+    public function testSearchSessionPages()
+    {
+        $this->logIn();
+
+        $postData = array(
+            "search"=>"page"
+        );
+
+        $crawler = $this->client->request(
+            'POST', 
+            '/admin/pages/search/1',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($postData)
         );
 
         $decoded = $this->assertStandardResponse(200, $crawler);
@@ -113,7 +136,6 @@ class AdminControllerTest extends WebTestCase
     	$pages = self::$em->getRepository('AppBundle:Page')->findBy(array('sort' => $postData['sort'], 'parent'=>$postData['parent']));
     	$this->assertCount(1, $pages, 'Order of pages not updated properly. There should be just 1 page with the sort value of '.$postData['sort']);
     }
-
     
     public function testLinkAdd()
     {
@@ -164,6 +186,26 @@ class AdminControllerTest extends WebTestCase
     	$this->assertInternalType('array', $decoded['errors']);
     	//should have an error for each of the submitted keys
     	$this->assertCount(4, $decoded['errors']);
+    }
+
+    public function testPageUpdate()
+    {
+        $this->logIn();
+
+        $postData = array(
+            "name"=>"I have updated the name"
+        );
+
+        $crawler = $this->client->request(
+            'POST', 
+            '/admin/page/update/1',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            json_encode($postData)
+        );
+
+        $decoded = $this->assertStandardResponse(200, $crawler);
     }
     
 
