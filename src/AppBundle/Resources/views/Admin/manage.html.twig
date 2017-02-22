@@ -16,6 +16,7 @@
     {{ parent() }}
     {% javascripts
     	'@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/js/bootstrap-select.min.js'
+        '@AppBundle/Resources/assets/global/AjaxManager.js'
         '@AppBundle/Resources/assets/local/js/adminLayout.js'
         '@AppBundle/Resources/assets/local/js/adminManage.js'
         filter='?uglifyjs2' %}
@@ -48,7 +49,8 @@
 								<option value="4">Session 4</option>
 								<option value="5">Session 5</option>
 								<option value="6">Session 6</option>
-							</select>
+							</select><br />
+							<span class="save-notice" id="saveNotice">Changes saved</span>
 						</div>
 						<div class="col-12 col-auto align-self-center">
 							<a href="#" id="logout" class="logout-link">

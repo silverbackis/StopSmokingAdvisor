@@ -30,8 +30,8 @@ class LoadSamplePages implements FixtureInterface, ContainerAwareInterface
         $page->setSession($session);
         $page->setParent($parent);
         $page->setSort($sort);
-        $page->setName('Page 1');
-        $page->setAdminDescription('Page 1 description');
+        $page->setName('Default session '.$session.' page');
+        $page->setAdminDescription('Default session '.$session.' page description');
         $page->setDraft(0);
         $page->setForwardToPage($forwardTo);
 
@@ -61,28 +61,23 @@ class LoadSamplePages implements FixtureInterface, ContainerAwareInterface
      *
      * @return Page
      */
-    protected function findOrCreateLocator($name, ObjectManager $manager)
+    protected function findOrCreateLocator($sessioNumber, ObjectManager $manager)
     {
-        return $manager->getRepository('AppBundle\Entity\Page')->findOneBy(['session' => 1]) ?: new Page();
+        return $manager->getRepository('AppBundle\Entity\Page')->findOneBy(['session' => $sessioNumber]) ?: new Page();
     }
 
     public function load(ObjectManager $manager)
     {
     	$this->manager = $manager;
-
-    	$locator = $this->findOrCreateLocator('Page 1', $this->manager);
-    	if (!$this->manager->contains($locator))
+        $counter = 6;
+        while($counter>0)
         {
-            $counter = 6;
-            while($counter>0)
+            $locator = $this->findOrCreateLocator($counter, $this->manager);
+            if (!$this->manager->contains($locator))
             {
                 $this->generatePage($counter);
-                $counter--;
             }
-	    	//$page1 = $this->generatePage();
-	        //$page2 = $this->generatePage(1, $page1, 1);
-	        //$page3 = $this->generatePage(1, null, 2);
-	        //$page4 = $this->generatePage(1, $page2, 1, $page3);
-	    }
+            $counter--;
+        }
     }
 }

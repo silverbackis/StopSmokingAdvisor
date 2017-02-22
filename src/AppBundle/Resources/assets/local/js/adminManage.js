@@ -87,16 +87,20 @@
 				e.stopPropagation();
 				var data = $(this).data("searchResult");
 				_self.parentNode.$nameInput.val(data.name);
-				f.ajax.updateNode(_self.parentNode.nodeData.id, {
-					forward_to_page: data.id
-				}, function(response){
+
+				
+				ajax.updateNode.ops.successFn = function(response){
 					_self.hide();
 
 					_self.parentNode.$nameInput.attr("data-gotoid", response.forwardToPage.id);
 					var nodeData = _self.parentNode.getData();
 					nodeData.forwardToPage = response.forwardToPage;
 					_self.parentNode.setData(nodeData);
-				});
+				};
+
+				ajax.updateNode.submit({
+					forward_to_page: data.id
+				}, ajax.updateNode.url + _self.parentNode.nodeData.id);
 			});
 
 			$(results).each(function(){
@@ -150,6 +154,12 @@
 			newNode.$node.insertAfter(this.nodes[nodeData.sort-2].$node);
 		}
 		this.updateSortValues();
+
+
+		if(nodeData.children.length>0)
+		{
+			f.createTree(nodeData.children, newNode);
+		}
 		return newNode;
 	};
 	Tree.prototype.getNodes = function(){
@@ -177,12 +187,12 @@
 			type: 'text',
 			class: 'form-control',
 			placeholder: 'Page name'
-		}).on("keyup blur", function(e){
+		})
+		.on("keyup blur", function(e){
 			if(nodeData.type=='link' && e.type=='blur')
 			{
 				return;
 			}
-
 			var ms = e.type==='blur' ? 1 : null;
 			_self.debounce(nodeData.type!=='link' ? _self.updateName : _self.searchName, ms);
 		});
@@ -224,7 +234,13 @@
 			class: 'btn btn-primary condition-add',
 			html: '&nbsp;'
 		}).on("click", function(){
-			f.ajax.addCondition.call(_self);
+			ajax.addCondition.ops.successFn = function(response){
+				_self.appendCondition(response);
+			};
+			ajax.addCondition.submit({
+				pageID: _self.nodeData.id,
+				condition: _self.$conditionInput.val()
+			});
 		});
 		this.$conditions = $("<div />",{
 			class: 'conditions'
@@ -304,7 +320,10 @@
 							html: 'Delete'
 						}).on("click", function(e){
 							e.preventDefault();
-							f.ajax.deleteNode.call(_self, nodeData.id);
+							ajax.deleteNode.ops.successFn = function(){
+								_self.remove();
+							};
+							ajax.deleteNode.submit({}, ajax.deleteNode.url + nodeData.id);
 						})
 					)
 				).append(
@@ -344,13 +363,31 @@
 					$nodeAddPage.clone()
 					.on("click", function(e){
 						e.preventDefault();
-						f.ajax.addNode.call(_self, 'page', nodeData.id, 1, true);
+
+						ajax.addNode.ops.successFn = function(response){
+							_self.addNodeByData(true, response);
+						};
+						ajax.addNode.submit({
+							session: sessionNumber,
+							parent: nodeData.id,
+							sort: 1,
+							type: 'page'
+						});
 					})
 				).append(
 					$nodeAddLink.clone()
 					.on("click", function(e){
 						e.preventDefault();
-						f.ajax.addNode.call(_self, 'link', nodeData.id, 1, true);
+
+						ajax.addNode.ops.successFn = function(response){
+							_self.addNodeByData(true, response);
+						};
+						ajax.addNode.submit({
+							session: sessionNumber,
+							parent: nodeData.id,
+							sort: 1,
+							type: 'link'
+						});
 					})
 				).append(
 					$nodeTargetLink.clone()
@@ -389,13 +426,29 @@
 						$nodeAddPage.clone()
 						.on("click", function(e){
 							e.preventDefault();
-							f.ajax.addNode.call(_self, 'page', nodeParent, nodeData.sort+1);
+							ajax.addNode.ops.successFn = function(response){
+								_self.addNodeByData(false, response);
+							};
+							ajax.addNode.submit({
+								session: sessionNumber,
+								parent: nodeParent,
+								sort: nodeData.sort+1,
+								type: 'page'
+							});
 						})
 					).append(
 						$nodeAddLink.clone()
 						.on("click", function(e){
 							e.preventDefault();
-							f.ajax.addNode.call(_self, 'link', nodeParent, nodeData.sort+1);
+							ajax.addNode.ops.successFn = function(response){
+								_self.addNodeByData(false, response);
+							};
+							ajax.addNode.submit({
+								session: sessionNumber,
+								parent: nodeParent,
+								sort: nodeData.sort+1,
+								type: 'link'
+							});
 						})
 					)
 					.append(
@@ -449,17 +502,28 @@
         }, ms || debounceInterval);
 	};
 	Node.prototype.updateName = function(){
-		var data = {
+		var _self = this,
+		data = {
 			name: this.$nameInput.val()
 		};
-		f.ajax.updateNode(this.nodeData.id, data, this.bindUpdatedName.call(this));		
+		ajax.updateNode.ops.successFn = function(){
+			_self.bindUpdatedName.call(_self);
+		};
+		ajax.updateNode.submit(data, ajax.updateNode.url + this.nodeData.id);	
 	};
 	Node.prototype.bindUpdatedName = function(){
 		$(".goto-pagename[data-gotoid="+this.nodeData.id+"]").val(this.$nameInput.val());
 	};
 	Node.prototype.searchName = function(){
+		var _self = this;
 		this.SearchMenu.setLoading();
-		f.ajax.searchSession(this);		
+
+		ajax.searchSession.ops.successFn = function(response){
+			_self.SearchMenu.setResults(response);
+		};
+		ajax.searchSession.submit({
+			search: this.$nameInput.val()
+		});		
 	};
 	Node.prototype.appendCondition = function(conditionData){
 		var newCondition = new Condition(conditionData, this);
@@ -476,7 +540,17 @@
 		this.request = null;
 	};
 	Node.prototype.setCopyMoveAjax = function(child){
-		f.ajax.copyMoveNode.call(selectedNode, this, child);
+		var sourceNode = selectedNode,
+		type = sourceNode.request,
+		targetNode = this;
+		var data = {
+			parent: child ? targetNode.nodeData.id : targetNode.getParentId(),
+			sort: child ? 1 : targetNode.nodeData.sort+1
+		};
+		ajax.copyMoveNode.ops.successFn = function(nodeData){
+			sourceNode[type](targetNode, child, nodeData);
+		};
+		ajax.copyMoveNode.submit(data, ajax.copyMoveNode.url + type + '/' + sourceNode.nodeData.id);
 	};
 	Node.prototype.getParentId = function(nodeData){
 		if(!nodeData)
@@ -531,7 +605,10 @@
 			})
 		).on("click", function(e){
 			e.preventDefault();
-			f.ajax.deleteCondition.call(_self);
+			ajax.deleteCondition.ops.successFn = function(response){
+				_self.remove();	
+			};
+			ajax.deleteCondition.submit({}, ajax.deleteCondition.url + _self.conditionData.id);
 		});
 	}
 	Condition.prototype.remove = function(id){
@@ -545,162 +622,86 @@
 			var newTree = new Tree(parentNode);
 			$(nodeData).each(function(){
 				var newNode = newTree.appendNode(this);
-				if(this.children.length>0)
-				{
-					f.createTree(this.children, newNode);
-				}
 			});
-		},
-		ajaxError: function(err){
-			console.warn(arguments);
-			if(typeof err.responseJSON == 'object')
-			{
-				if(err.responseJSON.errors)
-				{
-					$(err.responseJSON.errors).each(function(){
-						alert(this);
-					});
-				}else{
-					alert("An unknown error occured. Sorry for the inconvenience.");
-				}
-			}
-			else
-			{
-				alert("Error processing your request: "+err.responseText);
-			}
-		},
-		ajax: {
-			getSession: function(session){
-				$treeContainer.empty();
-				$.ajax({
-					type: "GET",
-					url: '/admin/pages/get/'+session,
-					dataType: 'json',
-					success: function(nodeData){
-						f.createTree(nodeData);
-					},
-					error: f.ajaxError
-				});
-			},
-			searchSession: function(searchNode){
-				var search = searchNode.$nameInput.val();
-				$.ajax({
-					type: "POST",
-					url: '/admin/pages/search/'+sessionNumber,
-					dataType: 'json',
-					contentType: "application/json",
-					data: JSON.stringify({
-						search: search
-					}),
-					success: function(pageResults){
-						searchNode.SearchMenu.setResults(pageResults);
-					},
-					error: f.ajaxError
-				});
-			},
-			addNode: function(type, parent, sort, childTree){
-				var currentNode = this;
-				$.ajax({
-					type: "POST",
-					url: '/admin/page/add',
-					dataType: 'json',
-					contentType: "application/json",
-					data: JSON.stringify({
-						session: sessionNumber,
-						parent: parent,
-						sort: sort,
-						type: type
-					}),
-					success: function(nodeData){
-						currentNode.addNodeByData(childTree, nodeData);
-					},
-					error: f.ajaxError
-				});
-			},
-			deleteNode: function(id){
-				var dNode = this;
-				$.ajax({
-					type: "GET",
-					url: '/admin/page/delete/'+id,
-					dataType: 'json',
-					success: function(response){
-						dNode.remove();
-					},
-					error: f.ajaxError
-				});
-			},
-			updateNode: function(id, data, fn){
-				$.ajax({
-					type: "POST",
-					url: '/admin/page/update/'+id,
-					dataType: 'json',
-					contentType: "application/json",
-					data: JSON.stringify(data),
-					success: function(response){
-						if(fn){
-							fn(response);
-						}
-					},
-					error: f.ajaxError
-				});
-			},
-			copyMoveNode: function(targetNode, child){
-				var sourceNode = this,
-				type = this.request;
-				var data = {
-					parent: child ? targetNode.nodeData.id : targetNode.getParentId(),
-					sort: child ? 1 : targetNode.nodeData.sort
-				};
-				$.ajax({
-					type: "POST",
-					url: '/admin/page/'+type+'/'+this.nodeData.id,
-					dataType: 'json',
-					contentType: "application/json",
-					data: JSON.stringify(data),
-					success: function(nodeData){
-						sourceNode[type](targetNode, child, nodeData);
-					},
-					error: f.ajaxError
-				});
-			},
-			addCondition: function(){
-				var node = this;
-				$.ajax({
-					type: "POST",
-					url: '/admin/condition/add',
-					dataType: 'json',
-					contentType: "application/json",
-					data: JSON.stringify({
-						pageID: node.nodeData.id,
-						condition: node.$conditionInput.val()
-					}),
-					success: function(conditionData){
-						node.appendCondition(conditionData);
-					},
-					error: f.ajaxError
-				});
-			},
-			deleteCondition: function(){
-				var dCondition = this;
-				$.ajax({
-					type: "GET",
-					url: '/admin/condition/delete/'+dCondition.conditionData.id,
-					dataType: 'json',
-					success: function(response){
-						dCondition.remove();	
-					},
-					error: f.ajaxError
-				});
-			}
 		}
+	};
+	var ajax = {
+		getSession: AjaxManager.new('/admin/pages/get/', {
+			dataType: 'json',
+			submitFn: function(){
+				$treeContainer.empty();
+			},
+			successFn: function(response){
+				f.createTree(response);
+			},
+			abortable: true,
+			load: true
+		}),
+		searchSession: AjaxManager.new('/admin/pages/search/', {
+			method: 'POST',
+			dataType: 'json',
+			contentType: 'application/json',
+			abortable: true,
+			uniqueRequest: {
+				url: true
+			},
+			initFn: function(){
+				return {
+					url: this.url + sessionNumber,
+					ops: {}
+				};
+			},
+			load: true
+		}),
+		addNode: AjaxManager.new('/admin/page/add', {
+			method: 'POST',
+			dataType: 'json',
+			contentType: 'application/json'
+		}),
+		deleteNode: AjaxManager.new('/admin/page/delete/', {
+			dataType: 'json',
+			uniqueRequest: {
+				url: true
+			}
+		}),
+		updateNode: AjaxManager.new('/admin/page/update/', {
+			method: 'POST',
+			dataType: 'json',
+			contentType: "application/json",
+			uniqueRequest: {
+				url: true,
+				data: true
+			}
+		}),
+		copyMoveNode: AjaxManager.new('/admin/page/', {
+			method: 'POST',
+			dataType: 'json',
+			contentType: "application/json",
+			uniqueRequest: {
+				url: true
+			}
+		}),
+		addCondition: AjaxManager.new('/admin/condition/add', {
+			method: 'POST',
+			dataType: 'json',
+			contentType: "application/json",
+			uniqueRequest: {
+				data: true
+			}
+		}),
+		deleteCondition: AjaxManager.new('/admin/condition/delete/', {
+			dataType: 'json',
+			uniqueRequest: {
+				url: true
+			}
+		})
 	};
 
 	// Setup main interface for getting tree data
 	$sessionSelect.on("change", function(){
 		sessionNumber = $(this).val();
-		f.ajax.getSession(sessionNumber);
-	});
-	f.ajax.getSession(sessionNumber);
+		ajax.getSession.submit(null, ajax.getSession.url + sessionNumber);
+	}).trigger("change");
 
 	$("#targetCancel").on("click",function(e){
 		e.preventDefault();
