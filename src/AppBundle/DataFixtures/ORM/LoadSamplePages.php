@@ -63,7 +63,7 @@ class LoadSamplePages implements FixtureInterface, ContainerAwareInterface
      */
     protected function findOrCreateLocator($name, ObjectManager $manager)
     {
-        return $manager->getRepository('AppBundle\Entity\Page')->findOneBy(['name' => $name]) ?: new Page();
+        return $manager->getRepository('AppBundle\Entity\Page')->findOneBy(['session' => 1]) ?: new Page();
     }
 
     public function load(ObjectManager $manager)
