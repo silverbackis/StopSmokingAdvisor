@@ -19,10 +19,17 @@
         '@AppBundle/Resources/assets/global/BootstrapModalAlerts.js'
         '@AppBundle/Resources/assets/global/AjaxManager.js'
         '@AppBundle/Resources/assets/local/js/adminLayout.js'
-        '@AppBundle/Resources/assets/local/js/adminManage.js'
+        '@AppBundle/Resources/assets/local/js/Entity/TreeManager/*.js'
+        '@AppBundle/Resources/assets/local/js/Utils/TreeManager.js'
         filter='?uglifyjs2' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
+    {#% gulpjs
+    	'@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/js/bootstrap-select.min.js'
+    	'@AppBundle/Resources/assets/global/BootstrapModalAlerts.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endgulpjs %#}
 {% endblock %}
 
 {% block body %}
@@ -66,8 +73,15 @@
 				</td>
 			</tr>
 			<tr class="bottom-table-row">
-				<td class="bottom-tree-area">
-					<div class="bottom-tree-container" id="treeContainer"></div>
+				<td class="bottom-tree-area row no-gutters">
+					<div class="col">
+						<div class="bottom-tree-container" id="treeContainer"></div>
+					</div>
+					<div class="col-12 col-auto right-bar">
+						<div class="right-bar-inner">
+
+						</div>
+					</div>
 				</td>
 			</tr>
 		</tbody>

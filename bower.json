@@ -11,10 +11,8 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "assets/bower",
     "test",
-    "tests",
-    "vendor/silverbackis/bw-assets-bundle/Resources/public/bower/source"
+    "tests"
   ],
   "dependencies": {
     "bootstrap": "v4.0.0-alpha.6"

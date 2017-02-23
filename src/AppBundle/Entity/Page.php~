@@ -11,6 +11,7 @@ use AppBundle\Validator\Constraints as SSAPageAssert;
  * @ORM\Entity
  * @ORM\Table(name="page")
  * @ORM\HasLifecycleCallbacks()
+ * @SSAPageAssert\ValidateSort
  */
 class Page
 {
@@ -34,7 +35,7 @@ class Page
 
     /**
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="children")
-     * @SSAPageAssert\PageExists
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="NO ACTION")
      */
     protected $parent;
 
@@ -54,8 +55,8 @@ class Page
     protected $type = 'page';
 
     /**
-     * @ORM\OneToOne(targetEntity="Page")
-     * @SSAPageAssert\PageExists
+     * @ORM\ManyToOne(targetEntity="Page")
+     * @ORM\JoinColumn(name="forward_to_page", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $forward_to_page;
 
@@ -127,6 +128,36 @@ class Page
         $this->conditions = new ArrayCollection();
     	$this->questions = new ArrayCollection();
         $this->children = new ArrayCollection();
+    }
+
+    public function __clone() {
+        $deepEntities = ['conditions', 'questions', 'children'];
+        foreach($deepEntities as $subEnt)
+        {
+            // method e.g. getConditions
+            $getMethod = 'get'.ucfirst($subEnt);
+            // call method and assign to variable name e.g. $conditions = $this->getConditions()
+            $$subEnt = $this->$getMethod();
+            // $this->conditions = ...
+            $this->$subEnt = new ArrayCollection();
+
+            // for each found sub entity e.g. $conditions
+            foreach ($$subEnt as $cloneEntity) {
+                // clone the entity
+                $clone = clone $cloneEntity;
+                // $this->conditions->add(...)
+                $this->$subEnt->add($clone);
+
+                // setParent if we can or we'll be setting the page
+                if(method_exists($clone, 'setParent'))
+                {
+                    $clone->setParent($this);
+                }
+                else{
+                    $clone->setPage($this);
+                }
+            }
+        }
     }
 
     /**
@@ -398,7 +429,14 @@ class Page
 
     public function setParentById(int $parentID = null)
     {
-        $this->parentID = $parentID;
+        if(is_null($parentID))
+        {
+            $this->setParent(null);
+        }
+        else
+        {
+            $this->parentID = $parentID;
+        }
     }
 
     /**
@@ -425,29 +463,6 @@ class Page
         return $this->parent;
     }
 
-    /**
-     * Set forwardToPage
-     *
-     * @param \AppBundle\Entity\Page $forwardToPage
-     *
-     * @return Page
-     */
-    public function setForwardToPage(\AppBundle\Entity\Page $forwardToPage = null)
-    {
-        $this->forward_to_page = $forwardToPage;
-
-        return $this;
-    }
-
-    /**
-     * Get forwardToPage
-     *
-     * @return \AppBundle\Entity\Page
-     */
-    public function getForwardToPage()
-    {
-        return $this->forward_to_page!==null ? $this->forward_to_page->getId() : null;
-    }
 
     /**
      * Add condition
@@ -549,5 +564,29 @@ class Page
     public function getChildren()
     {
         return $this->children;
+    }
+
+    /**
+     * Set lastUpdated
+     *
+     * @param \DateTime $lastUpdated
+     *
+     * @return Page
+     */
+    public function setLastUpdated($lastUpdated)
+    {
+        $this->last_updated = $lastUpdated;
+
+        return $this;
+    }
+
+    /**
+     * Get lastUpdated
+     *
+     * @return \DateTime
+     */
+    public function getLastUpdated()
+    {
+        return $this->last_updated;
     }
 }

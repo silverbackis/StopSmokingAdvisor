@@ -457,3 +457,25 @@
   width: 18px;
   z-index: 2;
 }
+
+.right-bar {
+  font-size: 16px;
+  overflow: hidden;
+
+  .right-bar-inner {
+    background: $white;
+    border-left: 4px solid $teal-dark;
+    height: 100%;
+    margin-right: -540px;
+    overflow: auto;
+    position: relative;
+    transition: margin $transition-dur;
+    width: 540px;
+  }
+
+  &.show {
+    .right-bar-inner {
+      margin-right: 0;
+    }
+  }
+}

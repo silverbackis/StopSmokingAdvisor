@@ -16,7 +16,7 @@ var BootstrapModalAlerts = (function($){
 	'      <div class="modal-body">' +
 	'      </div>' +
 	'      <div class="modal-footer">' +
-	'        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-fn_value="0">Close</button>' +
+	'        <button type="button" class="btn btn-secondary" data-dismiss="modal" data-fn_value="0">Cancel</button>' +
 	'        <button type="button" class="btn btn-primary alert-confirm" data-dismiss="modal" data-fn_value="1">OK</button>' +
 	'     </div>' +
 	'    </div>' +

@@ -56,7 +56,7 @@ class Page
 
     /**
      * @ORM\ManyToOne(targetEntity="Page")
-     * @ORM\JoinColumn(name="forward_to_page", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="forward_to_page_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $forward_to_page;
 
@@ -431,6 +431,7 @@ class Page
     {
         if(is_null($parentID))
         {
+            $this->parentID = null;
             $this->setParent(null);
         }
         else
@@ -460,31 +461,8 @@ class Page
      */
     public function getParent()
     {
+        $this->parentID = $this->parent ? $this->parent->getId() : null;
         return $this->parent;
-    }
-
-    /**
-     * Set forwardToPage
-     *
-     * @param \AppBundle\Entity\Page $forwardToPage
-     *
-     * @return Page
-     */
-    public function setForwardToPage(\AppBundle\Entity\Page $forwardToPage = null)
-    {
-        $this->forward_to_page = $forwardToPage;
-
-        return $this;
-    }
-
-    /**
-     * Get forwardToPage
-     *
-     * @return \AppBundle\Entity\Page
-     */
-    public function getForwardToPage()
-    {
-        return $this->forward_to_page;
     }
 
 
@@ -612,5 +590,29 @@ class Page
     public function getLastUpdated()
     {
         return $this->last_updated;
+    }
+
+    /**
+     * Set forwardToPage
+     *
+     * @param \AppBundle\Entity\Page $forwardToPage
+     *
+     * @return Page
+     */
+    public function setForwardToPage(\AppBundle\Entity\Page $forwardToPage = null)
+    {
+        $this->forward_to_page = $forwardToPage;
+
+        return $this;
+    }
+
+    /**
+     * Get forwardToPage
+     *
+     * @return \AppBundle\Entity\Page
+     */
+    public function getForwardToPage()
+    {
+        return $this->forward_to_page;
     }
 }

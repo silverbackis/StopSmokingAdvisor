@@ -32,7 +32,12 @@ class AdminManageActions
 
 		//instead of a circular reference where we would continue looping around the  parent and children, just return the parent's ID
 		$normalizer->setCircularReferenceHandler(function ($object) {
-		    return $object->getId();
+			$className = $this->doctrine->getClassMetadata(get_class($object))->getName();
+
+		    return $className=='AppBundle\Entity\Page' ? array(
+		    	"id"=>$object->getId(),
+		    	"name"=>$object->getName()
+		    ) : $object->getId();
 		});
 
 		$normalizers = array($normalizer);
@@ -44,7 +49,6 @@ class AdminManageActions
 	public function getSessionPages(int $session)
 	{
 		$pages = $this->doctrine->getRepository('AppBundle\Entity\Page')->findBy(array('session' => $session, 'parent' => null), array('sort'=>'ASC'));
-		
 		$this->response->setContent($this->serializer->serialize($pages, 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
 		$this->response->setStatusCode(JsonResponse::HTTP_OK);
 		return $this->response;
@@ -80,7 +84,6 @@ class AdminManageActions
 		if ($data instanceof JsonResponse) {
 			return $data;
 		}
-
 		//create and populate entity
 		$page = new Page();
 		$page->setSession($data['session']);
@@ -95,6 +98,12 @@ class AdminManageActions
 		$validResponse = $this->validatePage($page);
 		if ($validResponse instanceof JsonResponse) {
 			return $validResponse;
+		}
+
+		if($data['parent'])
+		{
+			$parentPage = $this->getPage($data['parent']);
+			$page->setParent($parentPage);
 		}
 
 		$this->updateOrder($data['session'], $data['parent'], $data['sort'], "+1");
