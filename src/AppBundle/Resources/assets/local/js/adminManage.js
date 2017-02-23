@@ -2,7 +2,7 @@
 	var $treeContainer = $("#treeContainer"),
 	$sessionSelect = $("#sessionSelect"),
 	$pageContainer = $("#pageContainer"),
-	sessionNumber = $sessionSelect .val(),
+	sessionNumber = $sessionSelect.val(),
 	debounceInterval = 250,
 	selectedNode = null;
 
@@ -40,23 +40,38 @@
 		}).append(
 			this.$loadingSearchResults
 		);
+
 		this.parentNode = parentNode;
 		this.$dropdown = this.parentNode.$nameInput.parent();
 		this.$dropdown.addClass("dropdown");
+
+		this.currentPage = {
+			name: (null === this.parentNode.nodeData.forwardToPage ? '' : this.parentNode.nodeData.forwardToPage.name),
+			id: (null === this.parentNode.nodeData.forwardToPage ? '' : this.parentNode.nodeData.forwardToPage.id)
+		};
+
 		this.parentNode.$nameInput
-			.addClass("dropdown-toggle")
-			.attr("data-toggle", "dropdown")
+			.addClass("dropdown-toggle goto-pagename")
+			.attr({
+				"data-toggle": "dropdown",
+				"data-gotoid": this.currentPage.id
+			})
 			.on("focus", function(){
 				_self.parentNode.$nameInput.trigger("click");
-			});
+				_self.parentNode.searchName();
+			})
+			.attr("value", this.currentPage.name);
 		
+		// Link allowing the menu to show and hide with whether the field is in focus
 		this.$dropdown.on("hide.bs.dropdown", function(){
 			if(_self.parentNode.$nameInput.is(":focus"))
 			{
 				return false;
 			}
 		});
-
+		this.$dropdown.on("hidden.bs.dropdown", function(){
+			_self.updateSaved();
+		});
 		this.$dropdown.on("show.bs.dropdown", function(){
 			if(!_self.parentNode.$nameInput.is(":focus"))
 			{
@@ -64,6 +79,11 @@
 			}
 		});
 	}
+	SearchMenu.prototype.updateSaved = function(){
+		this.parentNode.$nameInput
+				.val(this.currentPage.name)
+				.attr("data-gotoid", this.currentPage.id);
+	};
 	SearchMenu.prototype.hide = function(){
 		this.parentNode.$nameInput.trigger("click");
 	};
@@ -87,9 +107,14 @@
 				e.stopPropagation();
 				var data = $(this).data("searchResult");
 				_self.parentNode.$nameInput.val(data.name);
-
-				
 				ajax.updateNode.ops.successFn = function(response){
+					_self.currentPage = {
+						name: data.name,
+						id: data.id
+					};
+					// update saved in case has been hidden in the mean-time
+					_self.updateSaved();
+					// hide the menu if showing
 					_self.hide();
 
 					_self.parentNode.$nameInput.attr("data-gotoid", response.forwardToPage.id);
@@ -183,6 +208,13 @@
 		var _self = this,
 		nodeParent = this.getParentId(nodeData);
 
+		this.debounceTimer = null;
+		this.nodeData = nodeData;
+		this.tree = tree;
+		this.childTree = null;
+		this.conditions = {};
+		this.request = null;
+
 		this.$nameInput = $("<input />",{
 			type: 'text',
 			class: 'form-control',
@@ -210,14 +242,6 @@
 		else
 		{
 			this.SearchMenu = new SearchMenu(this);
-
-			this.$nameInput.attr("value", (null === nodeData.forwardToPage ? '' : nodeData.forwardToPage.name));
-
-			this.$nameInput.on("focus", function(e){
-				_self.searchName();
-			})
-			.addClass("goto-pagename")
-			.attr("data-gotoid", (null === nodeData.forwardToPage ? '' : nodeData.forwardToPage.id));
 
 			$nameInputGroup.append(
 				this.SearchMenu.$dropdownMenu
@@ -339,13 +363,6 @@
 					)
 				)
 			);
-
-		this.debounceTimer = null;
-		this.nodeData = nodeData;
-		this.tree = tree;
-		this.childTree = null;
-		this.conditions = {};
-		this.request = null;
 
 		if(nodeData.type!=='link')
 		{
@@ -651,7 +668,10 @@
 					ops: {}
 				};
 			},
-			load: true
+			load: true,
+			status: {
+				enabled: false
+			}
 		}),
 		addNode: AjaxManager.new('/admin/page/add', {
 			method: 'POST',
