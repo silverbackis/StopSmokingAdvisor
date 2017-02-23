@@ -18,6 +18,12 @@ services:
     tags:
       - { name: validator.constraint_validator }
 
+  app.validator.validate_sort:
+    class: AppBundle\Validator\Constraints\ValidateSortValidator
+    arguments: ["@doctrine.orm.entity_manager"]
+    tags:
+      - { name: validator.constraint_validator }
+
   app.page_listener:
     class: AppBundle\EventListener\PageParentSet
     arguments: []

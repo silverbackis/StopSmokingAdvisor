@@ -688,8 +688,7 @@
 			load: true,
 			status: {
 				enabled: false
-			},
-			debug: true
+			}
 		}),
 		addNode: AjaxManager.new('/admin/page/add', {
 			method: 'POST',
@@ -717,8 +716,7 @@
 			contentType: "application/json",
 			uniqueRequest: {
 				url: true
-			},
-			debug: true
+			}
 		}),
 		addCondition: AjaxManager.new('/admin/condition/add', {
 			method: 'POST',

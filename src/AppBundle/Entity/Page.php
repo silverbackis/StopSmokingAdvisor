@@ -11,6 +11,7 @@ use AppBundle\Validator\Constraints as SSAPageAssert;
  * @ORM\Entity
  * @ORM\Table(name="page")
  * @ORM\HasLifecycleCallbacks()
+ * @SSAPageAssert\ValidateSort
  */
 class Page
 {
