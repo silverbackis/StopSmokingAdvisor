@@ -1,4 +1,4 @@
-(function(){
+(function(alert, confirm){
 	var $treeContainer = $("#treeContainer"),
 	$sessionSelect = $("#sessionSelect"),
 	$pageContainer = $("#pageContainer"),
@@ -344,10 +344,17 @@
 							html: 'Delete'
 						}).on("click", function(e){
 							e.preventDefault();
-							ajax.deleteNode.ops.successFn = function(){
-								_self.remove();
-							};
-							ajax.deleteNode.submit({}, ajax.deleteNode.url + nodeData.id);
+							confirm("Are you sure you want to delete this node and all of its children?", {
+								title: 'Are you sure?'
+							}, function(e, confirmed, bsma){ 
+								if(confirmed)
+								{
+									ajax.deleteNode.ops.successFn = function(){
+										_self.remove();
+									};
+									ajax.deleteNode.submit({}, ajax.deleteNode.url + nodeData.id);
+								} 
+							});
 						})
 					)
 				).append(
@@ -727,4 +734,4 @@
 		e.preventDefault();
 		hideTreeTargets();
 	});
-})();
+})(BootstrapModalAlerts.alert, BootstrapModalAlerts.confirm);

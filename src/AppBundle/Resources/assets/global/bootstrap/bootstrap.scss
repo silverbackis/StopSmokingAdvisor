@@ -22,5 +22,13 @@ textarea {
 }
 
 .alert-dismissible .close {
-  padding: 0.55rem 1.25rem;
+  padding: .55rem 1.25rem;
+}
+
+.modal-content {
+  color: $gray-dark;
+}
+
+.modal-title {
+  color: $teal-dark;
 }

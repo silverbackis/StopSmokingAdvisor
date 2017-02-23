@@ -1,4 +1,4 @@
-var AjaxManager = (function($){
+var AjaxManager = (function($, alert){
 	// Private vars
 	var prv = {
 		submittingTotal: 0,
@@ -244,7 +244,7 @@ var AjaxManager = (function($){
 	};
 
 	return self;
-})(jQuery);
+})(jQuery, BootstrapModalAlerts);
 
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = AjaxManager;

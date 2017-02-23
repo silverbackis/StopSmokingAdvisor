@@ -534,7 +534,7 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").not(".video").
 /**
  * Form ajax post
  */
-(function(){
+(function(alert){
 	$('#loginCollapse').on('show.bs.collapse', function () {
 		$("#loginForm").attr("action", $("#loginForm").attr("data-loginAction"));
 		$("#username").attr("name", "_username");
@@ -755,4 +755,4 @@ $(".link-text-size").parents("a, button").add(".close-page-icon").not(".video").
 	};
 
 	$(".fos_user_registration_register, .fos_user_security_check").ajaxForm();
-})();
+})(BootstrapModalAlerts.alert);
