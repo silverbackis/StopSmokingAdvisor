@@ -1,6 +1,6 @@
 var BootstrapModalAlerts = (function($){
 	this.ops = {
-		modalTitle: "Alert"
+		title: "Alert"
 	};
 
 	this.$modal = 
@@ -35,7 +35,7 @@ var BootstrapModalAlerts = (function($){
 		$localModal = this.$modal.clone();
 
 		$(".modal-body", $localModal).html(message);
-		$(".modal-title", $localModal).html(localOps.modalTitle);
+		$(".modal-title", $localModal).html(localOps.title);
 		if(okOnly)
 		{
 			$(".btn-secondary", $localModal).remove();
