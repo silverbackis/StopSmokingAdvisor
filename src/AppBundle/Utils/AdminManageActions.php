@@ -64,7 +64,7 @@ class AdminManageActions
 			->where('p.session = :session')
 			->andWhere('p.name LIKE :search')
 			->setParameter('session', $session)
-   			->setParameter('search', $data['search'].'%')
+   			->setParameter('search', '%'.$data['search'].'%')
    			->orderBy('p.name', 'ASC')
    			->getQuery()
    			->getResult();

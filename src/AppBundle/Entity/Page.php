@@ -34,6 +34,7 @@ class Page
 
     /**
      * @ORM\ManyToOne(targetEntity="Page", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="NO ACTION")
      */
     protected $parent;
 
@@ -54,6 +55,7 @@ class Page
 
     /**
      * @ORM\ManyToOne(targetEntity="Page")
+     * @ORM\JoinColumn(name="forward_to_page", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $forward_to_page;
 
@@ -125,6 +127,36 @@ class Page
         $this->conditions = new ArrayCollection();
     	$this->questions = new ArrayCollection();
         $this->children = new ArrayCollection();
+    }
+
+    public function __clone() {
+        $deepEntities = ['conditions', 'questions', 'children'];
+        foreach($deepEntities as $subEnt)
+        {
+            // method e.g. getConditions
+            $getMethod = 'get'.ucfirst($subEnt);
+            // call method and assign to variable name e.g. $conditions = $this->getConditions()
+            $$subEnt = $this->$getMethod();
+            // $this->conditions = ...
+            $this->$subEnt = new ArrayCollection();
+
+            // for each found sub entity e.g. $conditions
+            foreach ($$subEnt as $cloneEntity) {
+                // clone the entity
+                $clone = clone $cloneEntity;
+                // $this->conditions->add(...)
+                $this->$subEnt->add($clone);
+
+                // setParent if we can or we'll be setting the page
+                if(method_exists($clone, 'setParent'))
+                {
+                    $clone->setParent($this);
+                }
+                else{
+                    $clone->setPage($this);
+                }
+            }
+        }
     }
 
     /**
@@ -396,7 +428,14 @@ class Page
 
     public function setParentById(int $parentID = null)
     {
-        $this->parentID = $parentID;
+        if(is_null($parentID))
+        {
+            $this->setParent(null);
+        }
+        else
+        {
+            $this->parentID = $parentID;
+        }
     }
 
     /**

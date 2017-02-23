@@ -244,7 +244,7 @@ var AjaxManager = (function($, alert){
 	};
 
 	return self;
-})(jQuery, BootstrapModalAlerts);
+})(jQuery, BootstrapModalAlerts.alert);
 
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = AjaxManager;

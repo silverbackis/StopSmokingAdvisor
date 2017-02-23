@@ -13,14 +13,14 @@
 		}
 
 		selectedNode = sNode;
-		selectedNode.$treeNode.addClass("selected");
+		selectedNode.$treeNode.addClass("selected action-"+request);
 		selectedNode.setRequest(request);
 		$pageContainer.addClass("show-targets");
 		$("#targetAction").text(request);
 	}
 
 	function hideTreeTargets(){
-		selectedNode.$treeNode.removeClass("selected");
+		selectedNode.$treeNode.removeClass("selected action-"+selectedNode.request);
 		selectedNode.clearRequest();
 		selectedNode = null;
 		$pageContainer.removeClass("show-targets");
@@ -516,6 +516,16 @@
 			this.childTree = undefined;
 		}
 		this.tree.removeNodeIndex(this.getData().sort-1);
+		
+		// unset any go to nodes that are directed this this node (will have been nulled in the database anyway)
+		// if we could find the gotoNode we would do this
+		//gotoNode.SearchMenu.currentPage.name = null;
+		//gotoNode.SearchMenu.currentPage.id = null;
+		//gotoNode.SearchMenu.updateSaved();
+		
+		//as that wasn't planned and may be harder to implement. Easiest just to change the name as it shouldn't make a difference
+		$(".goto-pagename[data-gotoid="+this.nodeData.id+"]").val("");
+
 		this.$node.remove();
 	};
 	Node.prototype.debounce = function(fn, ms){
@@ -678,7 +688,8 @@
 			load: true,
 			status: {
 				enabled: false
-			}
+			},
+			debug: true
 		}),
 		addNode: AjaxManager.new('/admin/page/add', {
 			method: 'POST',
@@ -706,7 +717,8 @@
 			contentType: "application/json",
 			uniqueRequest: {
 				url: true
-			}
+			},
+			debug: true
 		}),
 		addCondition: AjaxManager.new('/admin/condition/add', {
 			method: 'POST',

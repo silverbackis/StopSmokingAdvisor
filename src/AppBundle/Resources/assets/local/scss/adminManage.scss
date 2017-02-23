@@ -234,10 +234,10 @@
 
   &.selected {
     box-shadow: 0 0 1px 3px $green;
+  }
 
-    .node-target {
-      display: none;
-    }
+  &.action-move .node-target {
+    display: none;
   }
 }
 

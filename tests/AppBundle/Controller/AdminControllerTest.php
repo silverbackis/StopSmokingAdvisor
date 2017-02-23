@@ -93,7 +93,7 @@ class AdminControllerTest extends WebTestCase
 
         $crawler = $this->client->request(
             'POST', 
-            '/admin/pages/search/1',
+            '/admin/pages/search/2',
             array(),
             array(),
             array('CONTENT_TYPE' => 'application/json'),
@@ -247,13 +247,13 @@ class AdminControllerTest extends WebTestCase
     	$this->logIn();
 
     	$postData = array(
-    		"parent"=>2,
+    		"parent"=>null,
 			"sort"=>2
     	);
 
     	$crawler = $this->client->request(
             'POST', 
-            '/admin/page/move/7',
+            '/admin/page/move/8',
             array(),
             array(),
             array('CONTENT_TYPE' => 'application/json'),
@@ -261,6 +261,11 @@ class AdminControllerTest extends WebTestCase
         );
 
         $this->assertStandardResponse(200, $crawler);
+
+        // check it is in the database now
+        $pages = self::$em->getRepository('AppBundle:Page')->findOneById(8);
+        $this->assertNotNull($pages, 'Success response but the page no longer exists in the database');
+        $this->assertNull($pages->getParent(), 'Parent of page 8 should be Null after being moved to root');
     }
 
     public function testConditionAdd()
