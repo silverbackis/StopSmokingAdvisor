@@ -22,6 +22,7 @@
   font-size: 14px;
   font-weight: 700;
   line-height: 14px;
+  margin-top: 5px;
 
   &.saving {
     color: $orange;
@@ -47,11 +48,17 @@
 }
 
 .bootstrap-select.btn-group .dropdown-toggle .filter-option {
-  font-size: 24px;
-  text-align: center;
   vertical-align: middle;
 }
 
+.dropdown-toggle.btn-secondary {
+  border-color: $teal-lighter;
+}
+
+.header-bar .filter-option {
+  text-align: center !important;
+  font-size: 24px;
+}
 
 .dropdown-menu {
   background: $white;
@@ -236,6 +243,10 @@
     box-shadow: 0 0 1px 3px $green;
   }
 
+  &.editing {
+    box-shadow: 0 0 1px 3px $teal-dark;
+  }
+
   &.action-move .node-target {
     display: none;
   }
@@ -306,25 +317,24 @@
       }
     }
   }
+}
 
-  .input-group-addon {
-    padding: 0;
-  }
+.input-group-addon {
+  padding: 0;
+}
 
-  .condition-add {
-    background-image: url($asset-image-base + 'cms_icon_add.png');
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    background-size: 13.5px 13px;
-    display: inline-block;
-    font-size: 24px;
-    height: 100%;
-    line-height: 24px;
-    padding: 0 .75rem;
-    text-decoration: none !important;
-    width: 100%;
-  }
-
+.condition-add {
+  background-image: url($asset-image-base + 'cms_icon_add.png');
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: 13.5px 13px;
+  display: inline-block;
+  font-size: 24px;
+  height: 100%;
+  line-height: 24px;
+  padding: 0 .75rem;
+  text-decoration: none !important;
+  width: 100%;
 }
 
 .node-bar {
@@ -463,19 +473,157 @@
   overflow: hidden;
 
   .right-bar-inner {
-    background: $white;
-    border-left: 4px solid $teal-dark;
+    background: $gray-lightest;
+    border-left: 3px solid $teal-dark;
+    color: $gray-dark;
     height: 100%;
     margin-right: -540px;
-    overflow: auto;
     position: relative;
     transition: margin $transition-dur;
     width: 540px;
+
+    .right-bar-scroller {
+      height: 100%;
+      left: 0;
+      overflow: auto;
+      padding: 20px;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
   }
 
   &.show {
     .right-bar-inner {
       margin-right: 0;
     }
+  }
+}
+
+.close-sidebar {
+  font-size: 3.2rem;
+  line-height: .6;
+  overflow: hidden;
+}
+
+.side-bar-top {
+  margin-bottom: 20px;
+
+  .custom-control {
+    margin-bottom: 0;
+    margin-top: .5rem;
+    padding-left: 0;
+  }
+}
+
+.custom-control-input {
+  ~ .toggle-indicator {
+    background: $gray-light;
+    border-radius: 13px;
+    display: inline-block;
+    height: 26px;
+    position: relative;
+    top: 0;
+    transition: background $transition-dur;
+    width: 45px;
+
+    .toggle-circle {
+      background: $white;
+      border-radius: 50%;
+      display: inline-block;
+      height: 18px;
+      left: 4px;
+      position: absolute;
+      top: 4px;
+      transition: margin-left $transition-dur;
+      width: 18px;
+    }
+
+    ~ .custom-control-description {
+      color: $gray-light;
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 26px;
+      margin-left: 5px;
+      transition: color $transition-dur;
+    }
+  }
+
+  &:checked ~ .toggle-indicator {
+    background: $green !important;
+
+    .toggle-circle {
+      margin-left: 19px;
+    }
+
+    ~ .custom-control-description {
+      color: $green;
+    }
+  }
+}
+
+.side-bar-form {
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .form-text {
+    color: $gray;
+  }
+
+  .conditions {
+    .btn {
+      display: inline-block;
+      font-family: inherit;
+      font-size: 14px;
+      margin: 5px 5px 0 0;
+    }
+  }
+
+  .nav-tabs {
+    border-bottom: 0;
+  }
+
+  .nav-item {
+    a {
+      border-bottom: 3px solid $gray-light;
+      color: $gray-light;
+      display: inline-block;
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none !important;
+      width: 100%;
+
+      &.active {
+        border-color: $teal;
+        color: $teal !important;
+      }
+    }
+  }
+
+  .tab-pane {
+    padding: 20px 0;
+  }
+
+  .media-tab-type.hidden {
+    display: none;
+  }
+
+  .bootstrap-select {
+    min-width: 160px;
+  }
+
+  .progress {
+    margin-top: 5px;
+  }
+
+  .trumbowyg-editor {
+    background: $white;
+  }
+
+  .trumbowyg-box,
+  .trumbowyg-editor {
+    border-color: $teal-light;
   }
 }

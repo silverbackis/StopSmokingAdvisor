@@ -11,21 +11,9 @@ services:
   app.admin_manage_actions:
     class: AppBundle\Utils\AdminManageActions
     arguments: ["@doctrine.orm.entity_manager", "@validator"]
-  
-  app.validator.page_exists:
-    class: AppBundle\Validator\Constraints\PageExistsValidator
-    arguments: ["@doctrine.orm.entity_manager"]
-    tags:
-      - { name: validator.constraint_validator }
 
-  app.validator.validate_sort:
+  app.validator.sort_value:
     class: AppBundle\Validator\Constraints\ValidateSortValidator
     arguments: ["@doctrine.orm.entity_manager"]
     tags:
       - { name: validator.constraint_validator }
-
-  app.page_listener:
-    class: AppBundle\EventListener\PageParentSet
-    arguments: []
-    tags:
-      - { name: doctrine.event_subscriber, connection: default }

@@ -79,7 +79,7 @@ var AjaxManager = (function($, alert){
 				if(error.responseJSON.errors)
 				{
 					$(error.responseJSON.errors).each(function(){
-						alert(this);
+						alert(this.message);
 					});
 				}else{
 					alert("An unknown error occured. Sorry for the inconvenience.");

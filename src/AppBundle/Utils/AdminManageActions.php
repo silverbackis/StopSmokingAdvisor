@@ -4,6 +4,7 @@ namespace AppBundle\Utils;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,6 +27,7 @@ class AdminManageActions
 	{
 		$this->doctrine = $doctrine;
 		$this->validator = $validator;
+		$this->ccConverter = $ccConverter = new CamelCaseToSnakeCaseNameConverter();
 
 		$encoders = array(new JsonEncoder());
 		$normalizer = new ObjectNormalizer();
@@ -42,22 +44,27 @@ class AdminManageActions
 
 		$normalizers = array($normalizer);
 		$this->serializer = new Serializer($normalizers, $encoders);
-
-		$this->response = new JsonResponse();
 	}
 
 	public function getSessionPages(int $session)
 	{
 		$pages = $this->doctrine->getRepository('AppBundle\Entity\Page')->findBy(array('session' => $session, 'parent' => null), array('sort'=>'ASC'));
-		$this->response->setContent($this->serializer->serialize($pages, 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-		$this->response->setStatusCode(JsonResponse::HTTP_OK);
-		return $this->response;
+		return $this->getOKResponse($pages);
+	}
+
+	public function getPage(int $id)
+	{
+		$page = $this->fetchPage($id);
+		if (!$page instanceof Page) {
+			return $page;
+		}
+		return $this->getOKResponse($page);
 	}
 
 
 	public function searchSessionPages(int $session, Request $request)
 	{
-		$data = $this->getData($request, ['search']);
+		$data = $this->validatePost($request, ['search']);
 		if ($data instanceof JsonResponse) {
 			return $data;
 		}
@@ -73,37 +80,22 @@ class AdminManageActions
    			->getQuery()
    			->getResult();
 
-   		$this->response->setContent($this->serializer->serialize($pages, 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-		$this->response->setStatusCode(JsonResponse::HTTP_OK);
-		return $this->response;
+   		return $this->getOKResponse($pages);
 	}
 
 	public function addPage(Request $request)
 	{	
-		$data = $this->getData($request, ['session', 'sort', 'parent']);
+		$data = $this->validatePost($request, ['session', 'sort', 'parent'], ['type']);
 		if ($data instanceof JsonResponse) {
 			return $data;
 		}
 		//create and populate entity
 		$page = new Page();
-		$page->setSession($data['session']);
-		$page->setSort($data['sort']);
-		$page->setParentById($data['parent']);
-		if(isset($data['type']))
-		{
-			$page->setType($data['type']);
-		}
 
-		// run validation
-		$validResponse = $this->validatePage($page);
+		// apply data to page and validate
+		$validResponse = $this->validateEntity($page, $data);
 		if ($validResponse instanceof JsonResponse) {
 			return $validResponse;
-		}
-
-		if($data['parent'])
-		{
-			$parentPage = $this->getPage($data['parent']);
-			$page->setParent($parentPage);
 		}
 
 		$this->updateOrder($data['session'], $data['parent'], $data['sort'], "+1");
@@ -112,70 +104,53 @@ class AdminManageActions
 	    $this->doctrine->persist($page);
 	    $this->doctrine->flush();
 
-		$this->response->setContent($this->serializer->serialize($page, 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-		$this->response->setStatusCode(JsonResponse::HTTP_OK);
-		return $this->response;
+		return $this->getOKResponse($page);
+	}
+
+	private function getSetMethodFromKey($key)
+	{
+		$snake_case = "set_".$key;
+		return $this->ccConverter->denormalize($snake_case);
 	}
 
 	public function updatePage(int $pageID, Request $request)
 	{
-		$data = $this->getData($request, ['name', 'admin_description', 'draft', 'media_type', 'media_path', 'text', 'forward_to_page'], true);
+		$data = $this->validatePost($request, [], ['name', 'adminDescription', 'live', 'mediaType', 'imagePath', 'videoUrl', 'text', 'forwardToPage']);
 		if ($data instanceof JsonResponse) {
 			return $data;
 		}
 
-		$page = $this->getPage($pageID);
+		$page = $this->fetchPage($pageID);
 		if (!$page instanceof Page) {
 			return $page;
 		}
 
-		if(isset($data['forward_to_page']))
-		{
-			$forwardToPage = $this->getPage($data['forward_to_page']);
-			if (!$forwardToPage instanceof Page) {
-				return $forwardToPage;
-			}
-			$data['forward_to_page'] = $forwardToPage;
-		}
-
-		$ccConverter = new CamelCaseToSnakeCaseNameConverter();
-		foreach($data as $k=>$d)
-		{
-			$snake_case = "set_".$k;
-			$camelCase = $ccConverter->denormalize($snake_case);
-			$page->$camelCase($d);
-		}
-
-		// run validation
-		$validResponse = $this->validatePage($page);
+		// apply data to page and validate
+		$validResponse = $this->validateEntity($page, $data);
 		if ($validResponse instanceof JsonResponse) {
 			return $validResponse;
 		}
-		$this->doctrine->flush();
 
-		$this->response->setContent($this->serializer->serialize($page, 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-		$this->response->setStatusCode(JsonResponse::HTTP_OK);
-		return $this->response;
+		$this->doctrine->flush();
+		return $this->getOKResponse($page);
 	}
 
 	public function copyPage(int $pageID, Request $request)
 	{
-		$data = $this->getData($request, ['sort', 'parent']);
+		$data = $this->validatePost($request, ['sort', 'parent']);
 		if ($data instanceof JsonResponse) {
 			return $data;
 		}
 
-		$page = $this->getPage($pageID);
+		$page = $this->fetchPage($pageID);
 		if (!$page instanceof Page) {
 			return $page;
 		}
 
     	$pageCopy = clone $page;
-    	$pageCopy->setParentById($data['parent']);
-    	$pageCopy->setSort($data['sort']);
     	
-    	// run validation
-		$validResponse = $this->validatePage($pageCopy);
+    	// apply data to page and validate
+		$validResponse = $this->validateEntity($pageCopy, $data);
 		if ($validResponse instanceof JsonResponse) {
 			return $validResponse;
 		}
@@ -186,19 +161,17 @@ class AdminManageActions
 	    $this->doctrine->persist($pageCopy);
 	    $this->doctrine->flush();
 
-		$this->response->setContent($this->serializer->serialize($pageCopy, 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-		$this->response->setStatusCode(JsonResponse::HTTP_OK);
-		return $this->response;
+		return $this->getOKResponse($pageCopy);
 	}
 
 	public function movePage(int $pageID, Request $request)
 	{
-		$data = $this->getData($request, ['sort', 'parent']);
+		$data = $this->validatePost($request, ['sort', 'parent']);
 		if ($data instanceof JsonResponse) {
 			return $data;
 		}
 
-		$page = $this->getPage($pageID);
+		$page = $this->fetchPage($pageID);
 		if (!$page instanceof Page) {
 			return $page;
 		}
@@ -207,16 +180,13 @@ class AdminManageActions
 			'parent'=>(null == $page->getParent() ? null : $page->getParent()->getId()),
 			'sort'=> $page->getSort()
 		);
-
-		$page->setParentById($data['parent']);
-		$page->setLastUpdated(new \DateTime());
-    	$page->setSort($data['sort']);
     	
-    	// run validation
-		$validResponse = $this->validatePage($page);
+    	// apply data to page and validate
+		$validResponse = $this->validateEntity($page, $data);
 		if ($validResponse instanceof JsonResponse) {
 			return $validResponse;
 		}
+
 		$this->doctrine->flush();
 
 		//Update order of other entities where page is moving FROM
@@ -225,14 +195,12 @@ class AdminManageActions
 	    //Update order of other entities where page is moving TO
 	    $this->updateOrder($page->getSession(), $data['parent'], $data['sort'], "+1", $page->getId());
 
-		$this->response->setContent($this->serializer->serialize($page, 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-		$this->response->setStatusCode(JsonResponse::HTTP_OK);
-		return $this->response;
+		return $this->getOKResponse($page);
 	}
 
 	public function deletePage(int $pageID)
 	{
-		$page = $this->getPage($pageID);
+		$page = $this->fetchPage($pageID);
 		if (!$page instanceof Page) {
 			return $page;
 		}
@@ -252,11 +220,7 @@ class AdminManageActions
 			
 			if($totalSessionRootNodes === 1)
 			{
-				$this->response->setData(array(
-	    			"errors"=>["You cannot delete this page because it will result in there being no pages in session ".$page->getSession()."."]
-	    		));
-	    		$this->response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
-				return $this->response;
+				return $this->getBadRequestResponse("You cannot delete this page because it will result in there being no pages in session ".$page->getSession().".");
 			}
 		}
 
@@ -267,29 +231,19 @@ class AdminManageActions
     	$this->doctrine->remove($page);
     	$this->doctrine->flush();
 
-	    $this->response->setContent($this->serializer->serialize(array("result"=>true), 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-		$this->response->setStatusCode(JsonResponse::HTTP_OK);
-		return $this->response;
+	    return $this->getOKResponse();
 	}
 
 	public function addCondition(Request $request)
 	{
-		$data = $this->getData($request, ['pageID', 'condition']);
+		$data = $this->validatePost($request, ['page', 'condition']);
 		if ($data instanceof JsonResponse) {
 			return $data;
 		}
 
-		$pageID = $data['pageID'];
-		$page = $this->getPage($pageID);
-		if (!$page instanceof Page) {
-			return $page;
-		}
-
 		$condition = new Condition();
-		$condition->setCondition($data['condition']);
-		$condition->setPage($page);
 
-		$validResponse = $this->validatePage($condition);
+		$validResponse = $this->validateEntity($condition, $data);
 		if ($validResponse instanceof JsonResponse) {
 			return $validResponse;
 		}
@@ -297,9 +251,7 @@ class AdminManageActions
 		$this->doctrine->persist($condition);
 	    $this->doctrine->flush();
 
-	    $this->response->setContent($this->serializer->serialize($condition, 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-		$this->response->setStatusCode(JsonResponse::HTTP_OK);
-		return $this->response;
+	    return $this->getOKResponse($condition);
 	}
 
 	public function deleteCondition(int $id)
@@ -307,79 +259,116 @@ class AdminManageActions
 		$condition = $this->doctrine->getRepository('AppBundle\Entity\Condition')->findOneById($id);
     	if(null === $condition)
     	{
-    		$this->response->setData(array(
-    			"errors"=>["The condition ID '$id' does not exist."]
-    		));
-    		$this->response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
-			return $this->response;
+    		return $this->getBadRequestResponse("The condition ID '$id' does not exist.");
     	}
 	    
 	    // remove the page that was requested
     	$this->doctrine->remove($condition);
     	$this->doctrine->flush();
 
-	    $this->response->setContent($this->serializer->serialize(array("result"=>true), 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-		$this->response->setStatusCode(JsonResponse::HTTP_OK);
-		return $this->response;
+	    return $this->getOKResponse();
 	}
 
-	private function getData(Request $request, array $requiredKeys = array(), $anyRequired = false)
+	private function validatePost(Request $request, array $requiredKeys = array(), array $optionalKeys = array())
 	{
-		$data = json_decode($request->getContent(), true);
-		$foundAnyKey = false;
+		$decodedJSON = json_decode($request->getContent(), true);
+		$allPossibleKeys = array_merge($requiredKeys, $optionalKeys);
 
-		// if true, only values in requiredKeys can be submitted
-		// first check we don't have any other values
-		if($anyRequired)
+		// Expected post variables only
+		foreach($decodedJSON as $k=>$d)
 		{
-			foreach($data as $k=>$d)
+			if(!in_array($k, $allPossibleKeys))
 			{
-				if(!in_array($k, $requiredKeys))
-				{
-					$this->response->setContent($this->serializer->serialize(array("errors"=>['The key `'.$k.'` was submitted but is not permitted']), 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-					$this->response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
-					return $this->response;
-				}
+				return $this->getBadRequestResponse('The key `'.$k.'` was submitted but is not permitted');
 			}
 		}
 
-		// check the required fields, that at least the required fields all exist, or if $anyRequired is true, that at least 1 of them exist
+		// Loop through expected keys, check if they exist in post data
 		foreach($requiredKeys as $rk)
 		{
-			if(!$anyRequired && !array_key_exists($rk, $data))
+			if(!array_key_exists($rk, $decodedJSON))
 			{
-				$this->response->setContent($this->serializer->serialize(array("errors"=>['The key `'.$rk.'` is required for this action but it was not submitted']), 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-				$this->response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
-				return $this->response;
-				break;
-			}
-			elseif($anyRequired && array_key_exists($rk, $data))
-			{
-				$foundAnyKey = true;
-				break;
+				return $this->getBadRequestResponse('The key `'.$rk.'` is required for this action but it was not submitted');
 			}
 		}
 
 		// finish $anyRequired checks to see if a data key was found from $requiredKeys
-		if($anyRequired && !$foundAnyKey)
+		if(sizeof($decodedJSON)===0)
 		{
-			$this->response->setContent($this->serializer->serialize(array("errors"=>['None of the expected keys were submitted']), 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-			$this->response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
-			return $this->response;
+			return $this->getBadRequestResponse('Nothing was submitted');
 		}
 
-		return $data;
+		return $decodedJSON;
 	}
 
-	private function validatePage($page)
+	private function validateEntity($entity, $data)
 	{
-		$errors = $this->validator->validate($page);
-        if (count($errors) > 0) {
-	        $this->response->setContent($this->serializer->serialize(array("errors"=>$errors), 'json', ['json_encode_options' => JSON_PRETTY_PRINT]));
-			$this->response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
-			return $this->response;
+		$entityReferences = array(
+			'AppBundle:Page'=>array(
+				'parent',
+				'forwardToPage',
+				'page'
+			)
+		);
+
+		$allEntityRefs = [];
+		foreach($entityReferences as $e=>$erSet)
+		{
+			foreach($erSet as $er)
+			{
+				$allEntityRefs[$er] = $e;
+			}
+		}
+		$entityKeys = array_keys($allEntityRefs);
+
+		// Set everything that is not supposed to be an object
+		$entityKeysInData = [];
+		foreach($data as $k=>$d)
+		{
+			if(!in_array($k, $entityKeys))
+			{
+				$setMethod = $this->getSetMethodFromKey($k);
+				$entity->$setMethod($d);
+			}
+			else
+			{
+				$entityKeysInData[] = $k;
+			}
+		}
+		//Validate the plain data
+		$errors = $this->validator->validate($entity);
+
+		//Find entity objects for remaining keys and add errors to validation if they do not exist
+		foreach($entityKeysInData as $key)
+		{
+			$id = $data[$key];
+			$setMethod = $this->getSetMethodFromKey($key);
+			try{
+				$setEntity = is_null($id) ? null : $this->doctrine->getReference($allEntityRefs[$key], $id);
+				$entity->$setMethod($setEntity);
+			}
+			catch(\Doctrine\ORM\EntityNotFoundException $e)
+			{
+				$error = new ConstraintViolation("ID not found.".$e->getMessage(), '', [], $entity, $key, $id);
+				$errors->add($error);
+				$entity->$setMethod(null);
+			}
+		}
+
+		if (count($errors) > 0) {
+        	return $this->getBadRequestResponse($errors);
 	    }
 	    return true;
+	}
+
+	private function fetchPage(int $pageID)
+	{
+		$page = $this->doctrine->getRepository('AppBundle\Entity\Page')->findOneById($pageID);
+    	if(null === $page)
+    	{
+			return $this->getBadRequestResponse("The page ID '$pageID' does not exist.");
+    	}
+    	return $page;
 	}
 
 	private function updateOrder($session, $parentID, $currentPageSort, $changeBy="+1", int $excludeId=null)
@@ -418,17 +407,29 @@ class AdminManageActions
 	    return true;
 	}
 
-	private function getPage(int $pageID)
+	private function getOKResponse($data = array('success'=>true))
 	{
-		$page = $this->doctrine->getRepository('AppBundle\Entity\Page')->findOneById($pageID);
-    	if(null === $page)
-    	{
-    		$this->response->setData(array(
-    			"errors"=>["The page ID '$pageID' does not exist."]
-    		));
-    		$this->response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
-			return $this->response;
-    	}
-    	return $page;
+		$response = new JsonResponse();
+		$response->setContent(
+			$this->serializer->serialize($data, 'json', ['json_encode_options' => JSON_PRETTY_PRINT])
+		);
+		$response->setStatusCode(JsonResponse::HTTP_OK);
+		return $response;
+	}
+
+	private function getBadRequestResponse($data)
+	{
+		$response = new JsonResponse();
+		if(is_string($data))
+		{
+			$data = array(
+				"message"=>$data
+			);
+		}
+		
+		$serialized = $this->serializer->serialize(array("errors"=>$data), 'json', ['json_encode_options' => JSON_PRETTY_PRINT]);
+		$response->setContent($serialized);
+		$response->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
+		return $response;
 	}
 }

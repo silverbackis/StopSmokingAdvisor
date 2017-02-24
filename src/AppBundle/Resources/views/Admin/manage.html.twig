@@ -4,6 +4,7 @@
     {{ parent() }}
     {% stylesheets 
     	'@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/css/bootstrap-select.css'
+    	'@AppBundle/Resources/assets/global/bower/trumbowyg/dist/ui/trumbowyg.min.css'
         '@AppBundle/Resources/assets/local/scss/adminLayout.scss'
         '@AppBundle/Resources/assets/local/scss/adminManage.scss'
         filter='cssrewrite' 
@@ -16,6 +17,7 @@
     {{ parent() }}
     {% javascripts
     	'@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/js/bootstrap-select.min.js'
+    	'@AppBundle/Resources/assets/global/bower/trumbowyg/dist/trumbowyg.min.js'
         '@AppBundle/Resources/assets/global/BootstrapModalAlerts.js'
         '@AppBundle/Resources/assets/global/AjaxManager.js'
         '@AppBundle/Resources/assets/local/js/adminLayout.js'
@@ -79,7 +81,132 @@
 					</div>
 					<div class="col-12 col-auto right-bar">
 						<div class="right-bar-inner">
+							<div class="right-bar-scroller">
+								<button type="button" class="close close-sidebar" aria-label="Close">
+								  <span aria-hidden="true">&times;</span>
+								</button>
+								<fieldset>
+									<div class="side-bar-top">
+										<button type="button" class="btn btn-sm btn-primary disabled" id="previewButton">Preview as user</button>	
+										<br />
+										<label class="custom-control custom-checkbox">
+										  <input type="checkbox" class="custom-control-input" id="liveToggle" value="1" data-column="live" />
+										  <span class="custom-control-indicator toggle-indicator">
+										  	<span class="toggle-circle"></span>
+										  </span>
+										  <span class="custom-control-description" id="liveToggleText"></span>
+										</label>					
+									</div>	
+									<div class="side-bar-form">
+										<div class="form-group">
+											<label for="pageNameInput">Page Name</label>
+											<input type="text" class="form-control" id="pageNameInput" placeholder="Enter page name" data-column="name" />
+										</div>
+										<div class="form-group">
+											<label for="pageDescInput">Admin description</label>
+											<input type="text" class="form-control" id="pageDescInput" placeholder="Enter a description" data-column="adminDescription" />
+											<small id="pageDescHelp" class="form-text">This is to help you understand the page quickly and is never displayed to users.</small>
+										</div>
+										<div class="form-group">
+											<label for="pageDescInput">Conditions</label>
+											<div class="input-group">
+												<input type="text" class="form-control" placeholder="Enter new condition" />
+												<span class="input-group-addon">
+													<a href="#" class="btn btn-primary condition-add">&nbsp;</a>
+												</span>
+											</div>
+											<div class="conditions">
+												<a href="#" class="btn btn-secondary">condition=1&nbsp;&nbsp;<span class="text-danger">×</span></a>
+											</div>
+										</div>
 
+										<!-- Nav tabs -->
+										<ul class="nav nav-justified nav-tabs" role="tablist">
+										  <li class="nav-item">
+										    <a class="active" data-toggle="tab" href="#mediaTab" role="tab">Media</a>
+										  </li>
+										  <li class="nav-item">
+										    <a class="" data-toggle="tab" href="#textTab" role="tab">Text</a>
+										  </li>
+										  <li class="nav-item">
+										    <a class="" data-toggle="tab" href="#questionsTab" role="tab">Question</a>
+										  </li>
+										</ul>
+
+										<!-- Tab panes -->
+										<div class="tab-content">
+											<div class="tab-pane active" id="mediaTab" role="tabpanel">
+												<div class="form-group">
+													<select class="selectpicker" data-style="btn-secondary" id="mediaSelect" data-column="mediaType">
+														<option value="none">No Media</option>
+														<option value="video">Video</option>
+														<option value="image">Image</option>
+													</select>
+												</div>
+												<div class="media-tab-type none" id="media-tab-none"></div>
+												<div class="media-tab-type video hidden" id="media-tab-video">
+													<input type="text"  class="form-control" placeholder="Paste Vimeo share URL" data-column="videoUrl" />
+													<div class="media-current video"></div>
+												</div>
+												<div class="media-tab-type image hidden" id="media-tab-image">
+													<button type="button" class="btn btn-primary" id="uploadButton">Upload image</button>
+													<div class="progress">
+													  	<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 25%; height: 5px;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+													</div>
+													<div class="media-current image">
+														<img src="" />
+													</div>
+												</div>
+												
+										  	</div><!-- end media tab -->
+										  	<div class="tab-pane" id="textTab" role="tabpanel">
+										  		<div id="pageTextEdit" data-column="text"></div>
+										  	</div><!-- end text tab -->
+										  	<div class="tab-pane" id="questionsTab" role="tabpanel">
+											  	<div class="form-group">
+											  		<label for="questionType">Question type</label>
+													<div class="input-group">
+														<select class="selectpicker" data-style="btn-secondary" id="questionType">
+															<option value="choice">Dropdown</option>
+															<option value="choice_emotive">Emoticons (Happy/Sad/Neutral)</option>
+															<option value="choice_boolean">Yes / No</option>
+															<option value="text">Text</option>
+															<option value="float">Number</option>
+															<option value="date">Date</option>
+															<option value="date_quit">Quit Date</option>
+														</select>
+													</div>
+												</div>
+										  		<div class="form-group">
+											  		<label for="questionText">Question</label>
+											  		<div class="input-group">
+											  			<input type="text"  class="form-control" placeholder="Enter question" id="questionText" />
+											  		</div>
+											  	</div>
+											  	<div class="form-group">
+											  		<label for="variableText">Variable key</label>
+											  		<div class="input-group">
+											  			<input type="text"  class="form-control" placeholder="Enter variable" id="variableText" />
+											  		</div>
+											  	</div>
+											  	<hr />
+											  	<div class="form-group">
+											  		<label for="answerText">Answer Option (Displayed)</label>
+											  		<div class="input-group">
+											  			<input type="text"  class="form-control" placeholder="Enter answer option" id="answerText" />
+											  		</div>
+											  	</div>
+											  	<div class="form-group">
+											  		<label for="answerValue">Answer Option (Saved value)</label>
+											  		<div class="input-group">
+											  			<input type="text"  class="form-control" placeholder="Enter value to save" id="answerValue" />
+											  		</div>
+											  	</div>
+										  	</div><!-- end questions tab -->
+										</div>
+									</div>
+								</fieldset>
+							</div>
 						</div>
 					</div>
 				</td>

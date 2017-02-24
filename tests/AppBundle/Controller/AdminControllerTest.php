@@ -12,60 +12,33 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class AdminControllerTest extends WebTestCase
 {
-	private $client = null;
-
-	/**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private static $em;
 
 	public static function setUpBeforeClass()
     {
-    	$client = static::createClient();
+        parent::setUpBeforeClass();
 
-    	$container = $client->getKernel()->getContainer();
-    	self::$em = $container->get('doctrine')->getManager();
         $schema = self::$em->getConnection()->getSchemaManager();
         $newSchema = clone $schema;
         $newSchema->dropTable('answer');
         $newSchema->dropTable('question');
         $newSchema->dropTable('`condition`');
         $newSchema->dropTable('page');
-
-    	parent::setUpBeforeClass();
+    	self::updateSchema();
         self::runCommand('doctrine:fixtures:load --append --no-interaction --fixtures=src/AppBundle/DataFixtures/ORM/LoadSamplePages.php');
     }
 
     public function setUp()
     {
-        $this->client = static::createClient();
-    }
-
-    private function assertStandardResponse($httpCode=200, $crawler)
-    {
-    	$response = $this->client->getResponse();
-
-    	$textException = $crawler->filter('.text-exception');
-
-    	$decoded = json_decode($response->getContent(), true);
-    	$messageOutput = $textException->count()>0 ? $textException->text() : ($decoded ? $response->getContent() : 'Unknown content');
-    	
-    	//Check for HTTP response and output exception of page content
-        $this->assertEquals($httpCode, $response->getStatusCode(), $messageOutput);
-        
-        // Valid JSON check
-        $this->assertInternalType('array', $decoded);
-
-        return $decoded;
+        self::$client = static::createClient();
     }
 
     public function testSecuredAdmin()
     {
         //$this->logIn();
 
-        $crawler = $this->client->request('GET', '/admin/manage');
+        $crawler = self::$client->request('GET', '/admin/manage');
 
-        $this->assertFalse($this->client->getResponse()->isSuccessful());
+        $this->assertFalse(self::$client->getResponse()->isSuccessful());
         //$this->assertEquals(1, $crawler->filter('.bottom-tree-area')->count());
     }
 
@@ -73,7 +46,7 @@ class AdminControllerTest extends WebTestCase
     {
     	$this->logIn();
 
-        $crawler = $this->client->request(
+        $crawler = self::$client->request(
             'GET', 
             '/admin/pages/get/1'
         );
@@ -91,7 +64,7 @@ class AdminControllerTest extends WebTestCase
             "search"=>"page"
         );
 
-        $crawler = $this->client->request(
+        $crawler = self::$client->request(
             'POST', 
             '/admin/pages/search/2',
             array(),
@@ -115,7 +88,7 @@ class AdminControllerTest extends WebTestCase
 			"sort"=>2
     	);
 
-    	$crawler = $this->client->request(
+    	$crawler = self::$client->request(
             'POST', 
             '/admin/page/add',
             array(),
@@ -140,15 +113,15 @@ class AdminControllerTest extends WebTestCase
     public function testLinkAdd()
     {
     	$this->logIn();
-
+        $parentID = 6;
     	$postData = array(
 			"session"=>1,
-			"parent"=>1,
+			"parent"=>$parentID,
 			"sort"=>2,
 			"type"=>"link"
     	);
 
-    	$crawler = $this->client->request(
+    	$crawler = self::$client->request(
             'POST', 
             '/admin/page/add',
             array(),
@@ -158,6 +131,10 @@ class AdminControllerTest extends WebTestCase
         );
 
     	$decoded = $this->assertStandardResponse(200, $crawler);
+
+        $addedLink = self::$em->getRepository('AppBundle:Page')->findOneById($decoded['id']);
+        $databaseParentId = $addedLink->getParent()->getId();
+        $this->assertEquals($parentID, $databaseParentId, 'Parent ID in database should be '.$parentID.' for newly added link with ID '.$decoded['id'].'. It was '.$databaseParentId);
     }
     
     public function testPageAddFail()
@@ -171,7 +148,7 @@ class AdminControllerTest extends WebTestCase
 			"type"=>"unknown"
     	);
 
-    	$crawler = $this->client->request(
+    	$crawler = self::$client->request(
             'POST', 
             '/admin/page/add',
             array(),
@@ -181,11 +158,9 @@ class AdminControllerTest extends WebTestCase
         );
 
     	$decoded = $this->assertStandardResponse(400, $crawler);
-
-    	//check we are getting errors array
-    	$this->assertInternalType('array', $decoded['errors']);
+        
     	//should have an error for each of the submitted keys
-    	$this->assertCount(4, $decoded['errors']);
+    	$this->assertCount(4, $decoded['errors']);//, json_encode($decoded['errors'], JSON_PRETTY_PRINT)
     }
 
     public function testPageUpdate()
@@ -196,7 +171,7 @@ class AdminControllerTest extends WebTestCase
             "name"=>"I have updated the name"
         );
 
-        $crawler = $this->client->request(
+        $crawler = self::$client->request(
             'POST', 
             '/admin/page/update/1',
             array(),
@@ -207,30 +182,17 @@ class AdminControllerTest extends WebTestCase
 
         $decoded = $this->assertStandardResponse(200, $crawler);
     }
-    
-
-    public function testPageDelete()
-    {
-    	$this->logIn();
-
-    	$crawler = $this->client->request(
-            'GET', 
-            '/admin/page/delete/6'
-        );
-
-        $decoded = $this->assertStandardResponse(200, $crawler);
-    }
 
     public function testPageCopy()
     {
-    	$this->logIn();
+        $this->logIn();
 
-    	$postData = array(
-    		"parent"=>null,
-			"sort"=>2
-    	);
+        $postData = array(
+            "parent"=>null,
+            "sort"=>2
+        );
 
-    	$crawler = $this->client->request(
+        $crawler = self::$client->request(
             'POST', 
             '/admin/page/copy/3',
             array(),
@@ -240,6 +202,19 @@ class AdminControllerTest extends WebTestCase
         );
 
         $this->assertStandardResponse(200, $crawler);
+    }
+    
+
+    public function testPageDelete()
+    {
+    	$this->logIn();
+
+    	$crawler = self::$client->request(
+            'GET', 
+            '/admin/page/delete/9'
+        );
+
+        $decoded = $this->assertStandardResponse(200, $crawler);
     }
 
     public function testPageMove()
@@ -251,7 +226,7 @@ class AdminControllerTest extends WebTestCase
 			"sort"=>2
     	);
 
-    	$crawler = $this->client->request(
+    	$crawler = self::$client->request(
             'POST', 
             '/admin/page/move/8',
             array(),
@@ -260,12 +235,10 @@ class AdminControllerTest extends WebTestCase
             json_encode($postData)
         );
 
-        $this->assertStandardResponse(200, $crawler);
+        $decoded = $this->assertStandardResponse(200, $crawler);
 
         // check it is in the database now
-        $pages = self::$em->getRepository('AppBundle:Page')->findOneById(8);
-        $this->assertNotNull($pages, 'Success response but the page no longer exists in the database');
-        $this->assertNull($pages->getParent(), 'Parent of page 8 should be Null after being moved to root');
+        $this->assertNull($decoded['parent'], 'Parent ID of page 8 should be Null. Just tried moving it to the root');
     }
 
     public function testConditionAdd()
@@ -273,11 +246,11 @@ class AdminControllerTest extends WebTestCase
     	$this->logIn();
 
     	$postData = array(
-    		'pageID'=>1,
+    		'page'=>1,
     		'condition'=>'y < 50'
     	);
 
-    	$crawler = $this->client->request(
+    	$crawler = self::$client->request(
             'POST', 
             '/admin/condition/add',
             array(),
@@ -293,7 +266,7 @@ class AdminControllerTest extends WebTestCase
     {
     	$this->logIn();
 
-    	$crawler = $this->client->request(
+    	$crawler = self::$client->request(
             'GET', 
             '/admin/condition/delete/1'
         );
@@ -303,7 +276,7 @@ class AdminControllerTest extends WebTestCase
 
 	private function logIn()
     {
-        $session = $this->client->getContainer()->get('session');
+        $session = self::$client->getContainer()->get('session');
 
         // the firewall context (defaults to the firewall name)
         $firewall = 'main';
@@ -313,7 +286,7 @@ class AdminControllerTest extends WebTestCase
         $session->save();
 
         $cookie = new Cookie($session->getName(), $session->getId());
-        $this->client->getCookieJar()->set($cookie);
+        self::$client->getCookieJar()->set($cookie);
     }
 
     /**

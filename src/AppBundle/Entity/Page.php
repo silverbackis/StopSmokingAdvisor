@@ -71,9 +71,9 @@ class Page
     protected $admin_description;
 
     /**
-     * @ORM\Column(type="boolean", options={"default" : 1})
+     * @ORM\Column(type="boolean", options={"default" : 0})
      */
-    protected $draft = 1;
+    protected $live = 0;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=false, options={"default" : "none"})
@@ -84,7 +84,13 @@ class Page
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    protected $media_path = 'none';
+    protected $image_path;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @SSAPageAssert\VimeoUrl
+     */
+    protected $video_url;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -116,11 +122,6 @@ class Page
      * @ORM\OrderBy({"sort" = "ASC"})
      */
     protected $children;
-
-    /**
-     * @SSAPageAssert\PageExists
-     */
-    public $parentID = null;
     
 
     public function __construct()
@@ -308,30 +309,6 @@ class Page
     }
 
     /**
-     * Set draft
-     *
-     * @param boolean $draft
-     *
-     * @return Page
-     */
-    public function setDraft($draft)
-    {
-        $this->draft = $draft;
-
-        return $this;
-    }
-
-    /**
-     * Get draft
-     *
-     * @return boolean
-     */
-    public function getDraft()
-    {
-        return $this->draft;
-    }
-
-    /**
      * Set mediaType
      *
      * @param string $mediaType
@@ -353,30 +330,6 @@ class Page
     public function getMediaType()
     {
         return $this->media_type;
-    }
-
-    /**
-     * Set mediaPath
-     *
-     * @param string $mediaPath
-     *
-     * @return Page
-     */
-    public function setMediaPath($mediaPath)
-    {
-        $this->media_path = $mediaPath;
-
-        return $this;
-    }
-
-    /**
-     * Get mediaPath
-     *
-     * @return string
-     */
-    public function getMediaPath()
-    {
-        return $this->media_path;
     }
 
     /**
@@ -427,19 +380,6 @@ class Page
         return $this->createdAt;
     }
 
-    public function setParentById(int $parentID = null)
-    {
-        if(is_null($parentID))
-        {
-            $this->parentID = null;
-            $this->setParent(null);
-        }
-        else
-        {
-            $this->parentID = $parentID;
-        }
-    }
-
     /**
      * Set parent
      *
@@ -451,6 +391,11 @@ class Page
     {
         $this->parent = $parent;
 
+        // if parent is set to an ID, make sure this entity's session is not the same
+        if($parent)
+        {
+            $this->setSession($parent->getSession());
+        }
         return $this;
     }
 
@@ -461,7 +406,6 @@ class Page
      */
     public function getParent()
     {
-        $this->parentID = $this->parent ? $this->parent->getId() : null;
         return $this->parent;
     }
 
@@ -614,5 +558,77 @@ class Page
     public function getForwardToPage()
     {
         return $this->forward_to_page;
+    }
+
+    /**
+     * Set live
+     *
+     * @param boolean $live
+     *
+     * @return Page
+     */
+    public function setLive($live)
+    {
+        $this->live = $live;
+
+        return $this;
+    }
+
+    /**
+     * Get live
+     *
+     * @return boolean
+     */
+    public function getLive()
+    {
+        return $this->live;
+    }
+
+    /**
+     * Set imagePath
+     *
+     * @param string $imagePath
+     *
+     * @return Page
+     */
+    public function setImagePath($imagePath)
+    {
+        $this->image_path = $imagePath;
+
+        return $this;
+    }
+
+    /**
+     * Get imagePath
+     *
+     * @return string
+     */
+    public function getImagePath()
+    {
+        return $this->image_path;
+    }
+
+    /**
+     * Set videoUrl
+     *
+     * @param string $videoUrl
+     *
+     * @return Page
+     */
+    public function setVideoUrl($videoUrl)
+    {
+        $this->video_url = $videoUrl;
+
+        return $this;
+    }
+
+    /**
+     * Get videoUrl
+     *
+     * @return string
+     */
+    public function getVideoUrl()
+    {
+        return $this->video_url;
     }
 }

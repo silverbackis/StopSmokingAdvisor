@@ -15,15 +15,25 @@ function Node(nodeData, tree)
 		type: 'text',
 		class: 'form-control',
 		placeholder: 'Page name'
-	})
-	.on("keyup blur", function(e){
-		if(nodeData.type=='link' && e.type=='blur')
-		{
-			return;
-		}
-		var ms = e.type==='blur' ? 1 : null;
-		_self.debounce(nodeData.type!=='link' ? _self.updateName : _self.searchName, ms);
 	});
+
+	if(nodeData.type=='link')
+	{
+		this.$nameInput.attr({
+			"data-column": "name"
+		});
+		this.$nameInput.on("keyup", function(e){
+			_self.debounce(_self.searchName);
+		});
+	}
+	else
+	{
+		this.$nameInput.attr({
+			"data-column": "name",
+			"data-id": this.nodeData.id
+		});
+		new AjaxInput(this.$nameInput);
+	}
 
 	var $inputGroup = $("<div />",{
 			class: 'input-group'
@@ -58,7 +68,7 @@ function Node(nodeData, tree)
 			_self.appendCondition(response);
 		};
 		ajax.addCondition.submit({
-			pageID: _self.nodeData.id,
+			page: _self.nodeData.id,
 			condition: _self.$conditionInput.val()
 		});
 	});
@@ -171,9 +181,12 @@ function Node(nodeData, tree)
 	{
 		$nodeInner.append(
 			$("<a />",{
-				href: '/admin/edit/'+nodeData.id,
+				href: '#',
 				class: 'btn btn-primary',
 				html: 'Open'
+			}).on("click", function(e){
+				e.preventDefault();
+				SidePanel.show(_self);
 			})
 		);
 		$nodeBarRight.append(
@@ -292,26 +305,6 @@ function Node(nodeData, tree)
 Node.prototype.setChildBranch = function(childBranch){
 	this.childBranch = childBranch;
 };
-Node.prototype.debounce = function(fn, ms){
-	_self = this;
-	clearTimeout(_self.debounceTimer);
-    _self.debounceTimer = setTimeout(function(){
-        fn.call(_self);
-    }, ms || 250);
-};
-Node.prototype.updateName = function(){
-	var _self = this,
-	data = {
-		name: this.$nameInput.val()
-	};
-	ajax.updateNode.ops.successFn = function(){
-		_self.bindUpdatedName.call(_self);
-	};
-	ajax.updateNode.submit(data, ajax.updateNode.url + this.nodeData.id);	
-};
-Node.prototype.bindUpdatedName = function(){
-	$(".goto-pagename[data-gotoid="+this.nodeData.id+"]").val(this.$nameInput.val());
-};
 Node.prototype.searchName = function(){
 	var _self = this;
 	this.SearchMenu.setLoading();
@@ -397,4 +390,12 @@ Node.prototype.addNodeByData = function(child, nodeData){
 	{
 		this.tree.appendNode(nodeData);
 	}
+};
+Node.prototype.debounce = function(fn, ms)
+{
+	var _self = this;
+	clearTimeout(_self.debounceTimer);
+    _self.debounceTimer = setTimeout(function(){
+        fn.call(_self);
+    }, ms || 250);
 };

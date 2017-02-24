@@ -113,7 +113,7 @@ SearchMenu.prototype.setResults = function(results){
 			};
 
 			ajax.updateNode.submit({
-				forward_to_page: data.id
+				forwardToPage: data.id
 			}, ajax.updateNode.url + _self.parentNode.nodeData.id);
 		};
 

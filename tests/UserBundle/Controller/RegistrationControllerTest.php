@@ -14,33 +14,26 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 class RegistrationControllerTest extends WebTestCase
 {
     private static $email = "info@silverback.is";
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private static $em;
-
-    private $client;
+    
 
     public static function setUpBeforeClass()
     {
-        $client = static::createClient();
-        $container = $client->getKernel()->getContainer();
-        self::$em = $container->get('doctrine')->getManager();
+        parent::setUpBeforeClass();
+        self::updateSchema();
 
-        $userManager = $container->get('fos_user.user_manager');
+        $userManager = self::$container->get('fos_user.user_manager');
         $testUser = $userManager->findUserByEmail(self::$email);
         if($testUser){
             self::$em->remove($testUser);
             self::$em->flush();
         }
-
-        parent::setUpBeforeClass();
+        
         self::runCommand('doctrine:fixtures:load --append --no-interaction --fixtures=src/UserBundle/DataFixtures/ORM/LoadUserData.php');
     }
 
     protected function setUp()
     {
-        $this->client = static::createClient();
+        self::$client = static::createClient();
     }
 
     private function makePOSTRequest($data, $validationInputVar=false)
@@ -54,11 +47,12 @@ class RegistrationControllerTest extends WebTestCase
                 'input' => $validationInputVar
             ];
         }
-        $this->client->request(
+        $crawler = self::$client->request(
             'POST', 
             '/register/',
             $data
         );
+        return $crawler;
     }
 
     public function testValidField()
@@ -70,11 +64,10 @@ class RegistrationControllerTest extends WebTestCase
                 'second' => 'test12345'
             ]
         ];
-        $this->makePOSTRequest($data, $inputID);
-        $response = $this->client->getResponse();
+        $crawler = $this->makePOSTRequest($data, $inputID);
+        $decoded = $this->assertStandardResponse(202, $crawler);
 
-        $this->assertEquals(202, $response->getStatusCode());
-        $this->assertEquals('[]', $response->getContent());
+        $this->assertCount(0, $decoded);
     }
 
     public function testInvalidField()
@@ -83,24 +76,18 @@ class RegistrationControllerTest extends WebTestCase
         $data = [
             'email' => 'notanemail'
         ];
-        $this->makePOSTRequest($data, $inputID);
-        $response = $this->client->getResponse();
+        $crawler = $this->makePOSTRequest($data, $inputID);
+        $decoded = $this->assertStandardResponse(400, $crawler);
 
-        $this->assertEquals(400, $response->getStatusCode());
-
-        $decoded = json_decode($response->getContent(), true);
-        $this->assertInternalType('array', $decoded);
         $this->assertEquals(1, sizeof($decoded));
         $this->assertTrue(isset($decoded[$inputID]));
     }
 
     public function testRegisterNewUser()
     {
-        $container = $this->client
-            ->getKernel()
-            ->getContainer();
+        self::$container = self::$client->getKernel()->getContainer();
 
-        $CSRF_Token = (string)$container->get('security.csrf.token_manager')->getToken('registration');
+        $CSRF_Token = (string)self::$container->get('security.csrf.token_manager')->getToken('registration');
         
         $data = [
             '_token' => $CSRF_Token, 
@@ -111,11 +98,8 @@ class RegistrationControllerTest extends WebTestCase
                 'second' => 'test123'
             ]
         ];
-        $this->makePOSTRequest($data);
-        $response = $this->client->getResponse();
-
-        $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
-        $this->assertInternalType('array', json_decode($response->getContent(), true));
+        $crawler = $this->makePOSTRequest($data);
+        $decoded = $this->assertStandardResponse(201, $crawler);
     }
 
     public function testForgotPassword()
@@ -123,15 +107,12 @@ class RegistrationControllerTest extends WebTestCase
         $data = [
             'username' => self::$email
         ];
-        $this->client->request(
+        $crawler = self::$client->request(
             'POST', 
             '/resetting/send-email',
             $data
         );
-        $response = $this->client->getResponse();
-
-        $this->assertEquals(202, $response->getStatusCode());
-        $this->assertInternalType('array', json_decode($response->getContent(), true));
+        $decoded = $this->assertStandardResponse(202, $crawler);
     }
 
     public function testForgotPasswordRepeat()
@@ -139,15 +120,12 @@ class RegistrationControllerTest extends WebTestCase
         $data = [
             'username' => self::$email
         ];
-        $this->client->request(
+        $crawler = self::$client->request(
             'POST', 
             '/resetting/send-email',
             $data
         );
-        $response = $this->client->getResponse();
-
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertInternalType('array', json_decode($response->getContent(), true));
+        $decoded = $this->assertStandardResponse(400, $crawler);
     }
     
     public function testRegisterInvalidEmail()
@@ -159,11 +137,8 @@ class RegistrationControllerTest extends WebTestCase
                 'first' => 'test123', 'second' => 'test123'
             ]
         ];
-        $this->makePOSTRequest($data);
-        $response = $this->client->getResponse();
- 
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertInternalType('array', json_decode($response->getContent(), true));
+        $crawler = $this->makePOSTRequest($data);
+        $decoded = $this->assertStandardResponse(400, $crawler);
     }
 
     public function testRegisterInvalidPassword()
@@ -175,9 +150,8 @@ class RegistrationControllerTest extends WebTestCase
                 'first' => 'badpass', 'second' => 'badpass'
             ]
         ];
-        $this->makePOSTRequest($data);
-        $response = $this->client->getResponse();
-        $this->assertEquals(400, $response->getStatusCode());
+        $crawler = $this->makePOSTRequest($data);
+        $decoded = $this->assertStandardResponse(400, $crawler);
     }
 
     public function testRegisterInvalidPasswordMatch()
@@ -189,10 +163,8 @@ class RegistrationControllerTest extends WebTestCase
                 'first' => 'test123', 'second' => 'test12'
             ]
         ];
-        $this->makePOSTRequest($data);
-        $response = $this->client->getResponse();
- 
-        $this->assertEquals(400, $response->getStatusCode());
+        $crawler = $this->makePOSTRequest($data); 
+        $decoded = $this->assertStandardResponse(400, $crawler);
     }
 
     /**

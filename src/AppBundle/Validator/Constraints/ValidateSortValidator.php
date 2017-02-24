@@ -19,6 +19,8 @@ class ValidateSortValidator extends ConstraintValidator
 	public function validate($page, Constraint $constraint)
     {
     	$queryBuilder = $this->doctrineEM->createQueryBuilder();
+
+
     	$parent = $page->getParent();
     	if(is_null($parent ))
     	{

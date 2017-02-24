@@ -9,6 +9,44 @@ var TreeManager = (function($, alert, confirm){
 	this.$treeContainer = $("#treeContainer");
 	this.selectedNode = null;
 	this.sessionNumber = $sessionSelect.val();
+	this.SidePanel = new SidePanel();
+
+	this.setInputValue = function($input, value)
+	{
+		if($input.attr("type")==='checkbox')
+		{
+			$input.prop("checked", value).trigger("change");
+		}
+		else if($input.is("div"))
+		{
+			//$input.html(value);
+			return $input.trumbowyg('html', value);
+		}
+		else if($input.is("select")){
+			$input.selectpicker('val', value).trigger("change");
+		}
+		else
+		{
+			$input.val(value);
+		}
+	};
+
+	this.getInputValue = function($input)
+	{
+		if($input.attr("type")==='checkbox')
+		{
+			return $input.prop("checked");
+		}
+		else if($input.is("div"))
+		{
+			//return $input.html();
+			return $input.trumbowyg('html');
+		}
+		else
+		{
+			return $input.val();
+		}
+	};
 
 	// All ajax
 	this.ajax = {
@@ -19,6 +57,14 @@ var TreeManager = (function($, alert, confirm){
 			},
 			successFn: function(response){
 				tm.createBranch(response);
+			},
+			abortable: true,
+			load: true
+		}),
+		getPage: AjaxManager.new('/admin/page/get/', {
+			dataType: 'json',
+			submitFn: function(){
+				SidePanel.disableInputs();
 			},
 			abortable: true,
 			load: true
