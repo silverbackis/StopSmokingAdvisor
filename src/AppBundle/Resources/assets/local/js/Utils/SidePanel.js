@@ -219,10 +219,13 @@ var SidePanel = (function($){
 		_self.updateMedia();
 
 		this.questionDom.$answers.empty();
-		$.each(Node.nodeData.questions[0].answerOptions, function()
+		if(Node.nodeData.questions.length > 0)
 		{
-			_self.addAnswer(this);
-		});
+			$.each(Node.nodeData.questions[0].answerOptions, function()
+			{
+				_self.addAnswer(this);
+			});
+		}
 	};
 	LocalSidePanel.prototype.addCondition = function(Condition)
 	{
