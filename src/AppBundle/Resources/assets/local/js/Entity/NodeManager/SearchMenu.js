@@ -38,7 +38,7 @@ function SearchMenu(parentNode)
 			})
 			.on("focus", function(){
 				_self.parentNode.$nameInput.trigger("click");
-				_self.parentNode.searchName();
+				_self.parentNode.searchName.call(_self.parentNode);
 			})
 		.parent()
 			.addClass("dropdown");
@@ -64,6 +64,7 @@ function SearchMenu(parentNode)
 	this.$dropdown.on("hide.bs.dropdown", dropdownFn.hide);
 	this.$dropdown.on("hidden.bs.dropdown", dropdownFn.hidden );
 	this.$dropdown.on("show.bs.dropdown", dropdownFn.show );
+	return this;
 }
 SearchMenu.prototype.updateSaved = function(){
 	this.parentNode.$nameInput

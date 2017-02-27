@@ -25,30 +25,11 @@ function Node(nodeData, tree)
 
 	if(nodeData.type=='link')
 	{
-		var searchName = function(){
-			this.SearchMenu.setLoading();
-
-			ajax.searchSession.ops.successFn = function(response){
-				_self.SearchMenu.setResults(response);
-			};
-			ajax.searchSession.submit({
-				search: this.$nameInput.val()
-			});		
-		},
-		debounce = function(fn, ms)
-		{
-			var _self = this;
-			clearTimeout(_self.debounceTimer);
-		    _self.debounceTimer = setTimeout(function(){
-		        fn.call(_self);
-		    }, ms || 250);
-		};
-
 		this.$nameInput.attr({
 			"data-column": "name"
 		});
 		this.$nameInput.on("keyup", function(e){
-			debounce(searchName);
+			_self.debounce(_self.searchName);
 		});
 	}
 	else
@@ -71,10 +52,9 @@ function Node(nodeData, tree)
 	}
 	else
 	{
-		this.SearchMenu = new SearchMenu(this);
-
+		this.LocalSearchMenu = new SearchMenu(this);
 		$nameInputGroup.append(
-			this.SearchMenu.$dropdownMenu
+			this.LocalSearchMenu.$dropdownMenu
 		);
 	}		
 
@@ -330,6 +310,26 @@ function Node(nodeData, tree)
 	);
 
 }
+Node.prototype.debounce = function(fn, ms)
+{
+	var _self = this;
+	clearTimeout(_self.debounceTimer);
+    _self.debounceTimer = setTimeout(function(){
+        fn.call(_self);
+    }, ms || 250);
+};
+Node.prototype.searchName = function()
+{
+	var _self = this;
+	this.LocalSearchMenu.setLoading();
+
+	ajax.searchSession.ops.successFn = function(response){
+		_self.LocalSearchMenu.setResults(response);
+	};
+	ajax.searchSession.submit({
+		search: this.$nameInput.val()
+	});		
+};
 Node.prototype.updatePageStatus = function()
 {
 	this.$pageStatus.removeClass("text-success text-muted");
