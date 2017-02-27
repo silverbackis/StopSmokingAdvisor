@@ -25,12 +25,12 @@ class Question
     protected $page;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $question;
 
     /**
-     * @ORM\Column(type="string", length=80, nullable=false)
+     * @ORM\Column(type="string", length=80, nullable=true)
      */
     protected $variable;
 

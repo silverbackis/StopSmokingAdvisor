@@ -1,0 +1,6 @@
+services:
+  filesystem:
+    class: Symfony\Component\Filesystem\Filesystem
+  plupload.handler:
+    class: PlUploadBundle\Utils\PlUploadHandler
+    arguments: ["@filesystem"]

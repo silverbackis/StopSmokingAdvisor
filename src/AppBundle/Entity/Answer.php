@@ -24,12 +24,12 @@ class Answer
     protected $question;
 
     /**
-     * @ORM\Column(type="string", length=500, nullable=false)
+     * @ORM\Column(type="string", length=500, nullable=true)
      */
     protected $answer;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $save_value;
 

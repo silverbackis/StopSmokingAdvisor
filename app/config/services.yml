@@ -6,11 +6,12 @@ parameters:
 services:
   app.admin_manage:
     class: AppBundle\Controller\AdminController
-    arguments: ["@templating", "@sonata.seo.page", "%kernel.root_dir%", "@app.admin_manage_actions"]
+    arguments: ["@templating", "@sonata.seo.page", "%kernel.root_dir%", "@app.admin_manage_actions", "@plupload.handler"]
 
   app.admin_manage_actions:
     class: AppBundle\Utils\AdminManageActions
     arguments: ["@doctrine.orm.entity_manager", "@validator"]
+    public: false
 
   app.validator.sort_value:
     class: AppBundle\Validator\Constraints\ValidateSortValidator

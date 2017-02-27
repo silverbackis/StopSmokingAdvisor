@@ -17,14 +17,14 @@ function Tree(parentNode)
 	else
 	{
 		this.$ul.appendTo(parentNode.$node);
-		parentNode.setChildBranch(this);
+		parentNode.childBranch = this;
 	}
 
 	this.nodes = [];
 	this.parentNode = parentNode;
 }
 Tree.prototype.appendNode = function(nodeData){
-	var newNode = new Node(nodeData, this);
+	var newNode = NodeManager.new(nodeData, this);
 	if(nodeData.sort===1)
 	{
 		newNode.$node.prependTo(this.$ul);
@@ -37,7 +37,6 @@ Tree.prototype.appendNode = function(nodeData){
 		this.nodes.splice(sortToIndex, 0, newNode);
 	}
 	this.updateSortValues();
-
 
 	if(nodeData.children.length>0)
 	{

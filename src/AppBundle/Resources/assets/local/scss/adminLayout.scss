@@ -27,10 +27,19 @@ a:hover {
 .form-control,
 .input-group-addon {
   border-color: $teal-lighter;
+
+  &.error {
+    border-color: $red;
+  }
 }
 
 .btn {
   font-family: 'Comfortaa', cursive;
+
+  &.btn-primary:hover,
+  &.btn-primary:focus {
+    color: $white;
+  }
 }
 
 td {

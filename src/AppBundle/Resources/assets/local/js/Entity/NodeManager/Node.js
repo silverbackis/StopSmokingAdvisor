@@ -10,29 +10,53 @@ function Node(nodeData, tree)
 	this.childBranch = null;
 	this.conditions = {};
 	this.request = null;
+	this.inputs = [];
+	this.opened = false;
 
 	this.$nameInput = $("<input />",{
 		type: 'text',
 		class: 'form-control',
 		placeholder: 'Page name'
 	});
+	this.$pageStatus = $("<div />", {
+		class: 'page-status'
+	});
+	this.updatePageStatus();
 
 	if(nodeData.type=='link')
 	{
+		var searchName = function(){
+			this.SearchMenu.setLoading();
+
+			ajax.searchSession.ops.successFn = function(response){
+				_self.SearchMenu.setResults(response);
+			};
+			ajax.searchSession.submit({
+				search: this.$nameInput.val()
+			});		
+		},
+		debounce = function(fn, ms)
+		{
+			var _self = this;
+			clearTimeout(_self.debounceTimer);
+		    _self.debounceTimer = setTimeout(function(){
+		        fn.call(_self);
+		    }, ms || 250);
+		};
+
 		this.$nameInput.attr({
 			"data-column": "name"
 		});
 		this.$nameInput.on("keyup", function(e){
-			_self.debounce(_self.searchName);
+			debounce(searchName);
 		});
 	}
 	else
 	{
 		this.$nameInput.attr({
-			"data-column": "name",
-			"data-id": this.nodeData.id
+			"data-column": "name"
 		});
-		new AjaxInput(this.$nameInput);
+		this.inputs.push(AjaxManager.newInput(this.$nameInput, this.nodeData.id));
 	}
 
 	var $inputGroup = $("<div />",{
@@ -65,7 +89,7 @@ function Node(nodeData, tree)
 		html: '&nbsp;'
 	}).on("click", function(){
 		ajax.addCondition.ops.successFn = function(response){
-			_self.appendCondition(response);
+			_self.addCondition(response);
 		};
 		ajax.addCondition.submit({
 			page: _self.nodeData.id,
@@ -186,7 +210,7 @@ function Node(nodeData, tree)
 				html: 'Open'
 			}).on("click", function(e){
 				e.preventDefault();
-				SidePanel.show(_self);
+				SidePanel.show(_self.nodeData.id);
 			})
 		);
 		$nodeBarRight.append(
@@ -242,7 +266,7 @@ function Node(nodeData, tree)
 	}
 
 	$(nodeData.conditions).each(function(){
-		_self.appendCondition(this);
+		_self.addCondition(this);
 	});
 	this.$node = $("<li />",{
 		class: "tree-li"
@@ -291,6 +315,9 @@ function Node(nodeData, tree)
 						_self.setCopyMoveAjax(false);
 					})
 				)
+				.append(
+					this.$pageStatus
+				)
 			)
 			.append(
 				$nodeBarRight
@@ -301,34 +328,19 @@ function Node(nodeData, tree)
 			class: 'tree-icon-question-answer'
 		})
 	);
-}
-Node.prototype.setChildBranch = function(childBranch){
-	this.childBranch = childBranch;
-};
-Node.prototype.searchName = function(){
-	var _self = this;
-	this.SearchMenu.setLoading();
 
-	ajax.searchSession.ops.successFn = function(response){
-		_self.SearchMenu.setResults(response);
-	};
-	ajax.searchSession.submit({
-		search: this.$nameInput.val()
-	});		
-};
-Node.prototype.appendCondition = function(conditionData){
-	var newCondition = new Condition(conditionData, this);
-	this.conditions[conditionData.id] = newCondition;
-	this.$conditions.append(
-		newCondition.$condition
-	);
-	this.$conditionInput.val("");
-};
-Node.prototype.setRequest = function(request){
-	this.request = request;
-};
-Node.prototype.clearRequest = function(){
-	this.request = null;
+}
+Node.prototype.updatePageStatus = function()
+{
+	this.$pageStatus.removeClass("text-success text-muted");
+	if(this.nodeData.live)
+	{
+		this.$pageStatus.html("Live").addClass("text-success");
+	}
+	else
+	{
+		this.$pageStatus.html("Draft").addClass("text-muted");
+	}
 };
 Node.prototype.getParentId = function(nodeData){
 	if(!nodeData)
@@ -336,42 +348,6 @@ Node.prototype.getParentId = function(nodeData){
 		nodeData = this.nodeData;
 	}
 	return (null === nodeData.parent ? null : (nodeData.parent.id ? nodeData.parent.id : nodeData.parent));
-};
-Node.prototype.setCopyMoveAjax = function(child){
-	var sourceNode = selectedNode,
-	type = sourceNode.request,
-	targetNode = this;
-	var data = {
-		parent: child ? targetNode.nodeData.id : targetNode.getParentId(),
-		sort: child ? 1 : targetNode.nodeData.sort+1
-	};
-	ajax.copyMoveNode.ops.successFn = function(nodeData){
-		sourceNode[type](targetNode, child, nodeData);
-	};
-	ajax.copyMoveNode.submit(data, ajax.copyMoveNode.url + type + '/' + sourceNode.nodeData.id);
-};
-Node.prototype.copy = function(targetNode, child, nodeData){
-	targetNode.addNodeByData(child, nodeData);
-	hideTreeTargets();
-};
-Node.prototype.move = function(targetNode, child, nodeData){
-	this.copy(targetNode, child, nodeData);
-	// delete this node visually now we have added as a new mode wherever it is meant to be
-	this.remove();
-};
-Node.prototype.remove = function(){
-	if(this.childBranch)
-	{
-		$(this.childBranch.nodes).each(function(){
-			this.remove();
-		});
-		this.childBranch = undefined;
-	}
-	this.tree.removeNodeIndex(this.nodeData.sort-1);
-	
-	$(".goto-pagename[data-gotoid="+this.nodeData.id+"]").val("");
-
-	this.$node.remove();
 };
 Node.prototype.addNodeByData = function(child, nodeData){
 	if(child)
@@ -391,11 +367,88 @@ Node.prototype.addNodeByData = function(child, nodeData){
 		this.tree.appendNode(nodeData);
 	}
 };
-Node.prototype.debounce = function(fn, ms)
+Node.prototype.setCopyMoveAjax = function(child){
+	var sourceNode = selectedNode,
+	type = sourceNode.request,
+	targetNode = this;
+	var data = {
+		parent: child ? targetNode.nodeData.id : targetNode.getParentId(),
+		sort: child ? 1 : targetNode.nodeData.sort+1
+	};
+	// change the sort if we are moving to the same tree/branch just later in the list
+	// e.g. if we are at sort position 1, and we want to move it to beneath sort position 2
+	// then position 2 will become position 1, so this sort actually needs to be 2, not 3 - reduce by 1
+	if(type==='move' &&
+		!child &&
+		sourceNode.tree.$ul[0] === targetNode.tree.$ul[0] &&
+		targetNode.nodeData.sort > sourceNode.nodeData.sort)
+	{
+		data.sort--;
+	}
+	ajax.copyMoveNode.ops.successFn = function(nodeData){
+		sourceNode[type](targetNode, child, nodeData);
+	};
+	ajax.copyMoveNode.submit(data, ajax.copyMoveNode.url + type + '/' + sourceNode.nodeData.id);
+};
+Node.prototype.copy = function(targetNode, child, nodeData){
+	targetNode.addNodeByData(child, nodeData);
+	hideTreeTargets();
+};
+Node.prototype.remove = function(){
+	if(this.childBranch)
+	{
+		$(this.childBranch.nodes).each(function(){
+			this.remove();
+		});
+		this.childBranch = undefined;
+	}
+	this.tree.removeNodeIndex(this.nodeData.sort-1);
+	
+	$(".goto-pagename[data-gotoid="+this.nodeData.id+"]").val("");
+
+	this.$node.remove();
+};
+Node.prototype.move = function(targetNode, child, nodeData){
+	this.remove();
+	this.copy(targetNode, child, nodeData);
+};
+Node.prototype.setEditing = function(set)
 {
-	var _self = this;
-	clearTimeout(_self.debounceTimer);
-    _self.debounceTimer = setTimeout(function(){
-        fn.call(_self);
-    }, ms || 250);
+	var editingCls = "editing";
+	this.opened = set;
+	if(set)
+	{
+		if(!this.$treeNode.hasClass("editing"))
+		{
+			this.$treeNode.addClass("editing");
+		}
+	}
+	else
+	{
+		if(this.$treeNode.hasClass("editing"))
+		{
+			this.$treeNode.removeClass("editing");
+		}
+	}
+};
+Node.prototype.addCondition = function(conditionData){
+	var newCondition = new Condition(conditionData, this.nodeData.id);
+	this.conditions[conditionData.id] = newCondition;
+	this.$conditions.append(
+		newCondition.$condition
+	);
+	this.$conditionInput.val("");
+
+	if(this.opened)
+	{
+		SidePanel.addCondition(newCondition);
+	}
+};
+Node.prototype.removeCondition = function(conditionID){
+	this.conditions[conditionID].$condition.remove();
+	if(this.opened)
+	{
+		SidePanel.removeCondition(this.conditions[conditionID]);
+	}
+	this.conditions[conditionID] = undefined;
 };

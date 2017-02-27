@@ -10,7 +10,7 @@ use AppBundle\Utils\AdminManageActions;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-
+use PlUploadBundle\Utils\PlUploadHandler;
 /**
  * @Route(service="app.admin_manage")
  */
@@ -19,14 +19,21 @@ class AdminController
 
     private $templating,
     $seoPage,
-    $kernelRoot;
+    $kernelRoot,
+    $PlHandler;
 
-    public function __construct(EngineInterface $templating, SeoPage $seoPage, string $kernelRoot, AdminManageActions $ama)
+    public function __construct(EngineInterface $templating, SeoPage $seoPage, string $kernelRoot, AdminManageActions $ama, PlUploadHandler $PlHandler)
     {
+        // for the default tree page
         $this->templating = $templating;
         $this->seoPage = $seoPage;
         $this->kernelRoot = $kernelRoot;
+
+        // ajax actions
         $this->adminManageActions = $ama;
+
+        // upload (plupload) service
+        $this->PlHandler = $PlHandler;
     }
 
     /**
@@ -129,5 +136,57 @@ class AdminController
     public function deleteConditionAction(int $id, Request $request)
     {
         return $this->adminManageActions->deleteCondition($id);
+    }
+
+    /**
+     * @Route("/page/upload/{id}", name="admin_upload_file", requirements={"id": "\d+"})
+     * @Method({"POST"})
+     */
+    public function uploadAction(int $id, Request $request)
+    {
+        $file = $this->PlHandler->handle($request);
+        if ($file instanceof JsonResponse) {
+            return $data;
+        }
+        // file is a string with a path to the filename
+        $request->request->set('imagePath', $file);
+        $request->request->remove('name');
+        return $this->adminManageActions->updatePage($id, $request, true);
+    }
+
+    /**
+     * @Route("/question/update/{id}", name="admin_update_question", requirements={"id": "\d+"})
+     * @Method({"POST"})
+     */
+    public function updateQuestionAction(int $id, Request $request)
+    {
+        return $this->adminManageActions->updateQuestion($id, $request);
+    }
+
+    /**
+     * @Route("/answer/add", name="admin_add_answer")
+     * @Method({"POST"})
+     */
+    public function addAnswerAction(Request $request)
+    {
+        return $this->adminManageActions->addAnswer($request);
+    }
+
+    /**
+     * @Route("/answer/update/{id}", name="admin_update_answer", requirements={"id": "\d+"})
+     * @Method({"POST"})
+     */
+    public function updateAnswerAction(int $id, Request $request)
+    {
+        return $this->adminManageActions->updateAnswer($id, $request);
+    }
+
+    /**
+     * @Route("/answer/delete/{id}", name="admin_delete_answer", requirements={"id": "\d+"})
+     * @Method({"GET"})
+     */
+    public function deleteAnswerAction(int $id, Request $request)
+    {
+        return $this->adminManageActions->deleteAnswer($id);
     }
 }

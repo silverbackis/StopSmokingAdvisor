@@ -11,7 +11,7 @@ class VimeoUrlValidator extends ConstraintValidator
 {	
 	// Modified from URL Validator
 	const PATTERN = '~^
-		https:\/\/(vimeo\.com\/)(\d{9,12})
+		https:\/\/(vimeo\.com\/)(\d{8,12})
 	$~ixu';
 
 	/**

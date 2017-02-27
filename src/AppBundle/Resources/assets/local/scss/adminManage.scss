@@ -360,6 +360,15 @@
       height: 100%;
       width: 70px;
     }
+
+    .page-status {
+      font-size: 14px;
+      line-height: 24px;
+      position: absolute;
+      right: 5px;
+      top: 0;
+      z-index: 2;
+    }
   }
 
   &.right {
@@ -610,11 +619,24 @@
     display: none;
   }
 
+  .media-current {
+    margin: 15px 0;
+    text-align: left;
+
+    &.image img {
+      border: 1px solid $teal-light;
+      display: inline-block;
+      max-height: 400px;
+      max-width: 100%;
+    }
+  }
+
   .bootstrap-select {
     min-width: 160px;
   }
 
   .progress {
+    display: none;
     margin-top: 5px;
   }
 
@@ -625,5 +647,10 @@
   .trumbowyg-box,
   .trumbowyg-editor {
     border-color: $teal-light;
+  }
+
+  .answers {
+    padding-bottom: 10px;
+    position: relative;
   }
 }

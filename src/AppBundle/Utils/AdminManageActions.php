@@ -14,6 +14,8 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use AppBundle\Entity\Page;
 use AppBundle\Entity\Condition;
+use AppBundle\Entity\Question;
+use AppBundle\Entity\Answer;
 use Symfony\Component\Validator\ConstraintViolation;
 
 class AdminManageActions
@@ -58,9 +60,16 @@ class AdminManageActions
 		if (!$page instanceof Page) {
 			return $page;
 		}
+		if(count($page->getQuestions())===0)
+		{
+			$question = new Question();
+			$question->setPage($page);
+			$question->setInputType("choice");
+			$page->addQuestion($question);
+			$this->doctrine->flush();
+		}
 		return $this->getOKResponse($page);
 	}
-
 
 	public function searchSessionPages(int $session, Request $request)
 	{
@@ -113,9 +122,15 @@ class AdminManageActions
 		return $this->ccConverter->denormalize($snake_case);
 	}
 
-	public function updatePage(int $pageID, Request $request)
+	private function getGetMethodFromKey($key)
 	{
-		$data = $this->validatePost($request, [], ['name', 'adminDescription', 'live', 'mediaType', 'imagePath', 'videoUrl', 'text', 'forwardToPage']);
+		$snake_case = "get_".$key;
+		return $this->ccConverter->denormalize($snake_case);
+	}
+
+	public function updatePage(int $pageID, Request $request, $postedVar=false)
+	{
+		$data = $this->validatePost($request, [], ['name', 'adminDescription', 'live', 'mediaType', 'imagePath', 'videoUrl', 'text', 'forwardToPage'], $postedVar);
 		if ($data instanceof JsonResponse) {
 			return $data;
 		}
@@ -269,9 +284,95 @@ class AdminManageActions
 	    return $this->getOKResponse();
 	}
 
-	private function validatePost(Request $request, array $requiredKeys = array(), array $optionalKeys = array())
+	public function updateQuestion(int $questionID, Request $request, $postedVar=false)
 	{
-		$decodedJSON = json_decode($request->getContent(), true);
+		$data = $this->validatePost($request, [], ['inputType', 'question', 'variable'], $postedVar);
+		if ($data instanceof JsonResponse) {
+			return $data;
+		}
+
+		$question = $this->fetchQuestion($questionID);
+		if (!$question instanceof Question) {
+			return $question;
+		}
+
+		// apply data to page and validate
+		$validResponse = $this->validateEntity($question, $data);
+		if ($validResponse instanceof JsonResponse) {
+			return $validResponse;
+		}
+
+		$this->doctrine->flush();
+		return $this->getOKResponse($question);
+	}
+
+	public function addAnswer(Request $request)
+	{
+		$data = $this->validatePost($request, ['question']);
+		if ($data instanceof JsonResponse) {
+			return $data;
+		}
+
+		$answer = new Answer();
+
+		$validResponse = $this->validateEntity($answer, $data);
+		if ($validResponse instanceof JsonResponse) {
+			return $validResponse;
+		}
+
+		$this->doctrine->persist($answer);
+	    $this->doctrine->flush();
+
+	    return $this->getOKResponse($answer);
+	}
+
+	public function deleteAnswer(int $id)
+	{
+		$answer = $this->doctrine->getRepository('AppBundle\Entity\Answer')->findOneById($id);
+    	if(null === $answer)
+    	{
+    		return $this->getBadRequestResponse("The answer ID '$id' does not exist.");
+    	}
+	    
+	    // remove the page that was requested
+    	$this->doctrine->remove($answer);
+    	$this->doctrine->flush();
+
+	    return $this->getOKResponse();
+	}
+
+	public function updateAnswer(int $id, Request $request)
+	{
+		$data = $this->validatePost($request, [], ['answer', 'saveValue']);
+		if ($data instanceof JsonResponse) {
+			return $data;
+		}
+
+		$answer = $this->fetchAnswer($id);
+		if (!$answer instanceof Answer) {
+			return $answer;
+		}
+
+		// apply data to page and validate
+		$validResponse = $this->validateEntity($answer, $data);
+		if ($validResponse instanceof JsonResponse) {
+			return $validResponse;
+		}
+
+		$this->doctrine->flush();
+		return $this->getOKResponse($answer);
+	}
+
+	private function validatePost(Request $request, array $requiredKeys = array(), array $optionalKeys = array(), $postedVar=false)
+	{
+		if(!$postedVar)
+		{
+			$decodedJSON = json_decode($request->getContent(), true);
+		}
+		else
+		{
+			$decodedJSON = $request->request->all();
+		}
 		$allPossibleKeys = array_merge($requiredKeys, $optionalKeys);
 
 		// Expected post variables only
@@ -303,13 +404,23 @@ class AdminManageActions
 
 	private function validateEntity($entity, $data)
 	{
+		$fileColumns = array(
+			'imagePath'
+		);
+
 		$entityReferences = array(
 			'AppBundle:Page'=>array(
 				'parent',
 				'forwardToPage',
 				'page'
+			),
+			'AppBundle:Question'=>array(
+				'question'
 			)
 		);
+
+		$unlinkPaths = [];
+		$failUnlinkPaths = [];
 
 		$allEntityRefs = [];
 		foreach($entityReferences as $e=>$erSet)
@@ -327,6 +438,17 @@ class AdminManageActions
 		{
 			if(!in_array($k, $entityKeys))
 			{
+				if(in_array($k, $fileColumns))
+				{
+					$getMethod = $this->getGetMethodFromKey($k);
+					$currentPath = $entity->$getMethod();
+					if($currentPath)
+					{
+						$unlinkPaths[] = $currentPath;
+					}
+					$failUnlinkPaths[] = $d;				
+				}
+
 				$setMethod = $this->getSetMethodFromKey($k);
 				$entity->$setMethod($d);
 			}
@@ -355,8 +477,22 @@ class AdminManageActions
 			}
 		}
 
-		if (count($errors) > 0) {
+		if (count($errors) > 0)
+		{
+			// remove any uploaded files if validation failed to modify the database
+			foreach($failUnlinkPaths as $unlinkFile)
+			{
+				unlink($unlinkFile);
+			}
         	return $this->getBadRequestResponse($errors);
+	    }
+	    else
+	    {
+	    	// remove any files that had been uploaded previously and will now be changed
+	    	foreach($unlinkPaths as $unlinkFile)
+			{
+				unlink($unlinkFile);
+			}
 	    }
 	    return true;
 	}
@@ -369,6 +505,26 @@ class AdminManageActions
 			return $this->getBadRequestResponse("The page ID '$pageID' does not exist.");
     	}
     	return $page;
+	}
+
+	private function fetchQuestion(int $questionID)
+	{
+		$question = $this->doctrine->getRepository('AppBundle\Entity\Question')->findOneById($questionID);
+    	if(null === $question)
+    	{
+			return $this->getBadRequestResponse("The question ID '$questionID' does not exist.");
+    	}
+    	return $question;
+	}
+
+	private function fetchAnswer(int $answerID)
+	{
+		$answer = $this->doctrine->getRepository('AppBundle\Entity\Answer')->findOneById($answerID);
+    	if(null === $answer)
+    	{
+			return $this->getBadRequestResponse("The answer ID '$answerID' does not exist.");
+    	}
+    	return $answer;
 	}
 
 	private function updateOrder($session, $parentID, $currentPageSort, $changeBy="+1", int $excludeId=null)
