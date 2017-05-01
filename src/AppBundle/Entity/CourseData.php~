@@ -1,0 +1,67 @@
+<?php
+/**
+ * Course data is all the variables saved within a user's course, this is saved accross all sessions
+ * Key value pairs that can be saved and loaded for each page being displayed in a session in a course
+ */
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping\UniqueConstraint;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="course_data", uniqueConstraints={@UniqueConstraint(name="var_key_unique", columns={"course", "var"})})
+ */
+class CourseData {
+  /**
+   * @ORM\Id
+   * @ORM\Column(type="integer")
+   * @ORM\GeneratedValue(strategy="AUTO")
+   */
+  protected $id;
+
+  /**
+   * @ORM\Column(type="datetime", nullable=false)
+   */
+  protected $created_at;
+
+  /**
+   * @ORM\Column(type="datetime", nullable=false)
+   */
+  protected $last_updated;
+
+  /**
+   * Many Datas have One Course.
+   * @ORM\ManyToOne(targetEntity="Course", inversedBy="data")
+   * @ORM\JoinColumn(name="course_id", referencedColumnName="id", onDelete="NO ACTION")
+   */
+  private $course;
+
+  /**
+   * @ORM\Column(type="string", length=255, nullable=true)
+   */
+  protected $var;
+
+  /**
+   * @ORM\Column(type="string", length=255, nullable=true)
+   */
+  protected $value;
+
+  /**
+   * @ORM\PrePersist
+   */
+  public function setCreatedAtValue()
+  {
+      $this->created_at = new \DateTime();
+      $this->last_updated = new \DateTime();
+  }
+
+  /**
+   * @ORM\PreUpdate
+   */
+  public function setUpdatedValue()
+  {
+      $this->last_updated = new \DateTime();
+  }
+}

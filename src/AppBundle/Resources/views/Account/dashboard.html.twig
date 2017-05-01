@@ -1,4 +1,16 @@
 {% extends '@App/base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+        '@AppBundle/Resources/assets/local/scss/accountDashboard.scss'
+        filter='cssrewrite' 
+        filter='?uglifycss' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+
 {% block body %}
 {% for flash_message in app.session.flashBag.get('notice') %}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -8,5 +20,87 @@
         <strong>{{ flash_message }}</strong>
     </div>
 {% endfor %}
-Test user account page <a href="/logout">logout</a>
+<div class="container-fluid h-100 page">
+    <table class="page-table">
+      <tbody>
+        <tr>
+          <td class="dashboard-top">
+            <div class="container-fluid h-100">
+              <table class="page-table">
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="row header-row">
+                        <div class="col text-center">
+                          <img src="{{ asset('bundles/app/svg/logo.svg') }}" class="logo" alt="Stop Smoking Advisor Logo" />
+                          <div class="settings-dropdown">
+                            <div class="dropdown">
+                              <a href="#" class="settings-cog" id="dropdownSettingsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Settings</span>
+                              </a>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownSettingsMenu">
+                                <a class="dropdown-item" href="#">Settings</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout">Logout</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="h-100 dashboard-feature-content text-center">
+                      <h1>Ready to try and quit?</h1>
+                      <h2>Your first session is now available</h2>
+                      <a href="{{ path('account_session') }}" class="btn btn-lg btn-success btn-start">Start Now <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="start now button arrow" /></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="dashboard-bottom">
+            <div class="container-fluid h-100">
+              <div class="row h-100">
+                <div class="col-md-6 dashboard-progress">
+                  <div class="row h-100">
+                    <div class="col-12 align-self-center dashboard-bottom-box-pad">
+                      <div class="progress-initial">
+                        <div class="dashboard-bottom-image">
+                          <img src="{{ asset('bundles/app/svg/default_progress.svg') }}" alt="Progress pie chart illustration" />
+                        </div>
+                        <div class="dashboard-bottom-info">
+                          <h3>Your Progress</h3>
+                          <h4>This will be shown after the first session</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 dashboard-savings">
+                  <div class="row h-100">
+                    <div class="col-12 align-self-center dashboard-bottom-box-pad">
+                      <div class="savings-initial">
+                        <div class="dashboard-bottom-image">
+                          <img src="{{ asset('bundles/app/svg/coin.svg') }}" alt="Piggy Bank Coin" class="piggy-coin" />
+                          <img src="{{ asset('bundles/app/svg/piggy.svg') }}" alt="Piggy Bank" class="piggy" />
+                        </div>
+                        <div class="dashboard-bottom-info">
+                          <h3>Savings Calculator</h3>
+                          <h4>Savings will appear after the first session</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+</div>
 {% endblock %}

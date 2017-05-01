@@ -32,7 +32,7 @@ class LoadSamplePages implements FixtureInterface, ContainerAwareInterface
         $page->setSort($sort);
         $page->setName('Default session '.$session.' page');
         $page->setAdminDescription('Default session '.$session.' page description');
-        $page->setDraft(0);
+        $page->setLive(0);
         $page->setForwardToPage($forwardTo);
 
         // validate

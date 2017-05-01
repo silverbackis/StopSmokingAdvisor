@@ -84,12 +84,12 @@ class AdminManageActions
 			->where('p.session = :session')
 			->andWhere('p.name LIKE :search')
 			->setParameter('session', $session)
-   			->setParameter('search', '%'.$data['search'].'%')
-   			->orderBy('p.name', 'ASC')
-   			->getQuery()
-   			->getResult();
+ 			->setParameter('search', '%'.$data['search'].'%')
+ 			->orderBy('p.name', 'ASC')
+ 			->getQuery()
+ 			->getResult();
 
-   		return $this->getOKResponse($pages);
+   	return $this->getOKResponse($pages);
 	}
 
 	public function addPage(Request $request)
@@ -107,11 +107,16 @@ class AdminManageActions
 			return $validResponse;
 		}
 
-		$this->updateOrder($data['session'], $data['parent'], $data['sort'], "+1");
+		// Links cannot be changed to live, so will always be live
+		if($page->getType()=='link')
+		{
+			$page->setLive(true);
+		}
 
-	    //persist to the database
-	    $this->doctrine->persist($page);
-	    $this->doctrine->flush();
+		$this->updateOrder($data['session'], $data['parent'], $data['sort'], "+1");
+    //persist to the database
+    $this->doctrine->persist($page);
+    $this->doctrine->flush();
 
 		return $this->getOKResponse($page);
 	}
@@ -434,6 +439,7 @@ class AdminManageActions
 
 		// Set everything that is not supposed to be an object
 		$entityKeysInData = [];
+		//die(dump($data));
 		foreach($data as $k=>$d)
 		{
 			if(!in_array($k, $entityKeys))
@@ -457,8 +463,6 @@ class AdminManageActions
 				$entityKeysInData[] = $k;
 			}
 		}
-		//Validate the plain data
-		$errors = $this->validator->validate($entity);
 
 		//Find entity objects for remaining keys and add errors to validation if they do not exist
 		foreach($entityKeysInData as $key)
@@ -476,6 +480,9 @@ class AdminManageActions
 				$entity->$setMethod(null);
 			}
 		}
+		
+		//Validate
+		$errors = $this->validator->validate($entity);
 
 		if (count($errors) > 0)
 		{
@@ -493,8 +500,8 @@ class AdminManageActions
 			{
 				unlink($unlinkFile);
 			}
-	    }
-	    return true;
+	  }
+	  return true;
 	}
 
 	private function fetchPage(int $pageID)
@@ -537,24 +544,25 @@ class AdminManageActions
 	    }
 	    else
 	    {
-	    	$whereStr = 'p.parent=:pid';
+	    	$whereStr = 'p.parent = :pid';
 	    	$qb->setParameter('pid', $parentID);
 	    }
-	    $whereStr .= ' AND p.sort>= :cpsort';
+
+	    $whereStr .= ' AND p.sort >= :cpsort';
 	    $qb->setParameter('cpsort', $currentPageSort);
 
 	    $whereStr .= ' AND p.session = :session';
 	    $qb->setParameter('session', $session);
 	    if($excludeId)
 	    {
-	    	$whereStr .= ' AND p.id!=:exclid';
+	    	$whereStr .= ' AND p.id != :exclid';
 	    	$qb->setParameter('exclid', $excludeId);
 	    }
 	    $query = $qb->update('AppBundle\Entity\Page', 'p')
 	    	->set('p.sort', 'p.sort'.$changeBy)
 	    	->where($whereStr)
 	    	->getQuery();
-
+	    
 	    try
 	    {
 	   		$query->getSingleResult();

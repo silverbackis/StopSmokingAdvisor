@@ -18,3 +18,13 @@ services:
     arguments: ["@doctrine.orm.entity_manager"]
     tags:
       - { name: validator.constraint_validator }
+
+  app.course_manager:
+    class: AppBundle\Manager\CourseManager
+    arguments: ["@security.authorization_checker", "@security.token_storage", "@doctrine.orm.entity_manager"]
+    public: false
+
+  app.session_manager:
+    class: AppBundle\Manager\SessionManager
+    arguments: ["@doctrine.orm.entity_manager", "@app.course_manager"]
+    public: true

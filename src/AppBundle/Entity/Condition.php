@@ -26,6 +26,11 @@ class Condition
 
     /**
      * @ORM\Column(name="`condition`", type="string", length=150, nullable=false)
+     * @Assert\Regex(
+     *     pattern="(([A-Za-z0-9_-](\<|\>|\<=|\>=|=).*)|[A-Za-z0-9_-])",
+     *     match=true,
+     *     message="You have not entered a valid conditional statement"
+     * )
      */
     protected $condition;
 

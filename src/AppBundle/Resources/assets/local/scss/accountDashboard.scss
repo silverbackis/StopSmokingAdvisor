@@ -1,0 +1,152 @@
+@import 'bootstrap/variables';
+
+html,
+body {
+  height: 100%;
+}
+
+.page {
+  min-height: 700px;
+  padding: 0;
+}
+
+.page-table {
+  height: 100%;
+  width: 100%;
+
+  td {
+    padding: 0;
+    vertical-align: top;
+
+    &.dashboard-feature-content {
+      color: $teal;
+      font-family: 'Comfortaa', cursive;
+      padding: 2rem;
+      vertical-align: middle;
+    }
+
+    &.dashboard-top {
+      background: url($asset-image-base + 'bg_landscape.png') 50% 50% no-repeat;
+      background-size: cover;
+    }
+
+    &.dashboard-bottom {
+      height: 33%;
+
+      > .row {
+        min-height: 300px;
+      }
+    }
+  }
+}
+
+.header-row {
+  padding: 2rem 2rem 0;
+}
+
+.logo {
+  width: 280px;
+}
+
+.settings-dropdown {
+  position: absolute;
+  right: 0;
+  top: -1rem;
+
+  .dropdown-menu {
+    padding: 0;
+  }
+
+  .dropdown-item {
+    color: $teal;
+    padding: .5rem 1rem;
+    text-align: center;
+
+    &:active {
+      background: $gray-lighter;
+    }
+  }
+
+  .dropdown-divider {
+    margin: 0;
+  }
+}
+
+.settings-cog {
+  background: url($asset-svg-base + 'cog.svg') 50% 50% no-repeat;
+  display: block;
+  height: 40px;
+  width: 40px;
+}
+
+.dashboard-progress {
+  background: $gray-lightest;
+  color: $teal;
+}
+
+.dashboard-savings {
+  background: $white;
+  color: $pink;
+}
+
+.dashboard-progress,
+.dashboard-savings {
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.4rem;
+}
+
+.btn-start {
+  margin-top: 2rem;
+  padding: 1.15rem 4.5rem;
+  position: relative;
+
+  &:focus {
+    color: $white;
+  }
+}
+
+.dashboard-bottom-box-pad {
+  padding: 3rem;
+}
+
+.next-icon {
+  height: 20px;
+  //margin-top: -10px;
+  //position: absolute;
+  //right: 3.5rem;
+  //top: 50%;
+  margin-left: .5rem;
+  margin-top: -3px;
+}
+
+.dashboard-bottom-image {
+  height: 115px;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.piggy-coin {
+  left: 50%;
+  margin-left: -15px;
+  position: absolute;
+}
+
+.piggy {
+  bottom: 0;
+  left: 50%;
+  margin-left: -52px;
+  position: absolute;
+}
+
+.dashboard-bottom-info {
+  h3 {
+    font-size: 1.6rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+}

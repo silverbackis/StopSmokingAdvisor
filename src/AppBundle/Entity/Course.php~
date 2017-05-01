@@ -1,0 +1,76 @@
+<?php
+/**
+ * A user starts a course of sessions and can start new courses.
+ * A course in the database keeps track of where a user is in relation to sessions
+ * A course can expire - based on if latest available session has expired
+ * A course will be created when a user logs in if no course is available
+ * A user will always be on the most recent course they started
+ */
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="course")
+ */
+class Course {
+  /**
+   * @ORM\Id
+   * @ORM\Column(type="integer")
+   * @ORM\GeneratedValue(strategy="AUTO")
+   */
+  protected $id;
+
+  /**
+   * @ORM\Column(type="datetime", nullable=false)
+   */
+  protected $created_at;
+
+  /**
+   * @ORM\Column(type="datetime", nullable=false)
+   */
+  protected $last_updated;
+
+  /**
+   * @ORM\Column(type="boolean", options={"default" : 0})
+   */
+  protected $expired = 0;
+
+  /**
+   * Many Course have One User.
+   * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+   * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="NO ACTION")
+   */
+  private $user;
+
+  /**
+   * One Course has Many Datas.
+   * @ORM\OneToMany(targetEntity="CourseData", mappedBy="course", cascade={"all"})
+   */
+  private $data;
+
+  /**
+   * One Course has Many Datas.
+   * @ORM\OneToMany(targetEntity="Session", mappedBy="course", cascade={"all"})
+   */
+  private $sessions;
+
+  /**
+   * @ORM\PrePersist
+   */
+  public function setCreatedAtValue()
+  {
+      $this->created_at = new \DateTime();
+      $this->last_updated = new \DateTime();
+  }
+
+  /**
+   * @ORM\PreUpdate
+   */
+  public function setUpdatedValue()
+  {
+      $this->last_updated = new \DateTime();
+  }
+}
