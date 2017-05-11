@@ -1,10 +1,5 @@
 @import 'bootstrap/variables';
 
-html,
-body {
-  height: 100%;
-}
-
 .page {
   min-height: 700px;
   padding: 0;
@@ -100,26 +95,10 @@ h2 {
 
 .btn-start {
   margin-top: 2rem;
-  padding: 1.15rem 4.5rem;
-  position: relative;
-
-  &:focus {
-    color: $white;
-  }
 }
 
 .dashboard-bottom-box-pad {
   padding: 3rem;
-}
-
-.next-icon {
-  height: 20px;
-  //margin-top: -10px;
-  //position: absolute;
-  //right: 3.5rem;
-  //top: 50%;
-  margin-left: .5rem;
-  margin-top: -3px;
 }
 
 .dashboard-bottom-image {
@@ -150,3 +129,8 @@ h2 {
     font-size: 1rem;
   }
 }
+
+.text-next-session {
+  color: $pink;
+}
+

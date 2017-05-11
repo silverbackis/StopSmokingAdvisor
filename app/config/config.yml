@@ -40,6 +40,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form_themes:
+        - 'form/custom_layout.html.twig'
 
 # Doctrine Configuration
 doctrine:
@@ -159,14 +161,14 @@ bw_base:
                 apple-touch-icon-precomposed:
                 icon:
         js_sdk:
-            ganalytics:
+            google_analytics:
                 enabled: true
                 id: UA-88234079-2
                 domain: auto
             woopra:
                 enabled: false
                 domain: null
-            facebookPixel:
+            facebook_pixel:
                 enabled: false
                 id: null
             facebook:

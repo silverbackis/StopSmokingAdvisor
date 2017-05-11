@@ -1,0 +1,37 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="user_settings")
+ */
+class UserSettings
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="NO ACTION")
+     */
+    public $user;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default" : 1})
+     */
+    protected $reminder_emails = 1;
+    
+    public function __construct()
+    {
+        parent::__construct();
+        // your own logic
+    }
+}

@@ -26,5 +26,42 @@ services:
 
   app.session_manager:
     class: AppBundle\Manager\SessionManager
-    arguments: ["@doctrine.orm.entity_manager", "@app.course_manager"]
+    arguments: ["@doctrine.orm.entity_manager", "@app.course_manager", "@router"]
     public: true
+
+  app.session_type:
+    class: AppBundle\Form\SessionType
+    arguments: []
+    tags:
+        - { name: form.type }
+
+  app.choice_type_extension:
+    class: AppBundle\Form\Extension\ChoiceTypeExtension
+    tags:
+        - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\ChoiceType }
+
+  app.text_type_extension:
+    class: AppBundle\Form\Extension\TextTypeExtension
+    tags:
+        - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextType }
+
+  app.number_type_extension:
+    class: AppBundle\Form\Extension\NumberTypeExtension
+    tags:
+        - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\NumberType }
+  
+  app.submit_type_extension:
+    class: AppBundle\Form\Extension\SubmitTypeExtension
+    tags:
+        - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\SubmitType }
+
+  app.validator.course_data_var:
+    class: AppBundle\Validator\Constraints\CourseDataVarValidator
+    arguments: ["@app.session_manager"]
+    tags:
+      - { name: validator.constraint_validator }
+  
+  twig.extension.stringloader:
+    class: Twig_Extension_StringLoader
+    tags:
+        - { name: twig.extension }

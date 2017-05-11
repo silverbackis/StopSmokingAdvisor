@@ -31,12 +31,17 @@ class Question
 
     /**
      * @ORM\Column(type="string", length=80, nullable=true)
+     * @Assert\Regex(
+       *     pattern="/^[a-z0-9_-]+$/i",
+       *     match=true,
+       *     message="Your quesiton's variable name contains invalid characters. It can only contain letters, numbers, underscores (_) and dashes (-)"
+       * )
      */
     protected $variable;
 
     /**
      * @ORM\Column(type="string", length=30, nullable=false)
-     * @Assert\Choice({"choice", "choice_emotive", "choice_boolean", "text", "float", "date", "date_quit"})
+     * @Assert\Choice(choices = {"choice", "choice_emotive", "choice_boolean", "text", "float", "date", "date_quit"}, message = "The question type selected is not valid", strict = true)
      */
     protected $input_type;
 

@@ -206,6 +206,7 @@ var SidePanel = (function($){
 		var Node = NodeManager.get(nodeID);
 
 		var questionID = Node.nodeData.questions.length>0 ? Node.nodeData.questions[0].id : null;
+
 		$.each(this.inputs, function()
 		{
 			var AjaxInput = this,
@@ -243,7 +244,11 @@ var SidePanel = (function($){
 		_self = this;
 		if(null !== Node.nodeData.imagePath)
 		{
-			this.$nodeImage.attr("src", "/"+Node.nodeData.imagePath);
+			this.$nodeImage.attr("src", "/"+Node.nodeData.imagePath).show();
+		}
+		else
+		{
+			this.$nodeImage.attr("src", "#").hide();
 		}
 		_self.$vimeoFrame.empty();
 		if('' !== Node.nodeData.videoUrl && null !== Node.nodeData.videoUrl)

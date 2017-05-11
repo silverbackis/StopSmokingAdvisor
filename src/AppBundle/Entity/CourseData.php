@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 
+use AppBundle\Validator\Constraints as AppBundleAssert;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="user_course_data", uniqueConstraints={@UniqueConstraint(name="var_key_unique", columns={"course_id", "var"})})
@@ -41,17 +43,14 @@ class CourseData {
 
   /**
    * @ORM\Column(type="string", length=255, nullable=true)
-   * @Assert\Regex(
-   *     pattern="[A-Za-z0-9_-]",
-   *     match=true,
-   *     message="Your variable name contains invalid characters. It can only contain letters, numbers, underscores (_) and dashes (-)"
-   * )
+   * @AppBundleAssert\CourseDataVar()
    */
   protected $var;
 
   /**
    * @ORM\Column(type="string", length=255, nullable=true)
-   */
+   * @Assert\NotBlank()
+  */
   protected $value;
 
   /**

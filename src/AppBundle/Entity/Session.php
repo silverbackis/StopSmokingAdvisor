@@ -32,7 +32,7 @@ class Session {
   protected $last_updated;
 
   /**
-   * Many Datas have One Course.
+   * Many Sessions have One Course.
    * @ORM\ManyToOne(targetEntity="Course", inversedBy="sessions")
    * @ORM\JoinColumn(name="course_id", referencedColumnName="id")
    */
@@ -51,7 +51,7 @@ class Session {
 
   /**
    * One Session has One Last Page.
-   * @ORM\OneToOne(targetEntity="Page")
+   * @ORM\ManyToOne(targetEntity="Page")
    * @ORM\JoinColumn(name="last_page_id", referencedColumnName="id", onDelete="SET NULL")
    */
   private $last_page = null;
@@ -60,6 +60,20 @@ class Session {
    * @ORM\Column(type="boolean", options={"default" : 0})
    */
   protected $completed = 0;
+
+  /**
+   * One Session has Many Views.
+   * @ORM\OneToMany(targetEntity="SessionPageView", mappedBy="session", cascade={"all"})
+   */
+  public $views;
+
+  /**
+   * Constructor
+   */
+  public function __construct()
+  {
+      $this->views = new \Doctrine\Common\Collections\ArrayCollection();
+  }
 
   /**
    * @ORM\PrePersist
@@ -231,4 +245,38 @@ class Session {
   {
       return $this->completed;
   }
+
+    /**
+     * Add view
+     *
+     * @param \AppBundle\Entity\SessionPageView $view
+     *
+     * @return Session
+     */
+    public function addView(\AppBundle\Entity\SessionPageView $view)
+    {
+        $this->views[] = $view;
+
+        return $this;
+    }
+
+    /**
+     * Remove view
+     *
+     * @param \AppBundle\Entity\SessionPageView $view
+     */
+    public function removeView(\AppBundle\Entity\SessionPageView $view)
+    {
+        $this->views->removeElement($view);
+    }
+
+    /**
+     * Get views
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getViews()
+    {
+        return $this->views;
+    }
 }

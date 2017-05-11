@@ -165,7 +165,7 @@ AjaxInput.prototype.setInputValue = function(value)
 	}
 	else if(this.$input.is("div"))
 	{
-		this.$input.trumbowyg('html', value);
+		this.$input.trumbowyg('html', value === null ? '' : value);
 	}
 	else if(this.$input.is("select")){
 		this.$input.selectpicker('val', value);
@@ -173,7 +173,7 @@ AjaxInput.prototype.setInputValue = function(value)
 	}
 	else
 	{
-		this.$input.val(value);
+		this.$input.val(value === null ? '' : value);
 	}
 };
 AjaxInput.prototype.getInputValue = function()

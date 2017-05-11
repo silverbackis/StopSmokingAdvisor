@@ -3,6 +3,7 @@
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets
+        '@AppBundle/Resources/assets/local/scss/accountLayout.scss'
         '@AppBundle/Resources/assets/local/scss/accountDashboard.scss'
         filter='cssrewrite' 
         filter='?uglifycss' %}
@@ -12,14 +13,6 @@
 
 
 {% block body %}
-{% for flash_message in app.session.flashBag.get('notice') %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <strong>{{ flash_message }}</strong>
-    </div>
-{% endfor %}
 <div class="container-fluid h-100 page">
     <table class="page-table">
       <tbody>
@@ -30,6 +23,23 @@
                 <tbody>
                   <tr>
                     <td>
+                      {% set flashes = app.session.flashbag.all() %}
+                      {% if flashes | length > 0 %}
+                        <div class="row no-gutters session-notices">
+                          <div class="col-12">
+                          {% for type, messages in flashes %}
+                              {% for message in messages %}
+                                  <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                      </button>
+                                      <strong>{{ message }}</strong>
+                                  </div>
+                              {% endfor %}
+                          {% endfor %}
+                          </div>
+                        </div>
+                      {% endif %}
                       <div class="row header-row">
                         <div class="col text-center">
                           <img src="{{ asset('bundles/app/svg/logo.svg') }}" class="logo" alt="Stop Smoking Advisor Logo" />
@@ -39,9 +49,9 @@
                                 <span class="sr-only">Settings</span>
                               </a>
                               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownSettingsMenu">
-                                <a class="dropdown-item" href="#">Settings</a>
+                                <a class="dropdown-item" href="{{ path('account_settings') }}">Settings</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/logout">Logout</a>
+                                <a class="dropdown-item" href="{{ path('fos_user_security_logout') }}">Logout</a>
                               </div>
                             </div>
                           </div>
@@ -51,9 +61,22 @@
                   </tr>
                   <tr>
                     <td class="h-100 dashboard-feature-content text-center">
-                      <h1>Ready to try and quit?</h1>
-                      <h2>Your first session is now available</h2>
-                      <a href="{{ path('account_session') }}" class="btn btn-lg btn-success btn-start">Start Now <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="start now button arrow" /></a>
+                      {% if session_available %}
+                      <h1>{{ session_number > 1 ? 'Welcome Back!' : 'Ready to try and quit?' }}</h1>
+                      <h2>Your {{ session_number > 1 ? 'next' : 'first' }} session is {{ session_started ? 'still' : 'now' }} available</h2>
+
+                      <a href="{{ path('account_session') }}" class="btn btn-lg btn-success btn-start">{{ session_started ? 'Continue' : 'Start Now' }} <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="Continue to session" /></a>
+                      {% elseif session_expired %}
+                      <h1>Oh No!</h1>
+                      <h2>Session {{ session_number }} expired on {{ session_expired_date }}.</h2>
+                      <h2 class="text-next-session">Remember: Each session only available for 1 week after it unlocks.</h2>
+                      <a href="{{ path('account_restart') }}" class="btn btn-lg btn-success btn-start">Start Again <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="Continue to session" /></a>
+                      {% else %}
+                      <h1>Great job!<br />
+                      You've finished session {{ session_number-1 }}</h1>
+                      <h2 class="text-next-session">Your next session: {{ session_available_date }}</h2>
+                      <h3 class="reminder-info">{{ reminder_emails ? 'You will receive a reminder email' : 'Please be aware you will not receive a reminder email' }} <a href="{{ path('account_settings') }}">(change)</a></h3>
+                      {% endif %}
                     </td>
                   </tr>
                 </tbody>
@@ -68,6 +91,17 @@
                 <div class="col-md-6 dashboard-progress">
                   <div class="row h-100">
                     <div class="col-12 align-self-center dashboard-bottom-box-pad">
+                      {% if session_number > 1 %}
+                      <div class="progress-initial">
+                        <div class="dashboard-bottom-image">
+                          <img src="{{ asset('bundles/app/svg/default_progress.svg') }}" alt="Progress pie chart illustration" />
+                        </div>
+                        <div class="dashboard-bottom-info">
+                          <h3>Your Progress</h3>
+                          <h4>{{ ((session_number-1)/6*100)|round(2) }}% Completed</h4>
+                        </div>
+                      </div>
+                      {% else %}
                       <div class="progress-initial">
                         <div class="dashboard-bottom-image">
                           <img src="{{ asset('bundles/app/svg/default_progress.svg') }}" alt="Progress pie chart illustration" />
@@ -77,6 +111,7 @@
                           <h4>This will be shown after the first session</h4>
                         </div>
                       </div>
+                      {% endif %}
                     </div>
                   </div>
                 </div>

@@ -3,6 +3,10 @@
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets
+        '@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/css/bootstrap-select.css'
+        '@AppBundle/Resources/assets/global/bower/flatpickr/dist/flatpickr.min.css'
+        '@AppBundle/Resources/assets/global/flatpickr_theme.css'
+        '@AppBundle/Resources/assets/local/scss/accountLayout.scss'
         '@AppBundle/Resources/assets/local/scss/accountSession.scss'
         filter='cssrewrite' 
         filter='?uglifycss' %}
@@ -10,38 +14,101 @@
     {% endstylesheets %}
 {% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+        '@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/js/bootstrap-select.min.js'
+        '@AppBundle/Resources/assets/global/bower/flatpickr/dist/flatpickr.js'
+        '@AppBundle/Resources/assets/local/js/accountSession.js'
+        filter='?uglifyjs2' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
 
 {% block body %}
-{% for flash_message in app.session.flashBag.get('notice') %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <strong>{{ flash_message }}</strong>
-    </div>
-{% endfor %}
-<div class="container-fluid h-100 page">
-    <table class="page-table">
-      <tbody>
-        <tr>
-          <td class="dashboard-top">
-            <div class="container-fluid h-100">
-              Page ID: {{ page.id }}
 
-              <a href="{{ path('account_dashboard') }}">Exit session</a>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td class="dashboard-bottom">
-            <div class="container-fluid h-100">
-              <div class="row h-100">
-                
+<div class="container-fluid">
+  {% set flashes = app.session.flashbag.all() %}
+  {% if flashes | length > 0 %}
+    <div class="row no-gutters session-notices">
+      <div class="col-12">
+      {% for type, messages in flashes %}
+          {% for message in messages %}
+              <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  <strong>{{ message }}</strong>
               </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          {% endfor %}
+      {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="row no-gutters session-header-row">
+    <div class="col-12">
+      <span class="logo-header">
+        <h2>Session {{ session_number }}</h2>
+        <h1>{{ title }}</h1>
+      </span>
+      <a href="{{ path('account_dashboard') }}" class="exit-link">Exit session</a>
+    </div>
+    <div class="col-12">
+      <div class="progress-bar">
+        <div class="progress bg-success" style="width: {{ session_progress_percent }}%;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row session-content-row">
+    <div class="col">
+      <div class="session-text-outer">
+        <h3>{{ name }}</h3>
+        <div class="session-text">
+          {{ text|raw }}
+        </div>
+      </div>
+    </div>
+    {% if media_type != 'none' %}
+    <div class="col-12 col-lg-auto col-media">
+      <div class="session-media">
+        {% if media_type == 'image' and image_path is not empty %}
+          <img src="{{ asset(image_path) }}" />
+        {% endif %}
+        {% if media_type == 'video' and video_url is not empty %}
+          <div class='embed-container'>
+          <iframe id="vimeoVideo" class="vimeo-video" src="https://player.vimeo.com/video/{{ video_url|split('/')|last }}?title=0&amp;byline=0&amp;portrait=0&amp;color=1e92c1" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true"></iframe>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% if form %}
+  {{ form_start(form) }}
+  <div class="row no-gutters session-question-row">
+    <div class="col-12">
+      <div class="session-question">
+        {{ form_label(form.value) }}
+      </div>
+      <div class="session-input">
+        {{ form_widget(form.value) }}
+      </div>
+    </div>
+  </div>
+  <div class="row session-continue-row">
+    <div class="col-12">
+      {{ form_widget(form.save) }}
+    </div>
+  </div>
+  {{ form_end(form) }}
+  {% else %}
+  <div class="row session-continue-row">
+    <div class="col-12">
+      <a href="{{ path('account_session_next') }}" class="btn btn-lg btn-success btn-start">Continue <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="" /></a>
+    </div>
+  </div>
+  {% endif %}
+  
 </div>
 {% endblock %}

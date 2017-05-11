@@ -306,7 +306,7 @@ class AdminManageActions
 		if ($validResponse instanceof JsonResponse) {
 			return $validResponse;
 		}
-
+		
 		$this->doctrine->flush();
 		return $this->getOKResponse($question);
 	}
@@ -319,8 +319,11 @@ class AdminManageActions
 		}
 
 		$answer = new Answer();
-
-		$validResponse = $this->validateEntity($answer, $data);
+		$validResponse = $this->validateEntity($answer, $data, [
+			'AppBundle:Question'=>array(
+				'question'
+			)
+		]);
 		if ($validResponse instanceof JsonResponse) {
 			return $validResponse;
 		}
@@ -407,22 +410,19 @@ class AdminManageActions
 		return $decodedJSON;
 	}
 
-	private function validateEntity($entity, $data)
+	private function validateEntity($entity, $data, $extraEntityRefs = array())
 	{
 		$fileColumns = array(
 			'imagePath'
 		);
 
-		$entityReferences = array(
+		$entityReferences = array_merge([
 			'AppBundle:Page'=>array(
 				'parent',
 				'forwardToPage',
 				'page'
-			),
-			'AppBundle:Question'=>array(
-				'question'
 			)
-		);
+		], $extraEntityRefs);
 
 		$unlinkPaths = [];
 		$failUnlinkPaths = [];

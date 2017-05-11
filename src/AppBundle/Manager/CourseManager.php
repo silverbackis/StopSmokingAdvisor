@@ -14,7 +14,12 @@ class CourseManager {
   private $em;
 
   protected $user;
-  public $course;
+  private $course;
+
+  public function getCourse()
+  {
+    return $this->course;
+  }
 
   public function __construct(AuthorizationChecker $AuthorizationChecker, TokenStorage $TokenStorage, EntityManager $em)
   {
@@ -53,7 +58,7 @@ class CourseManager {
    * setNewCourse will create a empty new course and assign it to the current user
    * @return AppBundle\Entity\Course
    */
-  private function createNewCourse()
+  public function createNewCourse()
   {
     // Create a user's first course and add to the database
     $this->course = new Course();
@@ -88,10 +93,12 @@ class CourseManager {
   public function getData($key)
   {
     // find the variable by key for the course in the database
-    return $this->em
+    $dataEntity = $this->em
       ->getRepository('AppBundle:CourseData')
       ->findOneBy([
-        'var'=>$key
+        'var'=>$key,
+        'course'=>$this->course
       ]);
+    return null === $dataEntity ? null : $dataEntity->getValue();
   }
 }

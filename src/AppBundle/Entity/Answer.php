@@ -19,7 +19,7 @@ class Answer
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Question", inversedBy="answer")
+     * @ORM\ManyToOne(targetEntity="Question", inversedBy="answer_options")
      */
     protected $question;
 

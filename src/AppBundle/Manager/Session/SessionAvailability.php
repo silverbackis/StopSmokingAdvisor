@@ -12,19 +12,50 @@ class SessionAvailability
   protected $expire;
   
   // Week number
-  public $week;
+  private $week;
   
   // Session in the database if it exists (has been staretd already)
   private $session_entity;
 
   protected $quit_date;
   
-  public function __construct(Session $session = null, \DateTime $quit_date = null)
+  public function __construct(Session $session = null, string $quit_date = null)
   {
-    $this->quit_date = $quit_date;
-    $this->setSessionEntity($session);
-    $this->setCurrentSession();    
+    $this->quit_date = null === $quit_date ? null : new \DateTime($quit_date);
+    $this->session_entity = $session;
+    $this->setAvailability();
     return $this;
+  }
+
+  private function setAvailability()
+  {
+    if($this->session_entity->getCompleted())
+    {
+      $this->setAvailable(new \DateTime("-1 Minutes"));
+      $this->setExpire(new \DateTime("-1 Minutes"));
+    }
+    elseif(1===$this->week || null === $this->quit_date)
+    {
+      $this->setAvailable(new \DateTime("Now"));
+      $this->setExpire(new \DateTime("+1 Minutes"));
+    }
+    else
+    {
+      // The available from and expiry dates will be based on the week number and the quit date
+      
+      // Get the quit date variable for the course
+      $quitDate = $this->quit_date;
+      
+      // Set to midnight of the quit date
+      $quitDate->setTime(0, 0, 0);
+
+      $daysFromQuitAvailable = (($this->session_entity->getSession()-2)*7);
+      $available = clone $quitDate;
+      $this->setAvailable($available->modify("+$daysFromQuitAvailable days"));
+
+      $expire = clone $available;
+      $this->setExpire($expire->modify("+6 days"));
+    }
   }
 
   /**
@@ -33,7 +64,7 @@ class SessionAvailability
    */
   public function isAvailable()
   {
-    $now = new DateTime();
+    $now = new \DateTime();
     return ($now > $this->available && $now < $this->expire);
   }
 
@@ -47,66 +78,10 @@ class SessionAvailability
     return $this->expire;
   }
 
-  public function getWeek()
+  public function isExpired()
   {
-    return $this->week;
-  }
-
-  public function isSessionEntity()
-  {
-    return $this->session_entity!==null;
-  }
-
-  private function setCurrentSession()
-  {
-    // No session from database yet for current course, initial session always available
-    if(null === $this->session_entity)
-    {
-      $this->setWeek(1);
-    }
-    elseif(!$this->session_entity->getCompleted())
-    {
-      // The session in the database is the available session to set available and expiry times as it has not been completed yet (was started)
-      $this->setWeek($this->session_entity->getSession());
-    }
-    else
-    {
-      // The session in the database is completed, which means we are setting available and expiry dates for the next session.
-      $this->setWeek($this->session_entity->getSession()+1);
-      // The session entity is nothing to do with the week we are returning the data for, set to null to avoid any confusion
-      $this->setSessionEntity(null);
-    }
-    $this->setAvailability();
-  }
-
-  private function setAvailability()
-  {
-    if(1===$this->week)
-    {
-      $this->setAvailable(new \DateTime("Now"));
-      $this->setExpire(new \DateTime("+5 Minutes"));
-    }
-    else
-    {
-      // The available from and expiry dates will be based on the week number and the quit date
-      
-      // Get the quit date variable for the course
-      $quitDate = $this->quit_date;
-      
-      // Set to midnight of the quit date
-      $quitDate->setTime(0, 0, 0);
-
-      $daysFromQuitAvailable = (($this->week-2)*7);
-
-      $this->setAvailable($quitDate->modify("+$daysFromQuitAvailable days"));
-      $this->setExpire($quitDate->modify("+6 days"));
-    }
-  }
-
-  private function setWeek(int $week = 1)
-  {
-    $this->week = $week;
-    return $this;
+    $now = new \DateTime();
+    return $now > $this->expire;
   }
 
   private function setAvailable(\DateTime $date)
@@ -119,10 +94,5 @@ class SessionAvailability
   {
     $this->expire = $date;
     return $this;
-  }
-
-  private function setSessionEntity(Session $session = null)
-  {
-    $this->session_entity = $session;
   }
 }
