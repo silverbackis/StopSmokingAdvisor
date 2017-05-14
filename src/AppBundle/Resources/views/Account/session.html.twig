@@ -115,7 +115,11 @@
   {% else %}
   <div class="row session-continue-row">
     <div class="col-12">
+      {% if preview %}
+      {{ finish_button }}
+      {% else %}
       <a href="{{ path('account_session_next') }}" class="btn btn-lg btn-success btn-start">Continue <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="" /></a>
+      {% endif %}
     </div>
   </div>
   {% endif %}
