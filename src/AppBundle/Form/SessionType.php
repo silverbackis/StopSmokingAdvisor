@@ -95,6 +95,7 @@ class SessionType extends AbstractType
             break;
 
             case "float":
+            case "float_spend_weekly":
                 $input_type_class = NumberType::class;
                 $input_ops['attr'] = [
                     'placeholder' => 'Enter number',

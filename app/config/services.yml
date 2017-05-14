@@ -6,7 +6,7 @@ parameters:
 services:
   app.admin_manage:
     class: AppBundle\Controller\AdminController
-    arguments: ["@templating", "@sonata.seo.page", "%kernel.root_dir%", "@app.admin_manage_actions", "@plupload.handler"]
+    arguments: ["@templating", "@sonata.seo.page", "%kernel.root_dir%", "@app.admin_manage_actions", "@plupload.handler", "@app.session_manager"]
 
   app.admin_manage_actions:
     class: AppBundle\Utils\AdminManageActions
@@ -26,7 +26,7 @@ services:
 
   app.session_manager:
     class: AppBundle\Manager\SessionManager
-    arguments: ["@doctrine.orm.entity_manager", "@app.course_manager", "@router"]
+    arguments: ["@doctrine.orm.entity_manager", "@app.course_manager", "@router", "@sonata.seo.page", "@session", "@templating", "@form.factory"]
     public: true
 
   app.session_type:

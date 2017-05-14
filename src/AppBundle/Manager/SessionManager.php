@@ -1,13 +1,22 @@
 <?php
 namespace AppBundle\Manager;
+
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Session;
 use AppBundle\Entity\Page;
 use AppBundle\Entity\SessionPageView;
+use AppBundle\Entity\Question;
+use AppBundle\Entity\CourseData;
 use AppBundle\Manager\Session\SessionAvailability;
-
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use AppBundle\Form\SessionType;
+use Sonata\SeoBundle\Seo\SeoPage;
+use Symfony\Component\HttpFoundation\Session\Session as HTTPSession;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\FormFactory;
 
 class SessionManager {
   private $em;
@@ -18,15 +27,24 @@ class SessionManager {
   private $current_page;
   private $router;
   private $max_pages_remain = 0;
+  private $user_session;
 
-  public function __construct(EntityManager $em, CourseManager $course_manager, RouterInterface $router)
+  public function __construct(EntityManager $em, CourseManager $course_manager, RouterInterface $router, SeoPage $seoPage, HTTPSession $_session, TwigEngine $templating, FormFactory $formFactory)
   {
     $this->em = $em;
     $this->course_manager = $course_manager;
     $this->router = $router;
     $this->setSession();
+    $this->seoPage = $seoPage;
+    $this->_session = $_session;
+    $this->templating = $templating;
+    $this->formFactory = $formFactory;
   }
 
+  public function isValidQuestion(Question $question = null)
+  {
+      return null !== $question && null !== $question->getVariable() && "" !== $question->getVariable();
+  }
 
   private function setSession()
   {
@@ -169,6 +187,163 @@ class SessionManager {
     $MaxTotalPages = $this->max_pages_remain+$TotalPagesViewed+0.5;
     $PercViewed = round(($TotalPagesViewed/$MaxTotalPages)*100, 2);
     return $PercViewed;
+  }
+
+  public function sessionPageAction(Request $request, int $pageID = null)
+  {
+    if($pageID)
+    {
+      $preview = true;
+
+      $page = $this->em->getRepository('AppBundle\Entity\Page')
+        ->findOneBy([
+            'id' => $pageID
+        ]);
+      $this->current_page = $page;
+      
+      if(!$page)
+      {
+        $this->_session->getFlashBag()->add(
+          'danger',
+          "Sorry, that page was not found in the database."
+        );
+        return new RedirectResponse($this->router->generate('admin_manage_view'));
+      }
+
+      if(!$page->getLive())
+      {
+        $this->_session->getFlashBag()->add(
+          'warning',
+          "Preview of a DRAFT page"
+        );
+      }
+      else
+      {
+        $this->_session->getFlashBag()->add(
+          'success',
+          "Preview of a LIVE page"
+        );
+      }
+    }
+    else
+    {
+      $preview = false;
+      $page = $this->getCurrentPage();
+    }
+
+    // Check if session page has been set
+    if($page === false)
+    {
+        // No page available, return user to dashboard
+        $this->_session->getFlashBag()->add(
+          'warning',
+          "Sorry, it doesn't look like you have any sessions available at the moment."
+        );
+        return new RedirectResponse($this->router->generate('account_dashboard'));
+    }
+
+    if($page === null)
+    {
+        // No page available, return user to dashboard
+        $this->_session->getFlashBag()->add(
+          'warning',
+          "Sorry, there are no live pages we can show right now."
+        );
+        return new RedirectResponse($this->router->generate('account_dashboard'));
+    }
+
+    // Vars used multiple times
+    // For the top of the page
+    $page_title = $this->getPageTitle($page);
+    // Session number
+    $session_number = $page->getSession();
+    // Header on the text area
+    $page_name = $page->getName();
+
+    // Set title tag
+    $this->seoPage->setTitle("Session ".$session_number.", ".$page_title." - ".$page_name." - ".$this->seoPage->getTitle());
+    
+    // Get the question for the page
+    $questions = $page->getQuestions();
+    $question = $questions[0];
+    // If the quesiton variable name is set
+    if($this->isValidQuestion($question))
+    {
+        // Find CourseData Entity
+        $CourseData = $this->em->getRepository('AppBundle\Entity\CourseData')
+            ->findOneBy([
+                'course' => $this->getCourseManager()->getCourse(),
+                'var' => $question->getVariable()
+            ]);
+        // Create CourseData Entity if it doesn't exist
+        if(null === $CourseData)
+        {
+            $CourseData = new CourseData();
+            $CourseData->setCourse($this->getCourseManager()->getCourse());
+            $CourseData->setVar($question->getVariable());
+        }
+
+        // Create the form
+        $form = $this->formFactory->create(SessionType::class, $CourseData, [
+            'attr' => ['id' => 'session_form'],
+            'question' => $question
+        ]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted())
+        {
+            if($form->isValid())
+            {
+              if($preview)
+              {
+                return new RedirectResponse($this->router->generate('admin_manage_view'));
+              }
+                
+                $this->em->persist($CourseData);
+
+                // Update last_page variable to the next page that should be shown.
+                // This function wil flush too
+                return $this->setNextPage();
+            }
+            else
+            {
+                $this->em->detach($CourseData);
+                foreach($form->getErrors(true) as $error)
+                {
+                    $this->_session->getFlashBag()->add(
+                      'danger',
+                      $error->getMessage()
+                    );
+                }
+                return new RedirectResponse($this->router->generate('account_session'));
+            }
+        }
+    }
+    else
+    {
+        $form = null;
+    }
+
+    if(!$preview)
+    {
+      $this->recordPageView();
+    }
+    
+    // Render page with variables
+    return new Response($this->templating->render('@App/Account/session.html.twig', [
+        'session_number' => $session_number,
+        'name' => $page_name,
+        'media_type' => $page->getMediaType(),
+        'image_path' => $page->getImagePath(),
+        'video_url' => $page->getVideoUrl(),
+        'text' => $page->getText(),
+        'question_type' => null===$question ? null : $question->getInputType(),
+        'answers' => null===$question ? null : $question->getAnswerOptions(),
+        'title' => $page_title,
+        'form' => null===$form ? null : $form->createView(),
+        'session_progress_percent' => $this->getSessionProgress(),
+        'preview' => $preview
+    ]));
   }
 
   private function getChildren(Page $page, $parentIds = [], $depth = 0)

@@ -30,6 +30,11 @@ var SidePanel = (function($){
 			$addAnswer: $("#addAnswer")
 		};
 
+		this.fixedVars = {
+			date_quit: 'quit_date',
+			float_spend_weekly: 'weekly_spend'
+		}
+
 		// close the panel
 		$(".close-sidebar").on("click", function(e){
 			e.preventDefault();
@@ -39,7 +44,8 @@ var SidePanel = (function($){
 		// disable preview button for now
 		this.$previewButton.on("click", function(e){
 			e.preventDefault();
-			alert("Sorry, this feature is not currently available. There is no user front-end yet.", { title: 'Not available yet' });
+			//alert("Sorry, this feature is not currently available. There is no user front-end yet.", { title: 'Not available yet' });
+			window.open("/admin/preview/"+_self.selectedNodeID, "PagePreview", "fullscreen=1");
 		});
 
 		// change text (draft/live) for the toggle
@@ -127,14 +133,23 @@ var SidePanel = (function($){
 		});
 
 		this.questionDom.$type.on("change", function(){
-			var $type = $(this);
-			if($type.val()==='choice')
+			var $type = $(this),
+			selVal = $type.val();
+			if(selVal==='choice')
 			{
 				_self.questionDom.$answersPanel.show();
 			}
 			else
 			{
 				_self.questionDom.$answersPanel.hide();
+			}
+
+			_self.questionDom.$var.prop('disabled', false);
+
+			if(Object.keys(_self.fixedVars).indexOf(selVal)!==-1)
+			{
+				// Need to set the variable fixed
+				_self.questionDom.$var.val(_self.fixedVars[selVal]).trigger("blur").prop('disabled', true);
 			}
 		});
 
@@ -198,6 +213,7 @@ var SidePanel = (function($){
 		this.$fieldset.add(this.$selects).prop("disabled", false);
 		this.$selects.selectpicker('refresh');
 		this.$wysiwyg.trumbowyg('enable');
+		this.questionDom.$type.trigger("change");
 	};
 	LocalSidePanel.prototype.load = function()
 	{
@@ -231,7 +247,7 @@ var SidePanel = (function($){
 	LocalSidePanel.prototype.addCondition = function(Condition)
 	{
 		this.$conditions.append(Condition.$conditionSidePanel);
-		this.$conditionInput.val("");
+		this.$condition.val("");
 	};
 	LocalSidePanel.prototype.removeCondition = function(Condition)
 	{

@@ -2,10 +2,10 @@
 
 namespace AppBundle\Controller;
 
-//use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\SeoBundle\Seo\SeoPage;
 use AppBundle\Utils\AdminManageActions;
+use AppBundle\Manager\SessionManager;
 
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,9 +20,10 @@ class AdminController
     private $templating,
     $seoPage,
     $kernelRoot,
-    $PlHandler;
+    $PlHandler,
+    $sessionManager;
 
-    public function __construct(EngineInterface $templating, SeoPage $seoPage, string $kernelRoot, AdminManageActions $ama, PlUploadHandler $PlHandler)
+    public function __construct(EngineInterface $templating, SeoPage $seoPage, string $kernelRoot, AdminManageActions $ama, PlUploadHandler $PlHandler, SessionManager $sessionManager)
     {
         // for the default tree page
         $this->templating = $templating;
@@ -34,6 +35,7 @@ class AdminController
 
         // upload (plupload) service
         $this->PlHandler = $PlHandler;
+        $this->sessionManager = $sessionManager;
     }
 
     /**
@@ -46,6 +48,14 @@ class AdminController
         return $this->templating->renderResponse('@App/Admin/manage.html.twig', [
             'base_dir' => realpath($this->kernelRoot.'/..').DIRECTORY_SEPARATOR,
         ]);
+    }
+
+    /**
+     * @Route("/preview/{id}", name="admin_preview", requirements={"id": "\d+"})
+     */
+    public function previewAction($id, Request $request)
+    {
+        return $this->sessionManager->sessionPageAction($request, $id);
     }
 
     /**

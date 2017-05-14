@@ -77,6 +77,7 @@ AjaxInput.prototype.update = function(etype){
 	data = {};
 	// only update changed values
 	var currentValue = this.getInputValue();
+	console.log(currentValue, this.lastValue);
 	if(currentValue!==this.lastValue.submitted)
 	{
 		if(currentValue == this.lastValue.saved)
@@ -128,7 +129,7 @@ AjaxInput.prototype.update = function(etype){
 					});
 				break;
 			}
-			_self.lastValue.saved = _self.getInputValue();
+			_self.lastValue.saved = currentValue;
 		};
 
 		var ms = etype==='blur' || etype==='change' ? 1 : null,
