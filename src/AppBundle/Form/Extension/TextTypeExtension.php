@@ -30,6 +30,7 @@ class TextTypeExtension extends AbstractTypeExtension
     {
         $resolver->setDefined(['wrapper_class']);
         $resolver->setDefined(['input_group_html']);
+        $resolver->setDefined(['input_addon_before']);
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
@@ -42,5 +43,8 @@ class TextTypeExtension extends AbstractTypeExtension
         if (isset($options['input_group_html'])) {
             $view->vars['input_group_html'] = $options['input_group_html'];
         }
+
+        $view->vars['input_addon_before'] = (isset($options['input_addon_before']) && $options['input_addon_before']);
+        
     }
   }

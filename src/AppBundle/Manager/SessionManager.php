@@ -300,9 +300,10 @@ class SessionManager {
               }
                 
                 $this->em->persist($CourseData);
+                $this->em->flush();
 
                 // Update last_page variable to the next page that should be shown.
-                // This function wil flush too
+                // This function wil flush too, but need to flush data first for next page function to use it if necessary
                 return $this->setNextPage();
             }
             else
@@ -472,32 +473,33 @@ class SessionManager {
         $op = trim($re_matches[2]);
         $val = trim($re_matches[3]);
         $data = $this->course_manager->getData($var);
+
         // Do comparisons where we will return false if condition not matched
         switch($op)
         {
           case "<":
-            if($data >= $val)
+            if((float)$data >= (float)$val)
             {
               return false;
             }
           break;
 
           case ">":
-            if($data <= $val)
+            if((float)$data <= (float)$val)
             {
               return false;
             }
           break;
 
           case "<=":
-            if($data > $val)
+            if((float)$data > (float)$val)
             {
               return false;
             }
           break;
 
           case ">=":
-            if($data < $val)
+            if((float)$data < (float)$val)
             {
               return false;
             }

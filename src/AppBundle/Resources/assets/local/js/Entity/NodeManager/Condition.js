@@ -10,6 +10,7 @@ function Condition(conditionData, nodeID)
 		};
 		ajax.deleteCondition.submit({}, ajax.deleteCondition.url + _self.conditionData.id);
 	};
+	
 	this.nodeID = nodeID;
 	this.conditionData = conditionData;
 	this.$condition = $("<a />",{
@@ -24,6 +25,6 @@ function Condition(conditionData, nodeID)
 		})
 	).on("click", removeCondition);
 
-	this.$conditionSidePanel = this.$condition.clone(true).removeClass("btn-sm");
+	this.$conditionSidePanel = this.$condition.clone(true).removeClass("btn-sm").attr("id", 'panel_condition_'+conditionData.id);
 	return this;
 }

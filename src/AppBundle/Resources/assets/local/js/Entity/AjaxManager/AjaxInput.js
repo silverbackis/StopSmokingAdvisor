@@ -77,7 +77,6 @@ AjaxInput.prototype.update = function(etype){
 	data = {};
 	// only update changed values
 	var currentValue = this.getInputValue();
-	console.log(currentValue, this.lastValue);
 	if(currentValue!==this.lastValue.submitted)
 	{
 		if(currentValue == this.lastValue.saved)

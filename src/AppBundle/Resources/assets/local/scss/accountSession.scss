@@ -185,12 +185,14 @@ h3 {
 
   .custom-control-description,
   .bootstrap-select .btn,
-  .text-input {
+  .text-input,
+  .input-group-addon.text-pre {
     font-size: 1.4rem;
   }
 
   .bootstrap-select .btn,
-  .text-input {
+  .text-input,
+  .input-group-addon.text-pre {
     background: rgba($white, .2);
     border: 0;
     color: $white;
@@ -200,6 +202,10 @@ h3 {
       border: 0;
       color: $white;
     }
+  }
+
+  .input-group-addon.text-pre {
+    border-right: 1px solid rgba($white, .3);
   }
 
   .bootstrap-select {

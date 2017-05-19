@@ -49,7 +49,7 @@ class SessionAvailability
       // Set to midnight of the quit date
       $quitDate->setTime(0, 0, 0);
 
-      $daysFromQuitAvailable = (($this->session_entity->getSession()-2)*7);
+      $daysFromQuitAvailable = (($this->session_entity->getSession()-1)*7);
       $available = clone $quitDate;
       $this->setAvailable($available->modify("+$daysFromQuitAvailable days"));
 

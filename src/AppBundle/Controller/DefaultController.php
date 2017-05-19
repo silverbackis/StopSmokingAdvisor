@@ -108,6 +108,7 @@ class DefaultController extends Controller
 
             return $response;
         }
+
         return $this->render('@App/Default/resetting.html.twig', array(
             'userEmail' => $user->getEmail(),
             'token' => $token,

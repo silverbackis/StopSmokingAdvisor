@@ -1,5 +1,17 @@
 {% extends '@App/base.html.twig' %}
 
+{% set teal_deg = (((session_number-1)/6)*360)|round(2) %}
+
+{% set teal_deg_left = -180 %}
+{% set teal_deg_right = -180 %}
+
+{% if teal_deg >= 180 %}
+  {% set teal_deg_right = 0 %}
+  {% set teal_deg_left = -180+(teal_deg-180) %}
+{% else %}
+  {% set teal_deg_right = -180+(teal_deg) %}
+{% endif %}
+
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets
@@ -9,8 +21,33 @@
         filter='?uglifycss' %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
+    
+    <style type="text/css">
+      .pie-semi-crop.left > .slice {
+        -moz-transform: rotate({{ teal_deg_left }}deg);
+        -ms-transform: rotate({{ teal_deg_left }}deg);
+        -webkit-transform: rotate({{ teal_deg_left }}deg);
+        -o-transform: rotate({{ teal_deg_left }}deg);
+        transform:rotate({{ teal_deg_left }}deg);
+      }
+      .pie-semi-crop.right > .slice {
+        -moz-transform: rotate({{ teal_deg_right }}deg);
+        -ms-transform: rotate({{ teal_deg_right }}deg);
+        -webkit-transform: rotate({{ teal_deg_right }}deg);
+        -o-transform: rotate({{ teal_deg_right }}deg);
+        transform:rotate({{ teal_deg_right }}deg);
+      }
+    </style>
 {% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+        '@AppBundle/Resources/assets/local/js/accountDashboard.js'
+        filter='?uglifyjs2' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
 
 {% block body %}
 <div class="container-fluid h-100 page">
@@ -94,11 +131,18 @@
                       {% if session_number > 1 %}
                       <div class="progress-initial">
                         <div class="dashboard-bottom-image">
-                          <img src="{{ asset('bundles/app/svg/default_progress.svg') }}" alt="Progress pie chart illustration" />
+                          <div class="pie" data-deg="{{ teal_deg }}">
+                            <div class="pie-semi-crop right">
+                              <div class="slice"></div>
+                            </div>
+                            <div class="pie-semi-crop left">
+                              <div class="slice"></div>
+                            </div>
+                          </div>
                         </div>
                         <div class="dashboard-bottom-info">
-                          <h3>Your Progress</h3>
-                          <h4>{{ ((session_number-1)/6*100)|round(2) }}% Completed</h4>
+                          <h4 class="small">sessions completed</h4>
+                          <h3 class="large">{{ session_number-1 }}/6</h3>
                         </div>
                       </div>
                       {% else %}
@@ -124,8 +168,16 @@
                           <img src="{{ asset('bundles/app/svg/piggy.svg') }}" alt="Piggy Bank" class="piggy" />
                         </div>
                         <div class="dashboard-bottom-info">
-                          <h3>Savings Calculator</h3>
-                          <h4>Savings will appear after the first session</h4>
+                          {% if weekly_spend and quit_date %}
+                            {% set difference = date().diff(date(quit_date)) %}
+                            {% set secondsPassed = difference.s+(difference.i*60)+(difference.h*60*60) %}
+                            {% set weeksPassed = secondsPassed/60/60/24/7 %}
+                            <h4 class="small">savings so far</h4>
+                            <h3 class="large">&pound;{{ (weeksPassed*weekly_spend)|number_format(2) }}</h3>
+                          {% else %}
+                            <h3>Savings Calculator</h3>
+                            <h4>Savings will appear when available</h4>
+                          {% endif %}
                         </div>
                       </div>
                     </div>

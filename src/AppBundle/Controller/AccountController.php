@@ -29,7 +29,9 @@ class AccountController extends Controller
             'session_started' => count($session_manager->getSession()->getViews()) > 0,
             'session_number' => $session_manager->getSession()->getSession(),
             'session_available_date' => $session_manager->getSessionAvailability()->getAvailable()->format("l jS F"),
-            'reminder_emails' => $UserSettings->getReminderEmails()
+            'reminder_emails' => $UserSettings->getReminderEmails(),
+            'weekly_spend' => $session_manager->getCourseManager()->getData('weekly_spend'),
+            'quit_date' => $session_manager->getCourseManager()->getData('quit_date')
         ]);
     }
 
@@ -80,7 +82,7 @@ class AccountController extends Controller
         $page = $session_manager->getCurrentPage();
         $questions = $page->getQuestions();
         $question = $questions[0];
-        if($this->isQuestionPresent($question))
+        if($session_manager->isValidQuestion($question))
         {
             $this->addFlash(
                 'danger',
@@ -98,6 +100,6 @@ class AccountController extends Controller
      */
     public function sessionAction(Request $request)
     {
-        return $this->sessionPageAction($request);
+        return $this->container->get('app.session_manager')->sessionPageAction($request);
     }
 }

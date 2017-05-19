@@ -102,6 +102,15 @@ class SessionType extends AbstractType
                     'autocomplete' => 'off'
                 ];
                 $input_ops['wrapper_class'] = 'text-input-outer number';
+                if($input_type==='float_spend_weekly')
+                {
+                    $input_ops['attr']['class'] = 'money';
+                    $input_ops['attr']['step'] = '0.01';
+                    $input_ops['input_group_html'] = '<span class="input-group-addon text-pre">
+                        &pound;
+                      </span>';
+                    $input_ops['input_addon_before'] = true;
+                }
             break;
 
             default:

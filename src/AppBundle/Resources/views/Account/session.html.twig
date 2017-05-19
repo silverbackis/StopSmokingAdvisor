@@ -27,6 +27,10 @@
 
 {% block body %}
 
+{% set finish_button %}
+    <a href="javascript:window.close();" class="btn btn-lg btn-success btn-start">Finished</a>
+{% endset %}
+
 <div class="container-fluid">
   {% set flashes = app.session.flashbag.all() %}
   {% if flashes | length > 0 %}
@@ -84,9 +88,6 @@
     </div>
     {% endif %}
   </div>
-  {% set finish_button %}
-      <a href="javascript:window.close();" class="btn btn-lg btn-success btn-start">Finished</a>
-  {% endset %}
   {% if form %}
   {{ form_start(form) }}
   <div class="row no-gutters session-question-row">

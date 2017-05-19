@@ -12,9 +12,14 @@
     {% if input_group_html is defined %}
     <div class="input-group">
     {% endif %}
-    {{- parent() -}}
-    {% if input_group_html is defined %}
+    {% if input_group_html is defined and input_addon_before %}
     {{ include(template_from_string(input_group_html)) }}
+    {% endif %}
+    {{- parent() -}}
+    {% if input_group_html is defined and not input_addon_before %}
+    {{ include(template_from_string(input_group_html)) }}
+    {% endif %}
+    {% if input_group_html is defined %}
     </div>
     {% endif %}
     {% if wrapper_class is defined %}

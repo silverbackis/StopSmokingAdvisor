@@ -49,7 +49,31 @@
   top: -1rem;
 
   .dropdown-menu {
+    margin-top: 0.65rem;
+    min-width: 8.5rem;
     padding: 0;
+
+    &:BEFORE {
+        content:"\A";
+        border-style: solid;
+        border-width: 0 11px 13px 11px ;
+        border-color: transparent transparent $gray-light transparent;
+        position: absolute;
+        right: 8px;
+        bottom: 100%;
+        margin-bottom: 0px;
+    }
+
+    &:AFTER {
+        content:"\A";
+        border-style: solid;
+        border-width: 0 10px 13px 10px ;
+        border-color: transparent transparent $white transparent;
+        position: absolute;
+        right: 9px;
+        bottom: 100%;
+        margin-bottom: -1px;
+    }
   }
 
   .dropdown-item {
@@ -89,12 +113,31 @@
   text-align: center;
 }
 
+h1 {
+  line-height: 1.4;
+  margin-bottom: .8rem;
+}
+
 h2 {
   font-size: 1.4rem;
+  margin-bottom: 0;
+}
+
+.text-next-session {
+  margin-top: 2rem;
+  margin-bottom: 2.8rem;
+}
+
+.reminder-info {
+  font-size: 1.2rem;
+
+  a {
+    font-size: .8rem;
+  }
 }
 
 .btn-start {
-  margin-top: 2rem;
+  margin-top: 3rem;
 }
 
 .dashboard-bottom-box-pad {
@@ -103,7 +146,7 @@ h2 {
 
 .dashboard-bottom-image {
   height: 115px;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
   position: relative;
 }
 
@@ -121,12 +164,26 @@ h2 {
 }
 
 .dashboard-bottom-info {
+  font-family: 'Comfortaa', cursive;
+
   h3 {
     font-size: 1.6rem;
+    margin-bottom: 1.1rem;
+
+    &.large {
+      font-size: 2.5rem;
+      margin-bottom: 0;
+    }
   }
 
   h4 {
     font-size: 1rem;
+    margin-bottom: 0;
+
+    &.small {
+      font-size: 1.1rem;
+      margin-bottom: .5rem;
+    }
   }
 }
 
@@ -134,3 +191,42 @@ h2 {
   color: $pink;
 }
 
+.pie {
+  background: $gray-light;
+  border-radius: 50%;
+  display: inline-block;
+  height: 116px;
+  position:relative;
+  width: 116px;
+}
+
+.pie-semi-crop,
+.pie-semi-crop > .slice {
+  border-radius: 0 116px 116px 0;
+  overflow: hidden;
+  position: absolute;
+  height: 100%;
+  width: 58px;
+
+  -moz-transform-origin: 0 50%;
+  -ms-transform-origin: 0 50%;
+  -o-transform-origin: 0 50%;
+  -webkit-transform-origin: 0 50%;
+  transform-origin: 0 50%;
+
+  &.left {
+    -moz-transform: rotate(-180deg); /* Firefox */
+    -ms-transform: rotate(-180deg); /* IE */
+    -webkit-transform: rotate(-180deg); /* Safari and Chrome */
+    -o-transform: rotate(-180deg); /* Opera */
+    transform:rotate(-180deg);
+  }
+}
+
+.pie-semi-crop {
+  left: 50%;
+}
+
+.pie-semi-crop > .slice {
+  background: $teal;
+}

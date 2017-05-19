@@ -33,7 +33,7 @@ var SidePanel = (function($){
 		this.fixedVars = {
 			date_quit: 'quit_date',
 			float_spend_weekly: 'weekly_spend'
-		}
+		};
 
 		// close the panel
 		$(".close-sidebar").on("click", function(e){
@@ -229,10 +229,13 @@ var SidePanel = (function($){
 			id = AjaxInput.entity === 'node' ? nodeID : (AjaxInput.entity==='question' ? questionID : null);
 			AjaxInput.loadEntity(id, nodeID);
 		});
+		
 		$.each(Node.conditions, function()
 		{
 			_self.addCondition(this);
 		});
+		this.$conditionInput.val("");
+
 		_self.updateMedia();
 
 		this.questionDom.$answers.empty();
@@ -247,7 +250,7 @@ var SidePanel = (function($){
 	LocalSidePanel.prototype.addCondition = function(Condition)
 	{
 		this.$conditions.append(Condition.$conditionSidePanel);
-		this.$condition.val("");
+		this.$conditionInput.val("");
 	};
 	LocalSidePanel.prototype.removeCondition = function(Condition)
 	{
