@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d4a14d088e23bf971bb2eba5e6a82add",
+    "content-hash": "8a5acb3782b802531f2cf19a68387c59",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -1015,17 +1015,59 @@
             "time": "2016-12-18T15:42:34+00:00"
         },
         {
+            "name": "erusev/parsedown",
+            "version": "1.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/erusev/parsedown.git",
+                "reference": "1bf24f7334fe16c88bf9d467863309ceaf285b01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/1bf24f7334fe16c88bf9d467863309ceaf285b01",
+                "reference": "1bf24f7334fe16c88bf9d467863309ceaf285b01",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Parsedown": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Emanuil Rusev",
+                    "email": "hello@erusev.com",
+                    "homepage": "http://erusev.com"
+                }
+            ],
+            "description": "Parser for Markdown.",
+            "homepage": "http://parsedown.org",
+            "keywords": [
+                "markdown",
+                "parser"
+            ],
+            "time": "2017-03-29T16:04:15+00:00"
+        },
+        {
             "name": "friendsofsymfony/user-bundle",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
-                "reference": "730a8a5f6633ae913a838d26b1c7156faa6ed697"
+                "reference": "039b8261aab1c7eb6d1b33e0d174f59c24f8fa8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/730a8a5f6633ae913a838d26b1c7156faa6ed697",
-                "reference": "730a8a5f6633ae913a838d26b1c7156faa6ed697",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/039b8261aab1c7eb6d1b33e0d174f59c24f8fa8b",
+                "reference": "039b8261aab1c7eb6d1b33e0d174f59c24f8fa8b",
                 "shasum": ""
             },
             "require": {
@@ -1046,7 +1088,7 @@
                 "doctrine/doctrine-bundle": "^1.3",
                 "friendsofphp/php-cs-fixer": "^1.11",
                 "phpunit/phpunit": "~4.8|~5.0",
-                "swiftmailer/swiftmailer": "^4.3 || ^5.0",
+                "swiftmailer/swiftmailer": "^4.3 || ^5.0 || ^6.0",
                 "symfony/console": "^2.7 || ^3.0",
                 "symfony/phpunit-bridge": "^2.7 || ^3.0",
                 "symfony/validator": "^2.7 || ^3.0",
@@ -1089,7 +1131,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2017-04-21 12:31:59"
+            "time": "2017-05-22 11:34:50"
         },
         {
             "name": "hwi/oauth-bundle",
@@ -1795,16 +1837,16 @@
         },
         {
             "name": "sensio/distribution-bundle",
-            "version": "v5.0.19",
+            "version": "v5.0.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioDistributionBundle.git",
-                "reference": "654c4fa3d11448c8005400a244987896243a990a"
+                "reference": "4b019d4c0bd64438c42e4b6b0726085b409be8d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/654c4fa3d11448c8005400a244987896243a990a",
-                "reference": "654c4fa3d11448c8005400a244987896243a990a",
+                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/4b019d4c0bd64438c42e4b6b0726085b409be8d9",
+                "reference": "4b019d4c0bd64438c42e4b6b0726085b409be8d9",
                 "shasum": ""
             },
             "require": {
@@ -1843,20 +1885,20 @@
                 "configuration",
                 "distribution"
             ],
-            "time": "2017-04-23T22:28:23+00:00"
+            "time": "2017-05-11T16:21:03+00:00"
         },
         {
             "name": "sensio/framework-extra-bundle",
-            "version": "v3.0.25",
+            "version": "v3.0.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioFrameworkExtraBundle.git",
-                "reference": "472b339cf0c82f3a033b29f85d9d9cada3cd1a9c"
+                "reference": "6d6cbe971554f0a2cc84965850481eb04a2a0059"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/472b339cf0c82f3a033b29f85d9d9cada3cd1a9c",
-                "reference": "472b339cf0c82f3a033b29f85d9d9cada3cd1a9c",
+                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/6d6cbe971554f0a2cc84965850481eb04a2a0059",
+                "reference": "6d6cbe971554f0a2cc84965850481eb04a2a0059",
                 "shasum": ""
             },
             "require": {
@@ -1913,7 +1955,7 @@
                 "annotations",
                 "controllers"
             ],
-            "time": "2017-03-21T23:34:44+00:00"
+            "time": "2017-05-11T17:01:57+00:00"
         },
         {
             "name": "sensio/generator-bundle",
@@ -2207,16 +2249,16 @@
         },
         {
             "name": "sonata-project/core-bundle",
-            "version": "3.3.0",
+            "version": "3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataCoreBundle.git",
-                "reference": "d8f17c0edf01f2f2a253d4d74f9138680b811218"
+                "reference": "a1b837101262af856c45b22e8f0887553edf0fb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataCoreBundle/zipball/d8f17c0edf01f2f2a253d4d74f9138680b811218",
-                "reference": "d8f17c0edf01f2f2a253d4d74f9138680b811218",
+                "url": "https://api.github.com/repos/sonata-project/SonataCoreBundle/zipball/a1b837101262af856c45b22e8f0887553edf0fb0",
+                "reference": "a1b837101262af856c45b22e8f0887553edf0fb0",
                 "shasum": ""
             },
             "require": {
@@ -2225,6 +2267,7 @@
                 "sonata-project/datagrid-bundle": "^2.0",
                 "symfony/config": "^2.3 || ^3.0",
                 "symfony/form": "^2.3.5 || ^3.0",
+                "symfony/framework-bundle": "^2.3 || ^3.0",
                 "symfony/http-foundation": "^2.3 || ^3.0",
                 "symfony/property-access": "^2.3 || ^3.0",
                 "symfony/security": "^2.3 || ^3.0",
@@ -2281,7 +2324,7 @@
             "keywords": [
                 "sonata"
             ],
-            "time": "2017-03-23T12:43:08+00:00"
+            "time": "2017-05-09T15:05:32+00:00"
         },
         {
             "name": "sonata-project/datagrid-bundle",
@@ -2486,16 +2529,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.4.7",
+            "version": "v5.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4"
+                "reference": "9a06dc570a0367850280eefd3f1dc2da45aef517"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4",
-                "reference": "56db4ed32a6d5c9824c3ecc1d2e538f663f47eb4",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/9a06dc570a0367850280eefd3f1dc2da45aef517",
+                "reference": "9a06dc570a0367850280eefd3f1dc2da45aef517",
                 "shasum": ""
             },
             "require": {
@@ -2536,7 +2579,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2017-04-20T17:32:18+00:00"
+            "time": "2017-05-01T15:54:03+00:00"
         },
         {
             "name": "symfony/assetic-bundle",
@@ -3007,21 +3050,21 @@
         },
         {
             "name": "symfony/swiftmailer-bundle",
-            "version": "v2.5.4",
+            "version": "v2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/swiftmailer-bundle.git",
-                "reference": "8ab32ce31a7156621fb92e0466586186beb89759"
+                "reference": "deabc81120c2086571f7c4484ab785c5e1b84f75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/8ab32ce31a7156621fb92e0466586186beb89759",
-                "reference": "8ab32ce31a7156621fb92e0466586186beb89759",
+                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/deabc81120c2086571f7c4484ab785c5e1b84f75",
+                "reference": "deabc81120c2086571f7c4484ab785c5e1b84f75",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
-                "swiftmailer/swiftmailer": ">=4.2.0,~5.0",
+                "swiftmailer/swiftmailer": "~4.2|~5.0",
                 "symfony/config": "~2.7|~3.0",
                 "symfony/dependency-injection": "~2.7|~3.0",
                 "symfony/http-kernel": "~2.7|~3.0"
@@ -3029,7 +3072,7 @@
             "require-dev": {
                 "symfony/console": "~2.7|~3.0",
                 "symfony/framework-bundle": "~2.7|~3.0",
-                "symfony/phpunit-bridge": "~2.7|~3.0",
+                "symfony/phpunit-bridge": "~3.3@dev",
                 "symfony/yaml": "~2.7|~3.0"
             },
             "suggest": {
@@ -3038,7 +3081,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -3062,7 +3105,7 @@
             ],
             "description": "Symfony SwiftmailerBundle",
             "homepage": "http://symfony.com",
-            "time": "2017-03-21T21:47:36+00:00"
+            "time": "2017-05-22T04:58:24+00:00"
         },
         {
             "name": "symfony/symfony",

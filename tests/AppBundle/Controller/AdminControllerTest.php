@@ -17,14 +17,20 @@ class AdminControllerTest extends WebTestCase
     {
         parent::setUpBeforeClass();
 
-        $schema = self::$em->getConnection()->getSchemaManager();
+        /*$schema = self::$em->getConnection()->getSchemaManager();
         $newSchema = clone $schema;
         $newSchema->dropTable('answer');
         $newSchema->dropTable('question');
         $newSchema->dropTable('`condition`');
+        $newSchema->dropTable('user_course_data');
+        $newSchema->dropTable('user_session_view');
+        $newSchema->dropTable('user_course');
+        $newSchema->dropTable('user_session');
         $newSchema->dropTable('page');
-    	self::updateSchema();
-        self::runCommand('doctrine:fixtures:load --append --no-interaction --fixtures=src/AppBundle/DataFixtures/ORM/LoadSamplePages.php');
+    	self::updateSchema();*/
+        //self::runCommand('doctrine:database:drop');
+        //self::runCommand('doctrine:database:create');
+        //self::runCommand('doctrine:fixtures:load --append --no-interaction --fixtures=src/AppBundle/DataFixtures/ORM/LoadSamplePages.php');
     }
 
     public function setUp()
@@ -53,7 +59,7 @@ class AdminControllerTest extends WebTestCase
 
         $decoded = $this->assertStandardResponse(200, $crawler);
         // page fixtures data has 1 top level node in session 1
-        $this->assertEquals(1, sizeof($decoded));
+        $this->assertEquals(1, sizeof($decoded), 'Expected 1 top level node in session 1 ');
     }
 
     public function testSearchSessionPages()
@@ -157,8 +163,8 @@ class AdminControllerTest extends WebTestCase
             json_encode($postData)
         );
 
-    	$decoded = $this->assertStandardResponse(400, $crawler);
-        
+    	$decoded = $this->assertStandardResponse(400, $crawler, "Oh no!"); // "Page returned: ".self::$client->getResponse()->getContent()
+
     	//should have an error for each of the submitted keys
     	$this->assertCount(4, $decoded['errors']);//, json_encode($decoded['errors'], JSON_PRETTY_PRINT)
     }
@@ -281,7 +287,9 @@ class AdminControllerTest extends WebTestCase
         // the firewall context (defaults to the firewall name)
         $firewall = 'main';
 
-        $token = new UsernamePasswordToken('daniel', null, $firewall, array('ROLE_ADMIN'));
+        $user = self::$em->getRepository('UserBundle:User')->findOneByUsername('daniel');
+
+        $token = new UsernamePasswordToken($user, $user->getPassword(), $firewall, $user->getRoles());
         $session->set('_security_'.$firewall, serialize($token));
         $session->save();
 

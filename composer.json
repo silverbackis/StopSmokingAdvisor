@@ -36,7 +36,8 @@
         "irozgar/gulp-rev-versions-bundle": "^1.0",
         "hwi/oauth-bundle": "^0.5.3",
         "doctrine/doctrine-fixtures-bundle": "^2.3",
-        "sensio/generator-bundle": "^3.1"
+        "sensio/generator-bundle": "^3.1",
+        "erusev/parsedown": "^1.6"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^3.0"

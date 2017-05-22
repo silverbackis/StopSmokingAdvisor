@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Utils;
+namespace AppBundle\Controller\Actions;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -18,7 +18,7 @@ use AppBundle\Entity\Question;
 use AppBundle\Entity\Answer;
 use Symfony\Component\Validator\ConstraintViolation;
 
-class AdminManageActions
+class AdminActions
 {
 	private $doctrine,
 	$serializer,
@@ -463,7 +463,7 @@ class AdminManageActions
 				$entityKeysInData[] = $k;
 			}
 		}
-
+		$error = false;
 		//Find entity objects for remaining keys and add errors to validation if they do not exist
 		foreach($entityKeysInData as $key)
 		{
@@ -476,13 +476,16 @@ class AdminManageActions
 			catch(\Doctrine\ORM\EntityNotFoundException $e)
 			{
 				$error = new ConstraintViolation("ID not found.".$e->getMessage(), '', [], $entity, $key, $id);
-				$errors->add($error);
 				$entity->$setMethod(null);
 			}
 		}
 		
 		//Validate
 		$errors = $this->validator->validate($entity);
+		if($error)
+		{
+			$errors->add($error);
+		}
 
 		if (count($errors) > 0)
 		{

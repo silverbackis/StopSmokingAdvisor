@@ -4,8 +4,8 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Sonata\SeoBundle\Seo\SeoPage;
-use AppBundle\Utils\AdminManageActions;
-use AppBundle\Manager\SessionManager;
+use AppBundle\Controller\Actions\AdminActions;
+use AppBundle\Course\CourseManager;
 
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -21,9 +21,9 @@ class AdminController
     $seoPage,
     $kernelRoot,
     $PlHandler,
-    $sessionManager;
+    $CourseManager;
 
-    public function __construct(EngineInterface $templating, SeoPage $seoPage, string $kernelRoot, AdminManageActions $ama, PlUploadHandler $PlHandler, SessionManager $sessionManager)
+    public function __construct(EngineInterface $templating, SeoPage $seoPage, string $kernelRoot, AdminActions $ama, PlUploadHandler $PlHandler, CourseManager $CourseManager)
     {
         // for the default tree page
         $this->templating = $templating;
@@ -35,7 +35,7 @@ class AdminController
 
         // upload (plupload) service
         $this->PlHandler = $PlHandler;
-        $this->sessionManager = $sessionManager;
+        $this->CourseManager = $CourseManager;
     }
 
     /**
@@ -55,7 +55,7 @@ class AdminController
      */
     public function previewAction($id, Request $request)
     {
-        return $this->sessionManager->sessionPageAction($request, $id);
+        return $this->CourseManager->sessionPageAction($request, $id);
     }
 
     /**

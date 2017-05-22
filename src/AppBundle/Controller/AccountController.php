@@ -16,22 +16,24 @@ class AccountController extends Controller
      */
     public function dashboardAction(Request $request)
     {
-        $seoPage = $this->container->get('sonata.seo.page');
-        $seoPage->setTitle("Dashboard - ".$seoPage->getTitle());
+        $seo_page = $this->container->get('sonata.seo.page');
+        $seo_page->setTitle("Dashboard - ".$seo_page->getTitle());
 
-        $session_manager = $this->container->get('app.session_manager');
-        $UserSettings = $this->getUserSettings();
+        $course_manager = $this->container->get('app.course_manager');
+        $user_settings = $this->container->get('app.user_settings')->getUserSettings();
 
+        $EXPIRE = $course_manager->getCourse()->getSessionExpire();
+        $AVAIL = $course_manager->getCourse()->getSessionAvailable();
         return $this->render('@App/Account/dashboard.html.twig', [
-            'session_available' => $session_manager->getSessionAvailability()->isAvailable(),
-            'session_expired' => $session_manager->getSessionAvailability()->isExpired(),
-            'session_expired_date' => $session_manager->getSessionAvailability()->getExpire()->format("l jS F Y"),
-            'session_started' => count($session_manager->getSession()->getViews()) > 0,
-            'session_number' => $session_manager->getSession()->getSession(),
-            'session_available_date' => $session_manager->getSessionAvailability()->getAvailable()->format("l jS F"),
-            'reminder_emails' => $UserSettings->getReminderEmails(),
-            'weekly_spend' => $session_manager->getCourseManager()->getData('weekly_spend'),
-            'quit_date' => $session_manager->getCourseManager()->getData('quit_date')
+            'session_available' => $course_manager->isSessionAvailable(),
+            'session_expired' => $course_manager->isSessionExpired(),
+            'session_expired_date' => null === $EXPIRE ? null : $EXPIRE->format("l jS F Y"),
+            'session_started' => count($course_manager->getCurrentSession()->getViews()) > 0,
+            'session_number' => $course_manager->getCurrentSession()->getSession(),
+            'session_available_date' => null === $AVAIL ? null : $AVAIL->format("l jS F"),
+            'weekly_spend' => $course_manager->getData('weekly_spend'),
+            'quit_date' =>$course_manager->getData('quit_date'),
+            'reminder_emails' => $user_settings->getReminderEmails()
         ]);
     }
 
@@ -40,7 +42,8 @@ class AccountController extends Controller
      */
     public function settingsAction(Request $request)
     {
-        return $this->redirectToRoute('account_dashboard', ['_fragment' => 'no_settings_page_made']);
+        return $this->render('@App/Account/settings.html.twig', [
+        ]);
     }
     
     /**
@@ -48,28 +51,8 @@ class AccountController extends Controller
      */
     public function restartAction(Request $request)
     {
-        $session_manager = $this->container->get('app.session_manager');
-        $session_manager->getCourseManager()->createNewCourse();
+        $this->container->get('app.course_manager')->createNewCourse();
         return $this->redirectToRoute('account_dashboard', ['_fragment' => 'restarted']);
-    }
-
-    private function getUserSettings()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $UserSettings = $em->getRepository('AppBundle\Entity\UserSettings')
-            ->findOneBy([
-                'user' => $this->get('security.token_storage')->getToken()->getUser()
-            ]);
-
-        // Setup settings if not already there
-        if(null === $UserSettings)
-        {
-            $UserSettings = new UserSettings();
-            $UserSettings->setUser($this->get('security.token_storage')->getToken()->getUser());
-            $em->persist($UserSettings);
-            $em->flush();
-        }
-        return $UserSettings;
     }
 
     /**
@@ -78,21 +61,9 @@ class AccountController extends Controller
     public function sessionActionNext(Request $request)
     {
         // The current page must have no question requirements
-        $session_manager = $this->container->get('app.session_manager');
-        $page = $session_manager->getCurrentPage();
-        $questions = $page->getQuestions();
-        $question = $questions[0];
-        if($session_manager->isValidQuestion($question))
-        {
-            $this->addFlash(
-                'danger',
-                'Please answer the question before proceeding'
-            );
-            return $this->redirectToRoute('account_session');
-        }
-
-        // If we get here, we can proceed to next page
-        return $session_manager->setNextPage();
+        $course_manager = $this->container->get('app.course_manager');
+        
+        return $course_manager->nextPageAction();
     }
 
     /**
@@ -100,6 +71,6 @@ class AccountController extends Controller
      */
     public function sessionAction(Request $request)
     {
-        return $this->container->get('app.session_manager')->sessionPageAction($request);
+        return $this->container->get('app.course_manager')->sessionPageAction($request);
     }
 }

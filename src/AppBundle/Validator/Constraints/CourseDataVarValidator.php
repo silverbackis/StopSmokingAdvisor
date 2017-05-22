@@ -5,19 +5,19 @@ namespace AppBundle\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-use AppBundle\Manager\SessionManager;
+use AppBundle\Course\CourseManager;
 /**
  * @Annotation
  */
 class CourseDataVarValidator extends ConstraintValidator
 {
-    private $session_manager;
+    private $CourseManager;
     private $question;
 
-    public function __construct(SessionManager $session_manager)
+    public function __construct(CourseManager $CourseManager)
     {
-        $this->session_manager = $session_manager;
-        $questions = $session_manager->getCurrentPage()->getQuestions();
+        $this->CourseManager = $CourseManager;
+        $questions = $CourseManager->getCurrentPage()->getQuestions();
         $this->question = $questions[0];
     }
 

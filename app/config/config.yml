@@ -189,7 +189,7 @@ fos_user:
         mailer:     fos_user.mailer.twig_swift
     from_email:
         address:        "%mailer_user%"
-        sender_name:    Stop Smoking Advisor
+        sender_name:    "%mailer_sender_name%"
     registration:
         form:
             type:               UserBundle\Form\RegistrationType

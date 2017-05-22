@@ -1,104 +1,72 @@
 <?php
-namespace AppBundle\Manager;
+namespace AppBundle\Course;
 
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session as HTTPSession;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+
 use Doctrine\ORM\EntityManager;
+
+use Sonata\SeoBundle\Seo\SeoPage;
+
 use AppBundle\Entity\Session;
 use AppBundle\Entity\Page;
 use AppBundle\Entity\SessionPageView;
 use AppBundle\Entity\Question;
 use AppBundle\Entity\CourseData;
-use AppBundle\Manager\Session\SessionAvailability;
 use AppBundle\Form\SessionType;
-use Sonata\SeoBundle\Seo\SeoPage;
-use Symfony\Component\HttpFoundation\Session\Session as HTTPSession;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\FormFactory;
 
 class SessionManager {
   private $em;
-  private $course_manager = null;
-  private $session_availability = null;
   private $session = null;
+  private $_session;
   private $last_page;
-  private $current_page;
+  private $current_page = false;
   private $router;
   private $max_pages_remain = 0;
   private $user_session;
 
-  public function __construct(EntityManager $em, CourseManager $course_manager, RouterInterface $router, SeoPage $seoPage, HTTPSession $_session, TwigEngine $templating, FormFactory $formFactory)
+  public function __construct(EntityManager $em, RouterInterface $router, SeoPage $seoPage, HTTPSession $_session, TwigEngine $templating, FormFactory $formFactory)
   {
     $this->em = $em;
-    $this->course_manager = $course_manager;
     $this->router = $router;
-    $this->setSession();
     $this->seoPage = $seoPage;
     $this->_session = $_session;
     $this->templating = $templating;
     $this->formFactory = $formFactory;
   }
 
-  public function isValidQuestion(Question $question = null)
+  public function setSession(Session $session)
   {
-      return null !== $question && null !== $question->getVariable() && "" !== $question->getVariable();
-  }
+    $this->session = $session;
 
-  private function setSession()
-  {
-    if(0 === count($this->course_manager->getCourse()->getSessions()))
-    {
-      // No sessions in DB in database - create 1st session
-      $this->session = $this->createNewSession();
-    }
-    else
-    {
-      $allSessions = $this->course_manager->getCourse()->getSessions()->toArray();
-      $this->session = end($allSessions);
-
-      if($this->session->getCompleted())
-      {
-        // The session entity already there is finished - no good. Create the next session
-        $this->session = $this->createNewSession($this->session->getSession()+1);
-      }
-    }
-
-    $this->session_availability = new SessionAvailability($this->session, $this->course_manager->getData('quit_date'));
-    $this->last_page = $this->session->getLastPage();
-
-    if(!$this->session_availability->isAvailable())
-    {
-      $this->current_page = false;
-    }    
-    elseif(null !== $this->last_page && $this->last_page->getLive())
+    if(null !== $this->session->getLastPage() && $this->session->getLastPage()->getLive())
     // Check for the last page id that was viewed to continue
     {
       // Find the last page and return if it still exists and is available
-      $this->current_page = $this->last_page;
+      $this->current_page = $this->session->getLastPage();
     }
     else
     {
       $this->current_page = $this->findPage($this->session->getSession(), null);
-      $this->session->setLastPage($this->current_page);
       $this->em->flush();
     }
+
+    return $this;
   }
 
-  public function getSession()
+  public function getSession(Session $session)
   {
     return $this->session;
   }
 
-  public function getSessionAvailability()
+  public function isValidQuestion(Question $question = null)
   {
-    return $this->session_availability;
-  }
-
-  public function getCourseManager()
-  {
-    return $this->course_manager;
+      return null !== $question && null !== $question->getVariable() && "" !== $question->getVariable();
   }
 
   public function getCurrentPage()
@@ -151,7 +119,7 @@ class SessionManager {
   {
     $SessionView = $this->em->getRepository('AppBundle\Entity\SessionPageView')
       ->findOneBy([
-          'course' => $this->course_manager->getCourse(),
+          'course' => $this->session->getCourse(),
           'session' => $this->session,
           'page_viewed' => $this->current_page
       ]);
@@ -159,7 +127,7 @@ class SessionManager {
     {
       // create the row
       $SessionView = new SessionPageView();
-      $SessionView->setCourse($this->course_manager->getCourse());
+      $SessionView->setCourse($this->session->getCourse());
       $SessionView->setSession($this->session);
       $SessionView->setPageViewed($this->current_page);
       $SessionView->setViews(1);
@@ -169,6 +137,7 @@ class SessionManager {
     {
       $SessionView->setViews($SessionView->getViews()+1);
     }
+    $this->session->setLastPage($this->current_page);
 
     //This updating database prematurely with CourseData which is modified after this...
     $this->em->flush();
@@ -181,10 +150,23 @@ class SessionManager {
   public function getSessionProgress()
   {
     // This includes the page we are on by now
-    $TotalPagesViewed = count($this->session->getViews())-0.5;
+    // We are probably admin (or there is a bug) if views are 0 - find how many parents there are to current page.
+    $TotalPagesViewed = count($this->session->getViews());
+    if( $TotalPagesViewed == 0 )
+    {
+      $current = $this->current_page;
+      while($current->getParent() !== null)
+      {
+        $current = $current->getParent();
+        $TotalPagesViewed++;
+      }
+    }
+    $TotalPagesViewed-=0.5;
+
     $children[$this->current_page->getId()] = $this->getChildren($this->current_page);
 
     $MaxTotalPages = $this->max_pages_remain+$TotalPagesViewed+0.5;
+
     $PercViewed = round(($TotalPagesViewed/$MaxTotalPages)*100, 2);
     return $PercViewed;
   }
@@ -200,7 +182,6 @@ class SessionManager {
             'id' => $pageID
         ]);
       $this->current_page = $page;
-      
       if(!$page)
       {
         $this->_session->getFlashBag()->add(
@@ -229,17 +210,6 @@ class SessionManager {
     {
       $preview = false;
       $page = $this->getCurrentPage();
-    }
-
-    // Check if session page has been set
-    if($page === false)
-    {
-        // No page available, return user to dashboard
-        $this->_session->getFlashBag()->add(
-          'warning',
-          "Sorry, it doesn't look like you have any sessions available at the moment."
-        );
-        return new RedirectResponse($this->router->generate('account_dashboard'));
     }
 
     if($page === null)
@@ -272,14 +242,14 @@ class SessionManager {
         // Find CourseData Entity
         $CourseData = $this->em->getRepository('AppBundle\Entity\CourseData')
             ->findOneBy([
-                'course' => $this->getCourseManager()->getCourse(),
+                'course' => $this->session->getCourse(),
                 'var' => $question->getVariable()
             ]);
         // Create CourseData Entity if it doesn't exist
         if(null === $CourseData)
         {
             $CourseData = new CourseData();
-            $CourseData->setCourse($this->getCourseManager()->getCourse());
+            $CourseData->setCourse($this->session->getCourse());
             $CourseData->setVar($question->getVariable());
         }
 
@@ -398,18 +368,6 @@ class SessionManager {
     return $children;
   }
 
-  private function createNewSession(int $SessionNumber = 1)
-  {
-    // Create a user's first course and add to the database
-    $session = new Session();
-    $session->setCourse($this->course_manager->getCourse());
-    $session->setSession($SessionNumber);
-    $this->em->persist($session);
-    $this->em->flush();
-    $this->course_manager->getCourse()->sessions[] = $session;
-    return $session;
-  }
-
   private function findPage(int $week, Page $parent_page = null)
   {
     $pages = $this->em->getRepository('AppBundle:Page')
@@ -425,6 +383,10 @@ class SessionManager {
     // Loop through possible pages until conditions match
     foreach($pages as $page)
     {
+      if($page->getType()==='link' && null === $page->getForwardToPage())
+      {
+        continue;
+      }
       if($this->checkPageConditions($page)){
         // check if it's a 'Go To'
         if($page->getType()==='link')
@@ -466,13 +428,13 @@ class SessionManager {
       // /^(([a-z0-9_-]+)([\<|\>|\<=|\>=|=])(.+)|([a-z0-9_-]+))$/i
       
       // e.g. var=123
-      if(preg_match("/^([a-z0-9_-]+)([\<|\>|\<=|\>=|=])(.+)$/i", $condition->getCondition(), $re_matches))
+      if(preg_match("/^([a-z0-9_-]+( )?)([\<|\>|\<=|\>=|=])(.+)$/i", $condition->getCondition(), $re_matches))
       {
         // the condition can be evaluated - variable, operator, value
         $var = trim($re_matches[1]);
-        $op = trim($re_matches[2]);
-        $val = trim($re_matches[3]);
-        $data = $this->course_manager->getData($var);
+        $op = trim($re_matches[4]);
+        $val = trim($re_matches[5]);
+        $data = $this->getData($var);
 
         // Do comparisons where we will return false if condition not matched
         switch($op)
@@ -515,11 +477,11 @@ class SessionManager {
         }
       }
       // e.g. var (variable exists and not null or false)
-      elseif(preg_match("/^([a-z0-9_-]+)$/i", $condition->getCondition(), $re_matches))
+      elseif(preg_match("/^([a-z0-9_-]+( )?)$/i", $condition->getCondition(), $re_matches))
       {
         //the condition can be evaluated, does a variable exist
         $var = $re_matches[1];
-        if(!$this->course_manager->getData($var))
+        if(!$this->getData($var))
         {
           return false;
         }
@@ -527,5 +489,17 @@ class SessionManager {
     }
 
     return true;
+  }
+
+  public function getData($key)
+  {
+    // find the variable by key for the course in the database
+    $dataEntity = $this->em
+      ->getRepository('AppBundle:CourseData')
+      ->findOneBy([
+        'var'=>$key,
+        'course'=>$this->session->getCourse()
+      ]);
+    return null === $dataEntity ? null : $dataEntity->getValue();
   }
 }

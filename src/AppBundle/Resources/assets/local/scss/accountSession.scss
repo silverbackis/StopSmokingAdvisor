@@ -37,60 +37,9 @@ body {
   @extends .home-form-control::-webkit-input-placeholder;
 }
 
-.exit-link {
-  color: $gray;
-  font-family: 'Comfortaa', cursive;
-  font-size: .8rem;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-
-.session-header-row {
-  padding: 15px;
-
-  .logo-header {
-    background: url($asset-svg-base + 'logo_icon.svg') 0 50% no-repeat;
-    display: inline-block;
-    padding-left: 70px;
-
-    h2 {
-      color: $gray-light;
-      font-size: 1.1rem;
-      margin: 0;
-    }
-
-    h1 {
-      color: $teal;
-      font-size: 1.8rem;
-      margin: .3rem 0 0;
-    }
-  }
-
-  .progress-bar {
-    background: $gray-light;
-    height: 8px;
-    margin-top: .7rem;
-    position: relative;
-  }
-
-  .progress {
-    display: inline-block;
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 10%;
-  }
-}
-
 h3 {
   color: $teal;
   font-size: 1.4rem;
-}
-
-.session-content-row {
-  background: $gray-lightest;
 }
 
 .session-text-outer {

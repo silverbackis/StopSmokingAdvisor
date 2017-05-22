@@ -29,9 +29,11 @@ class WebTestCase extends BaseTestCase
         self::$em = self::$container->get('doctrine')->getManager();
 
     	//create and update the database schema
-        //self::runCommand('doctrine:database:drop --force');
         //self::runCommand('cache:clear --no-warmup');
+        self::runCommand('doctrine:database:drop --force');
         self::runCommand('doctrine:database:create');
+        self::runCommand('doctrine:schema:update --force');
+        self::runCommand('doctrine:fixtures:load --append --no-interaction');
     }
 
     protected static function updateSchema()

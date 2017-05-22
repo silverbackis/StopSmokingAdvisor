@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_course")
+ * @ORM\Table(name="user_course", indexes={@ORM\Index(name="date_search_index", columns={"session_available", "session_expire"})})
  * @ORM\HasLifecycleCallbacks()
  */
 class Course {
@@ -35,6 +35,23 @@ class Course {
   public $last_updated;
 
   /**
+   * @ORM\Column(type="datetime", nullable=true)
+   */
+  public $session_available;
+
+  /**
+   * @ORM\Column(type="datetime", nullable=true)
+   */
+  public $session_expire;
+
+  /**
+   * Many Course have One User.
+   * @ORM\ManyToOne(targetEntity="Session")
+   * @ORM\JoinColumn(name="latest_session_id", referencedColumnName="id", onDelete="NO ACTION")
+   */
+  public $latest_session;
+
+  /**
    * @ORM\Column(type="boolean", options={"default" : 0})
    */
   public $expired = 0;
@@ -42,7 +59,7 @@ class Course {
   /**
    * Many Course have One User.
    * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
-   * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="NO ACTION")
+   * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="NO ACTION", nullable=false)
    */
   public $user;
 
@@ -255,5 +272,77 @@ class Course {
     public function getSessions()
     {
         return $this->sessions;
+    }
+
+    /**
+     * Set sessionAvailable
+     *
+     * @param \DateTime $sessionAvailable
+     *
+     * @return Course
+     */
+    public function setSessionAvailable($sessionAvailable)
+    {
+        $this->session_available = $sessionAvailable;
+
+        return $this;
+    }
+
+    /**
+     * Get sessionAvailable
+     *
+     * @return \DateTime
+     */
+    public function getSessionAvailable()
+    {
+        return $this->session_available;
+    }
+
+    /**
+     * Set sessionExpire
+     *
+     * @param \DateTime $sessionExpire
+     *
+     * @return Course
+     */
+    public function setSessionExpire($sessionExpire)
+    {
+        $this->session_expire = $sessionExpire;
+
+        return $this;
+    }
+
+    /**
+     * Get sessionExpire
+     *
+     * @return \DateTime
+     */
+    public function getSessionExpire()
+    {
+        return $this->session_expire;
+    }
+
+    /**
+     * Set latestSession
+     *
+     * @param \AppBundle\Entity\Session $latestSession
+     *
+     * @return Course
+     */
+    public function setLatestSession(\AppBundle\Entity\Session $latestSession = null)
+    {
+        $this->latest_session = $latestSession;
+
+        return $this;
+    }
+
+    /**
+     * Get latestSession
+     *
+     * @return \AppBundle\Entity\Session
+     */
+    public function getLatestSession()
+    {
+        return $this->latest_session;
     }
 }

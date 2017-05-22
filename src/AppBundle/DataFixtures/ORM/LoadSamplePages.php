@@ -4,6 +4,7 @@ namespace AppBundle\DataFixtures\ORM;
 // Class level
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 // Method parameters
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -11,7 +12,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\Page;
 use AppBundle\Entity\Condition;
 
-class LoadSamplePages implements FixtureInterface, ContainerAwareInterface
+class LoadSamplePages implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
 	private static $pageCounter = 1;
 	private $container,
@@ -79,5 +80,12 @@ class LoadSamplePages implements FixtureInterface, ContainerAwareInterface
             }
             $counter--;
         }
+    }
+
+    public function getOrder()
+    {
+        // the order in which fixtures will be loaded
+        // the lower the number, the sooner that this fixture is loaded
+        return 2;
     }
 }

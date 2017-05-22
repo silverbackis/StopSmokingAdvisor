@@ -6,10 +6,10 @@ parameters:
 services:
   app.admin_manage:
     class: AppBundle\Controller\AdminController
-    arguments: ["@templating", "@sonata.seo.page", "%kernel.root_dir%", "@app.admin_manage_actions", "@plupload.handler", "@app.session_manager"]
+    arguments: ["@templating", "@sonata.seo.page", "%kernel.root_dir%", "@app.admin_manage_actions", "@plupload.handler", "@app.course_manager"]
 
   app.admin_manage_actions:
-    class: AppBundle\Utils\AdminManageActions
+    class: AppBundle\Controller\Actions\AdminActions
     arguments: ["@doctrine.orm.entity_manager", "@validator"]
     public: false
 
@@ -20,14 +20,14 @@ services:
       - { name: validator.constraint_validator }
 
   app.course_manager:
-    class: AppBundle\Manager\CourseManager
-    arguments: ["@security.authorization_checker", "@security.token_storage", "@doctrine.orm.entity_manager"]
-    public: false
+    class: AppBundle\Course\CourseManager
+    arguments: ["@security.authorization_checker", "@security.token_storage", "@doctrine.orm.entity_manager", "@app.session_manager", "@router"]
+    public: true
 
   app.session_manager:
-    class: AppBundle\Manager\SessionManager
-    arguments: ["@doctrine.orm.entity_manager", "@app.course_manager", "@router", "@sonata.seo.page", "@session", "@templating", "@form.factory"]
-    public: true
+    class: AppBundle\Course\SessionManager
+    arguments: ["@doctrine.orm.entity_manager", "@router", "@sonata.seo.page", "@session", "@templating", "@form.factory"]
+    public: false
 
   app.session_type:
     class: AppBundle\Form\SessionType
@@ -57,9 +57,29 @@ services:
 
   app.validator.course_data_var:
     class: AppBundle\Validator\Constraints\CourseDataVarValidator
-    arguments: ["@app.session_manager"]
+    arguments: ["@app.course_manager"]
     tags:
       - { name: validator.constraint_validator }
+
+  app.course_reminder_provider:
+    class: AppBundle\Course\CourseReminderProvider
+    arguments: ["@mailer", "@doctrine.orm.entity_manager", "@event_dispatcher", "@templating", "%mailer_user%", "%mailer_sender_name%", "@router"]
+    public: true
+
+  app.user_settings:
+    class: AppBundle\Utils\UserSettings
+    arguments: ["@security.token_storage", "@doctrine.orm.entity_manager"]
+    public: true
+
+  app.markdown:
+    class: AppBundle\Utils\Markdown
+
+  app.twig.markdown_extension:
+    class:     AppBundle\Twig\MarkdownExtension
+    arguments: ['@app.markdown']
+    public:    false
+    tags:
+      - { name: twig.extension }
   
   twig.extension.stringloader:
     class: Twig_Extension_StringLoader
