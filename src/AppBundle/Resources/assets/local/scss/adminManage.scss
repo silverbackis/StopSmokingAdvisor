@@ -140,6 +140,10 @@
   vertical-align: top;
   white-space: nowrap;
 
+  .trumbowyg-editor {
+    white-space: normal;
+  }
+
   .bottom-tree-container {
     color: $teal;
     font-size: 0;
