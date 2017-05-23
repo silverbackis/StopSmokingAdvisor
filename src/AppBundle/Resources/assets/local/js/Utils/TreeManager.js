@@ -69,7 +69,7 @@ var TreeManager = (function($, alert, confirm){
 			contentType: "application/json",
 			uniqueRequest: {
 				url: true,
-				data: true
+				data: false
 			}
 		}),
 		copyMoveNode: AjaxManager.newRequest('/admin/page/', {

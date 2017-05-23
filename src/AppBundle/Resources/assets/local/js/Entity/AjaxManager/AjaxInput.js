@@ -84,14 +84,15 @@ AjaxInput.prototype.update = function(etype){
 			// last saved value means it must have validated properly before, just remove error notices - do not submit
 			this.error.current = false;
 			this.setError(false);
-			setSaved();
-			return;
+			//setSaved();
+			//return;
 		}
-		this.lastValue.submitted = this.getInputValue();
+
+		this.lastValue.submitted = currentValue;
 		var column = this.getColumn();
 		data[column] = this.lastValue.submitted;
 
-		ajax.updateNode.ops.successFn = function(entityData){
+		var successFn = function(entityData){
 			var Node;
 			switch(_self.entity)
 			{
@@ -130,10 +131,13 @@ AjaxInput.prototype.update = function(etype){
 			}
 			_self.lastValue.saved = currentValue;
 		};
-
+		//console.log("UPDATE: ", data);
 		var ms = etype==='blur' || etype==='change' ? 1 : null,
 		baseURL = (this.entity==='node' ? ajax.updateNode.url : (this.entity=='question' ? ajax.updateQuestion.url : ajax.updateAnswer.url));
-		ajax.updateNode.submit(data, baseURL + this.id, ms, { input: _self });
+		ajax.updateNode.submit(data, baseURL + this.id, ms, { 
+			input: _self,
+			successFn: successFn
+		});
 	}
 };
 AjaxInput.prototype.bindUpdatedData = function()

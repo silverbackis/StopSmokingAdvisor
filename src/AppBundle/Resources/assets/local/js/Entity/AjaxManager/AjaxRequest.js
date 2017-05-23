@@ -47,6 +47,7 @@ AjaxRequest.prototype.submit = function(data, url, ms, ops){
 	{
 		ops = {};
 	}
+
 	// Localise set options to this submission
 	var localOps = $.extend({}, this.ops, ops);
 
@@ -152,10 +153,10 @@ AjaxRequest.prototype.submit = function(data, url, ms, ops){
 	setSaving(localOps.load);
 
 	clearTimeout(_self.debounceTimer[requestHash]);
-    _self.debounceTimer = setTimeout(function(){
-        // Do Ajax call
+  _self.debounceTimer[requestHash] = setTimeout(function(){
+    // Do Ajax call
 		_self.setRequest(requestHash, $.ajax(ajaxOps));
-    }, ms || 250);
+  }, ms || 250);
 };
 AjaxRequest.prototype.ajaxError = function (localOps, error, textStatus, errorThrown, jqueryAjaxScope){
 	submitComplete();
