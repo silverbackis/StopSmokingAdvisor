@@ -1,7 +1,13 @@
 services:
-    user_bundle.register_listener:
-        class: UserBundle\EventListener\RegisterListener
-        arguments: ["@request_stack", "%fos_user.resetting.retry_ttl%", "@translator", "%login_default_target%", "@security.token_storage", "@session", "@router"]
+    user_bundle.user_register_reset_password_listener:
+        class: UserBundle\EventListener\UserRegisterResetPasswordListener
+        arguments: ["@request_stack", "@translator", "@security.token_storage", "@session", "@router", "%fos_user.resetting.retry_ttl%", "%login_default_target%"]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    user_bundle.user_change_password_listener:
+        class: UserBundle\EventListener\UserChangePasswordListener
+        arguments: ["@router"]
         tags:
             - { name: kernel.event_subscriber }
 
@@ -13,6 +19,26 @@ services:
         class: UserBundle\Form\RegistrationType
         tags:
             - { name: form.type, alias: app_user_registration }
+    
+    user.form.change_email.factory:
+        class: FOS\UserBundle\Form\Factory\FormFactory
+        arguments: ["@form.factory", app_user_change_email, UserBundle\Form\ChangeEmailType, [Profile, Default]]
+
+    user.form.change_email.type:
+        class: UserBundle\Form\ChangeEmailType
+        arguments: ["%fos_user.model.user.class%", "@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type, alias: app_user_change_email }
+
+    #user_bundle.form.change_email:
+    #    class: UserBundle\Form\ChangeEmailType
+    #    tags:
+    #        - { name: form.type, alias: user_change_email }
+
+    #user_bundle.form.change_settings:
+    #    class: UserBundle\Form\ChangeSettingsType
+    #    tags:
+    #        - { name: form.type, alias: user_change_settings }
 
     userbundle.oauth_user_provider:
         class: UserBundle\Security\Core\User\FOSUBUserProvider

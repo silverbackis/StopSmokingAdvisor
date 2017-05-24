@@ -1,5 +1,7 @@
 {% extends '@App/base.html.twig' %}
 
+{% trans_default_domain 'FOSUserBundle' %}
+
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets
@@ -11,14 +13,14 @@
     {% endstylesheets %}
 {% endblock %}
 
-{#% block javascripts %}
+{% block javascripts %}
     {{ parent() }}
     {% javascripts
-        '@AppBundle/Resources/assets/local/js/accountSession.js'
+        '@AppBundle/Resources/assets/local/js/accountSettings.js'
         filter='?uglifyjs2' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
-{% endblock %#}
+{% endblock %}
 
 {% block body %}
 
@@ -51,19 +53,111 @@
   </div>
 
   <div class="row session-content-row">
-    <h3>Email</h3>
-    <p>Coming soon...</p>
-    <hr />
-    <h3>Password</h3>
-    <p>Coming soon...</p>
-    <hr />
-    <h3>Reminder Notifications</h3>
-    <p>Coming soon...</p>
-    <hr />
-    <h3 class="restart">Start Again?</h3>
-    <p>
-      <a href="{{ path('account_restart') }}" class="btn btn-lg btn-success btn-start restart">Reset Stop Smoking Advisor</a>
-    </p>
+    <div class="col-12">
+      <div class="row">
+        <h3>Email</h3>
+        {{ form_start(form_email, { 'action': path('account_settings'), 'attr': { 'class': 'col-12', 'id': 'new_email_form' } }) }}
+          <div class="form-group row justify-content-center">
+            <div class="col-md-auto">
+              {{ form_widget(form_email.email, {'attr': {'class': 'form-control-lg', 'placeholder': 'Current Password', 'autocomplete': 'off'} }) }}
+              {% if not form_email.email.vars.valid %}
+                <span class="form-text text-danger">{{ form_errors(form_email.email) }}</span>
+              {% endif %}
+              {% if email_new %}
+              <span class="form-text text-mutes">
+                You have requested to change your email to <strong><span id="new_email">{{ email_new }}</span></strong><br />
+                A verification email has been sent. <a href="#" id="resend_email_confirmation">Resend</a>
+              </span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <button type="submit" class="col-md-auto btn btn-lg btn-success">Update Email</button>
+          </div>
+        {{ form_end(form_email) }}
+      </div>
+      <hr />
+      <div class="row">
+        <h3 class="col-12">
+          Password
+        </h3>
+        {{ form_start(form_password, { 'action': path('fos_user_change_password'), 'attr': { 'class': 'col-12' } }) }}
+          <div class="form-group row justify-content-center">
+            <div class="col-md-auto">
+              {{ form_widget(form_password.current_password, {'attr': {'class': 'form-control-lg', 'placeholder': 'Current Password', 'autocomplete': 'off'} }) }}
+              {% if not form_password.current_password.vars.valid %}
+                <span class="form-text text-danger">{{ form_errors(form_password.current_password) }}</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group row justify-content-center">
+            <div class="col-md-auto">
+              {{ form_widget(form_password.plainPassword.first, {'attr': {'class': 'form-control-lg', 'placeholder': 'New Password', 'autocomplete': 'off'} }) }}
+              {% if not form_password.plainPassword.first.vars.valid %}
+                <span class="form-text text-danger">{{ form_errors(form_password.plainPassword.first) }}</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="form-group row justify-content-center">
+            <div class="col-md-auto">
+              {{ form_widget(form_password.plainPassword.second, {'attr': {'class': 'form-control-lg', 'placeholder': 'Repeat New Password', 'autocomplete': 'off'} }) }}
+              {% if not form_password.plainPassword.second.vars.valid %}
+                <span class="form-text text-danger">{{ form_errors(form_password.plainPassword.second) }}</span>
+              {% endif %}
+              <small id="passwordHelp" class="form-text password-help">
+                  Passwords must include at least:
+                  <ul>
+                      <li id="pw-letter"><span class="list-tick"></span> <span class="list-text">1 letter</span></li>
+                      <li id="pw-number"><span class="list-tick"></span> <span class="list-text">1 number</span></li>
+                      <li id="pw-6"><span class="list-tick"></span> <span class="list-text">6 characters</span></li>
+                  </ul>
+              </small>
+            </div>
+          </div>
+
+          <div class="row justify-content-center">
+            <button type="submit" class="col-md-auto btn btn-lg btn-success">Update Password</button>
+          </div>
+        {{ form_end(form_password) }}
+      </div>
+      <hr />
+      <div class="row">
+        <h3 class="col-12">
+          Reminder Notifications
+        </h3>
+        
+        {{ form_start(form_notifications, { 'action': path('account_settings'), 'attr': { 'class': 'col-12' } }) }}
+          <div class="form-group row justify-content-center">
+            <div class="col-md-auto">
+              {{ form_widget(form_notifications.reminder_emails, {'attr': {'autocomplete': 'off'} }) }}
+              {% if not form_notifications.reminder_emails.vars.valid %}
+                <span class="form-text text-danger">{{ form_errors(form_notifications.reminder_emails) }}</span>
+              {% endif %}
+
+              <small id="passwordHelp" class="form-text password-help">
+                  <strong>Emails will be sent at the following times if your<br />session remains incomplete:</strong>
+                  <ul>
+                      <li><span class="list-text">On the day your sessions become available</span></li>
+                      <li><span class="list-text">1 day after your sessions become available</span></li>
+                      <li><span class="list-text">The day your session expire</span></li>
+                  </ul>
+              </small>
+            </div>
+          </div>
+
+          <div class="row justify-content-center">
+            <button type="submit" class="col-md-auto btn btn-lg btn-success">Update Notifications</button>
+          </div>
+        {{ form_end(form_notifications) }}
+      </div>
+      <hr />
+      <div class="row">
+        <h3 class="restart">Start Again?</h3>
+        <p>
+          <a href="{{ path('account_restart') }}" class="btn btn-secondary restart">Reset Stop Smoking Advisor</a>
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

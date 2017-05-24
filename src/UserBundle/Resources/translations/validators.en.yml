@@ -6,7 +6,7 @@ fos_user:
         short: 'Your username is too short.'
         long: 'Your username is too long.'
     email:
-        already_used: 'Your email is already registered. <a href="#login">Try logging in</a>.'
+        already_used: 'Your email is already registered. <a href="/logout#login">Try logging in</a>.'
         blank: 'Please enter your email.'
         short: 'Your email is too short.'
         long: 'Your email is too long.'

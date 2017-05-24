@@ -121,7 +121,7 @@ class DefaultController extends Controller
      */
     public function confirmedAction()
     {
-        $this->addFlash('notice', 'You have already confirmed your account.');
+        $this->addFlash('success', 'You have already confirmed your account.');
         return $this->redirectToRoute('homepage');
     }
 }

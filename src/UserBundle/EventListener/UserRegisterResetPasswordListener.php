@@ -27,19 +27,27 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 /**
  * Listener responsible to change the redirection at the end of the password resetting
  */
-class RegisterListener implements EventSubscriberInterface
+class UserRegisterResetPasswordListener implements EventSubscriberInterface
 {
     protected $requestStack, $resetting_ttl, $translator, $token_storage, $session;
 
-    public function __construct($requestStack, $resetting_ttl, TranslatorInterface $translator, $login_default_target, TokenStorageInterface $token_storage, Session $session, $router)
+    public function __construct(
+        RequestStack $requestStack, 
+        TranslatorInterface $translator, 
+        TokenStorageInterface $token_storage, 
+        Session $session, 
+        Router $router, 
+        int $resetting_ttl, 
+        string $login_default_target
+    )
     {
         $this->requestStack = $requestStack;
-        $this->resetting_ttl = $resetting_ttl;
         $this->translator = $translator;
-        $this->login_default_target = $login_default_target;
         $this->token_storage = $token_storage;
         $this->session = $session;
         $this->router = $router;
+        $this->resetting_ttl = $resetting_ttl;
+        $this->login_default_target = $login_default_target;
     }
 
     /**
@@ -103,6 +111,7 @@ class RegisterListener implements EventSubscriberInterface
     public function onRegisterConfirm(GetResponseUserEvent $event)
     {
         $this->session->getFlashBag()->add('notice', 'You have successfully confirmed your account.');
+        
         $response = new RedirectResponse($this->router->generate('homepage'));
         $event->setResponse($response, Response::HTTP_PERMANENTLY_REDIRECT);
     }
@@ -129,8 +138,7 @@ class RegisterListener implements EventSubscriberInterface
                 $data[$fieldID] = $currentError->getMessage();
             }else{
                 $HTTPCode = Response::HTTP_ACCEPTED;   
-            }
-                    
+            }    
         }else{
             //FormErrorIterator
             $errorIterator = $form->getErrors(true);            

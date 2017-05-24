@@ -9,6 +9,10 @@ admin:
     resource: "@AppBundle/Controller/AdminController.php"
     type:     annotation
     prefix:   /admin
+user_bundle:
+    resource: "@UserBundle/Controller/DefaultController.php"
+    type:     annotation
+
 
 #HWIOAuthBundle routes
 hwi_oauth_security:

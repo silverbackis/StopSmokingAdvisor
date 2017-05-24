@@ -28,34 +28,79 @@ body {
 
   h3 {
     color: $teal;
-    font-size: 1.8rem;
+    font-family: 'Comfortaa', cursive;
+    font-size: 1.6rem;
+    margin-bottom: 1.6rem;
 
     &.restart {
       color: $gray-light;
+      font-size: 1.4rem;
+      margin-bottom: 0;
     }
   }
 
   hr {
     border-top: 1px solid $gray-light;
     display: block;
-    margin-bottom: 1.4rem;
+    margin-bottom: 1.8rem;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 1.4rem;
+    margin-top: 1.8rem;
     width: 100%;
   }
 
   .btn {
     display: inline-block;
+  }
 
-    &.restart {
-      background: $gray-light;
-      border: 0;
-      margin-top: 1rem;
+  .text-input {
+    border: 1px solid $gray-light;
+    transition: all .3s;
+    width: 400px;
 
-      &:hover {
-        background: $red;
+    &:focus,
+    &:hover,
+    &.isfilled {
+      border: 1px solid $teal;
+      color: $teal;
+
+      &::placeholder {
+        color: $teal;
       }
     }
+
+    &::placeholder {
+      transition: all .6s;
+    }
+  }
+
+  .form-text ul {
+    margin: 0;
+  }
+}
+
+.btn-secondary {
+  background: $gray-light;
+  color: $white;
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+
+  &:hover,
+  &:focus {
+    background: $red;
+    border-color: $red;
+    color: $white;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px rgba($red, .5);
+  }
+}
+
+.password-help {
+  text-align: left;
+
+  ul {
+    padding-left: 20px;
   }
 }

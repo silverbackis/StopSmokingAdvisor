@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 use AppBundle\Entity\UserSettings;
-
+use UserBundle\Form\ChangeSettingsType;
 
 class AccountController extends Controller
 {
@@ -42,7 +42,76 @@ class AccountController extends Controller
      */
     public function settingsAction(Request $request)
     {
+        $user = $this->getUser();
+
+        $formFactoryEmail = $this->get('user.form.change_email.factory');
+        $formEmail = $formFactoryEmail->createForm();
+        $formEmail->setData($user);
+        $formEmail->handleRequest($request);
+        // Handle the email form having been submitted
+        if ($formEmail->isSubmitted() && $formEmail->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            
+            // Now we know the email address is valid - What was email changed to? Save it as a var
+            $new_email = $user->getEmail();
+            $old_new_email = $user->getEmailNew();
+            
+            // Refresh user from the database again
+            $em->refresh($user);
+
+            if( $new_email == $user->getEmail() )
+            {
+                $user->setEmailNew(null);
+            }
+            else
+            {
+                if( $old_new_email == $new_email ) {
+                    $this->addFlash(
+                        'success',
+                        'Confirmation email resent'
+                    );
+                }
+                // Now set the new email to another column
+                $user->setEmailNew($new_email);
+                // Set a confirmation token if one doesn't already exist to the updated email
+                if (null === $user->getEmailChangeConfirmationToken()) {
+                    $user->setEmailChangeConfirmationToken($this->get('fos_user.util.token_generator')->generateToken());
+                }
+                $this->get('fos_user.mailer')->sendConfirmationEmailChangeMessage($user);
+                $request->getSession()->set('fos_user_send_confirmation_email/email', $user->getEmailNew());
+            }            
+            
+            // Make the form again with the correct user data
+            $formEmail = $formFactoryEmail->createForm();
+            $formEmail->setData($user);
+
+            $em->flush();
+        }
+
+        $formFactoryPassword = $this->get('fos_user.change_password.form.factory');
+        $formPassword = $formFactoryPassword->createForm();
+        $formPassword->setData($user);
+        $formPassword->handleRequest($request);
+        // This is handled by FOSUserBundle but forwarded back to this action
+
+        $user_settings = $this->container->get('app.user_settings')->getUserSettings();
+        $formNotifications = $this->createForm(ChangeSettingsType::class, $user_settings);
+        $formNotifications->handleRequest($request);
+         // Handle the notification form having been submitted
+        if ($formNotifications->isSubmitted() && $formNotifications->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+            $this->addFlash(
+                'success',
+                'Notification preferences updated'
+            );
+        }
+
         return $this->render('@App/Account/settings.html.twig', [
+            'email_new' => $user->getEmailNew(),
+            'form_email' => $formEmail->createView(),
+            'form_password' => $formPassword->createView(),
+            'form_notifications' => $formNotifications->createView()
         ]);
     }
     
