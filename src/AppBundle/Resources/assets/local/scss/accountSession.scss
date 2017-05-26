@@ -249,3 +249,30 @@ h3 {
   padding: 30px;
   text-align: center;
 }
+
+.custom-control {
+  margin-right: 0;
+  padding-left: 0;
+}
+
+@include media-breakpoint-down(sm) {
+  .session-text-outer {
+    padding: 30px 10px;
+  }
+
+  .session-text {
+    font-size: .9rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  .session-media {
+    padding: 0 0 45px;
+  }
+
+  .session-question-row {
+    font-size: 1.45rem;
+  }
+}

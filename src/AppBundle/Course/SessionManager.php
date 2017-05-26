@@ -171,6 +171,14 @@ class SessionManager {
     return $PercViewed;
   }
 
+  public function addFlash($cat, $msg)
+  {
+    $this->_session->getFlashBag()->add(
+      $cat,
+      $msg
+    );
+  }
+
   public function sessionPageAction(Request $request, int $pageID = null)
   {
     if($pageID)
@@ -432,8 +440,8 @@ class SessionManager {
       {
         // the condition can be evaluated - variable, operator, value
         $var = trim($re_matches[1]);
-        $op = trim($re_matches[4]);
-        $val = trim($re_matches[5]);
+        $op = trim($re_matches[3]);
+        $val = trim($re_matches[4]);
         $data = $this->getData($var);
 
         // Do comparisons where we will return false if condition not matched

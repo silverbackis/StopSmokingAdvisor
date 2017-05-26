@@ -224,7 +224,7 @@ class CourseManager {
     }
     if( !$this->isSessionAvailable() )
     {
-      $this->_session->getFlashBag()->add(
+      $this->session_manager->addFlash(
         'warning',
         "Sorry, it doesn't look like you have any sessions available at the moment."
       );

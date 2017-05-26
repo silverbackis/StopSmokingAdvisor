@@ -38,7 +38,7 @@ $(function(){
 
   if(pageVar === 'quit_date')
   {
-    pickerOps.minDate = new Date();
+    pickerOps.minDate = "today";
     pickerOps.maxDate = new Date();
     pickerOps.maxDate.setDate(pickerOps.maxDate.getDate() + 14);
   }

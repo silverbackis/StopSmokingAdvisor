@@ -225,8 +225,62 @@ h2 {
 
 .pie-semi-crop {
   left: 50%;
+
+  > .slice {
+    background: $teal;
+  }
 }
 
-.pie-semi-crop > .slice {
-  background: $teal;
+@include media-breakpoint-down(sm) {
+  .header-row {
+    padding: 2rem 1rem 0;
+  }
+
+  .logo {
+    margin-top: 1.5rem;
+    max-width: 280px;
+    width: 80%;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+
+  .btn-start {
+    margin-top: 1.2rem;
+  }
+
+  .text-next-session {
+    margin: 1.5rem 0;
+  }
+
+  .settings-cog {
+    background-size: 100% auto;
+    height: 30px;
+    width: 30px;
+  }
+
+  .settings-dropdown {
+    .dropdown-menu {
+      &:BEFORE {
+        right: 3px;
+      }
+
+      &:AFTER {
+        right: 4px;
+      }
+    }
+  }
+
+  .reminder-info {
+    font-size: 1rem;
+
+    a {
+      font-size: .6rem;
+    }
+  }
 }

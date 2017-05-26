@@ -40,7 +40,7 @@ class SessionPageView
   /**
    * One Session view related to one page.
    * @ORM\ManyToOne(targetEntity="Page")
-   * @ORM\JoinColumn(name="page_viewed_id", referencedColumnName="id")
+   * @ORM\JoinColumn(name="page_viewed_id", referencedColumnName="id", onDelete="CASCADE")
    */
   private $page_viewed;
 

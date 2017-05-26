@@ -20,7 +20,7 @@ class UserSettings
 
     /**
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="NO ACTION")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     public $user;
 

@@ -41,12 +41,9 @@ body {
 
   hr {
     border-top: 1px solid $gray-light;
-    display: block;
     margin-bottom: 1.8rem;
-    margin-left: auto;
-    margin-right: auto;
     margin-top: 1.8rem;
-    width: 100%;
+    padding: 0;
   }
 
   .btn {
@@ -79,7 +76,7 @@ body {
   }
 }
 
-.btn-secondary {
+.btn-secondary.restart {
   background: $gray-light;
   color: $white;
   margin-top: 1rem;
@@ -107,10 +104,12 @@ body {
 
 .custom-checkbox {
   padding-left: 40px;
+  margin-bottom: 1rem;
 
   .custom-control-description {
     color: $teal;
     font-size: 1.45rem;
+    line-height: 32px;
   }
 
   .custom-control-indicator.ssa {
@@ -119,6 +118,7 @@ body {
     display: inline-block;
     height: 32px;
     width: 32px;
+    top: 0;
   }
 
   .custom-control-input:checked ~ .custom-control-indicator.ssa {
@@ -127,5 +127,51 @@ body {
 
   .custom-control-input:focus ~ .custom-control-indicator.ssa {
     box-shadow: none;
+  }
+}
+
+.password-help,
+.btn-lg {
+  width: 400px;
+}
+
+@include media-breakpoint-down(sm) {
+  .session-content-row {
+    padding: 2rem 1rem;
+
+    .text-input {
+      font-size: 1rem;
+      padding: .75rem;
+      width: 100%;
+    }
+
+    h3 {
+      font-size: 1.4rem;
+    }
+
+    .custom-checkbox {
+      .custom-control-description {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .password-help,
+  .btn-lg {
+    width: 100%;
+  }
+
+  .btn-lg {
+    font-size: 1rem;
+  }
+
+  .session-header-row {
+    padding: 15px 20px;
+
+    .logo-header {
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
   }
 }

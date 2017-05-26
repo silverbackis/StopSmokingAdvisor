@@ -58,7 +58,7 @@
         <h3>Email</h3>
         {{ form_start(form_email, { 'action': path('account_settings'), 'attr': { 'class': 'col-12', 'id': 'new_email_form' } }) }}
           <div class="form-group row justify-content-center">
-            <div class="col-md-auto">
+            <div class="col-12 col-md-auto">
               {{ form_widget(form_email.email, {'attr': {'class': 'form-control-lg', 'placeholder': 'Current Password', 'autocomplete': 'off'} }) }}
               {% if not form_email.email.vars.valid %}
                 <span class="form-text text-danger">{{ form_errors(form_email.email) }}</span>
@@ -72,18 +72,20 @@
             </div>
           </div>
           <div class="row justify-content-center">
-            <button type="submit" class="col-md-auto btn btn-lg btn-success">Update Email</button>
+            <div class="col-12 col-md-auto">
+              <button type="submit" class="col-12 col-md-auto btn btn-lg btn-success">Update Email</button>
+            </div>
           </div>
         {{ form_end(form_email) }}
+        <hr class="col-12" />
       </div>
-      <hr />
       <div class="row">
         <h3 class="col-12">
           Password
         </h3>
         {{ form_start(form_password, { 'action': path('fos_user_change_password'), 'attr': { 'class': 'col-12' } }) }}
           <div class="form-group row justify-content-center">
-            <div class="col-md-auto">
+            <div class="col-12 col-md-auto">
               {{ form_widget(form_password.current_password, {'attr': {'class': 'form-control-lg', 'placeholder': 'Current Password', 'autocomplete': 'off'} }) }}
               {% if not form_password.current_password.vars.valid %}
                 <span class="form-text text-danger">{{ form_errors(form_password.current_password) }}</span>
@@ -91,7 +93,7 @@
             </div>
           </div>
           <div class="form-group row justify-content-center">
-            <div class="col-md-auto">
+            <div class="col-12 col-md-auto">
               {{ form_widget(form_password.plainPassword.first, {'attr': {'class': 'form-control-lg', 'placeholder': 'New Password', 'autocomplete': 'off'} }) }}
               {% if not form_password.plainPassword.first.vars.valid %}
                 <span class="form-text text-danger">{{ form_errors(form_password.plainPassword.first) }}</span>
@@ -99,7 +101,7 @@
             </div>
           </div>
           <div class="form-group row justify-content-center">
-            <div class="col-md-auto">
+            <div class="col-12 col-md-auto">
               {{ form_widget(form_password.plainPassword.second, {'attr': {'class': 'form-control-lg', 'placeholder': 'Repeat New Password', 'autocomplete': 'off'} }) }}
               {% if not form_password.plainPassword.second.vars.valid %}
                 <span class="form-text text-danger">{{ form_errors(form_password.plainPassword.second) }}</span>
@@ -116,11 +118,13 @@
           </div>
 
           <div class="row justify-content-center">
-            <button type="submit" class="col-md-auto btn btn-lg btn-success">Update Password</button>
+            <div class="col-12 col-md-auto">
+              <button type="submit" class="btn btn-lg btn-success">Update Password</button>
+            </div>
           </div>
         {{ form_end(form_password) }}
+        <hr class="col-12" />
       </div>
-      <hr />
       <div class="row">
         <h3 class="col-12">
           Reminder Notifications
@@ -128,7 +132,7 @@
         
         {{ form_start(form_notifications, { 'action': path('account_settings'), 'attr': { 'class': 'col-12' } }) }}
           <div class="form-group row justify-content-center">
-            <div class="col-md-auto">
+            <div class="col-12 col-md-auto">
               {{ form_widget(form_notifications.reminder_emails, {'attr': {'autocomplete': 'off'} }) }}
               {% if not form_notifications.reminder_emails.vars.valid %}
                 <span class="form-text text-danger">{{ form_errors(form_notifications.reminder_emails) }}</span>
@@ -146,16 +150,38 @@
           </div>
 
           <div class="row justify-content-center">
-            <button type="submit" class="col-md-auto btn btn-lg btn-success">Update Notifications</button>
+            <div class="col-12 col-md-auto">
+              <button type="submit" class="btn btn-lg btn-success">Update Notifications</button>
+            </div>
           </div>
         {{ form_end(form_notifications) }}
+        <hr class="col-12" />
       </div>
-      <hr />
       <div class="row">
         <h3 class="restart">Start Again?</h3>
         <p>
-          <a href="{{ path('account_restart') }}" class="btn btn-secondary restart">Reset Stop Smoking Advisor</a>
+          <button type="button" class="btn btn-secondary restart" data-toggle="modal" data-target="#myModal">Reset Stop Smoking Advisor</button>
         </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        You will loose all your progress in your current course of sessions if you restart.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a href="{{ path('account_restart') }}" class="btn btn-primary">Restart</a>
       </div>
     </div>
   </div>
