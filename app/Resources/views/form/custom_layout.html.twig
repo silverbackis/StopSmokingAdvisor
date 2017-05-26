@@ -178,7 +178,7 @@
                 parent_label_class: label_attr.class|default(''),
                 translation_domain: choice_translation_domain,
                 custom: custom,
-                text_class: text_class
+                text_class: text_class is defined ? text_class : null
             }) -}}
         {% endfor -%}
     {%- else -%}
@@ -196,12 +196,19 @@
 {%- endblock choice_widget_expanded %}
 
 {% block checkbox_widget -%}
-    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
-    {% if 'checkbox-inline' in parent_label_class %}
-        {{- form_label(form, null, { widget: parent() }) -}}
+    {%- set label_attr = label_attr|merge({class: 'custom-control custom-checkbox' ~ label_attr.class|default('')}) -%}
+    
+    {%- set label_data = {
+        widget: custom ? block('checkbox_widget_custom') : parent(),
+        text_class: text_class|default('') ~ ' custom-control-description',
+        label_attr: label_attr
+    } -%}
+
+    {% if 'checkbox-inline' in label_attr.class %}
+        {{- form_label(form, null, label_data) -}}
     {% else -%}
         <div class="checkbox">
-            {{- form_label(form, null, { widget: parent() }) -}}
+            {{- form_label(form, null, label_data) -}}
         </div>
     {%- endif %}
 {%- endblock checkbox_widget %}
@@ -210,7 +217,7 @@
     {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
 
     {%- set label_data = {
-        widget: custom ? block('radio_custom') : parent(),
+        widget: custom ? block('radio_widget_custom') : parent(),
         text_class: text_class
     } -%}
 
@@ -224,9 +231,8 @@
 {%- endblock radio_widget %}
 
 {# Labels #}
-
 {% block form_label -%}
-    {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' control-label')|trim}) -%}
+    {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' custom-control')|trim}) -%}
     {{- parent() -}}
 {%- endblock form_label %}
 
@@ -237,7 +243,9 @@
 {% endblock %}
 
 {% block checkbox_label -%}
+    {% with { attr: label_attr } %}
     {{- block('checkbox_radio_label') -}}
+    {% endwith %}
 {%- endblock checkbox_label %}
 
 {% block radio_label -%}
@@ -340,6 +348,13 @@
 
 
 {# custom input #}
-{% block radio_custom %}
-    <input type="radio" class="custom-control-input" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{% block radio_widget_custom %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' custom-control-input')|trim}) %}
+    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
 {% endblock %}
+
+{%- block checkbox_widget_custom -%}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' custom-control-input')|trim}) %}
+    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    <span class="{{ indicator_class|default('custom-control-indicator') }}"></span>
+{%- endblock checkbox_widget_custom -%}

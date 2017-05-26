@@ -105,7 +105,7 @@
                 <span class="form-text text-danger">{{ form_errors(form_password.plainPassword.second) }}</span>
               {% endif %}
               <small id="passwordHelp" class="form-text password-help">
-                  Passwords must include at least:
+                  <strong>Passwords must include at least:</strong>
                   <ul>
                       <li id="pw-letter"><span class="list-tick"></span> <span class="list-text">1 letter</span></li>
                       <li id="pw-number"><span class="list-tick"></span> <span class="list-text">1 number</span></li>
@@ -135,11 +135,11 @@
               {% endif %}
 
               <small id="passwordHelp" class="form-text password-help">
-                  <strong>Emails will be sent at the following times if your<br />session remains incomplete:</strong>
+                  <strong>Emails will be sent:</strong>
                   <ul>
-                      <li><span class="list-text">On the day your sessions become available</span></li>
-                      <li><span class="list-text">1 day after your sessions become available</span></li>
-                      <li><span class="list-text">The day your session expire</span></li>
+                      <li><span class="list-text">When each of your sessions unlock</span></li>
+                      <li><span class="list-text">The day after your available session has unlocked</span></li>
+                      <li><span class="list-text">The day your available session is expiring</span></li>
                   </ul>
               </small>
             </div>

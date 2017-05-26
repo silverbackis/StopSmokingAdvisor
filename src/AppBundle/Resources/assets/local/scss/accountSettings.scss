@@ -104,3 +104,28 @@ body {
     padding-left: 20px;
   }
 }
+
+.custom-checkbox {
+  padding-left: 40px;
+
+  .custom-control-description {
+    color: $teal;
+    font-size: 1.45rem;
+  }
+
+  .custom-control-indicator.ssa {
+    background: $white;
+    border: 1px solid $teal;
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+  }
+
+  .custom-control-input:checked ~ .custom-control-indicator.ssa {
+    background: url($asset-svg-base + 'tick.svg') 50% 50% no-repeat $white;
+  }
+
+  .custom-control-input:focus ~ .custom-control-indicator.ssa {
+    box-shadow: none;
+  }
+}

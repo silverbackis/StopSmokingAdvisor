@@ -55,6 +55,11 @@ services:
     tags:
         - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\SubmitType }
 
+  app.checkbox_type_extension:
+    class: AppBundle\Form\Extension\CheckboxTypeExtension
+    tags:
+        - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\CheckboxType }
+
   app.validator.course_data_var:
     class: AppBundle\Validator\Constraints\CourseDataVarValidator
     arguments: ["@app.course_manager"]

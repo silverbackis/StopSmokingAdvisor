@@ -21,7 +21,9 @@ class ChangeSettingsType extends AbstractType
     {
         $builder->add('reminder_emails', CheckboxType::class, [
             'label' => 'Remind me',
-            'required' => false
+            'required' => false,
+            'custom' => true,
+            'indicator_class' => 'custom-control-indicator ssa'
         ]);
     }
 
