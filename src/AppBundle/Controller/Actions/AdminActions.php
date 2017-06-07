@@ -113,7 +113,8 @@ class AdminActions
 			$page->setLive(true);
 		}
 
-		$this->updateOrder($data['session'], $data['parent'], $data['sort'], "+1");
+		$this->updateOrder($data['session'], $data['parent'], $data['sort'], true);
+
     //persist to the database
     $this->doctrine->persist($page);
     $this->doctrine->flush();
@@ -167,55 +168,101 @@ class AdminActions
 			return $page;
 		}
 
-    	$pageCopy = clone $page;
+    $pageCopy = clone $page;
     	
-    	// apply data to page and validate
+    // apply data to page and validate
 		$validResponse = $this->validateEntity($pageCopy, $data);
 		if ($validResponse instanceof JsonResponse) {
 			return $validResponse;
 		}
 
-    	$this->updateOrder($page->getSession(), $data['parent'], $data['sort'], "+1");
+		// Page will be added, update other page orders to make room for the new page
+  	$this->updateOrder($page->getSession(), $data['parent'], $data['sort'], true);
 
-	    //persist new page the database
-	    $this->doctrine->persist($pageCopy);
-	    $this->doctrine->flush();
+    //persist new page the database
+    $this->doctrine->persist($pageCopy);
+    $this->doctrine->flush();
 
 		return $this->getOKResponse($pageCopy);
 	}
 
 	public function movePage(int $pageID, Request $request)
 	{
+		// Get the post data (sort and parent)
 		$data = $this->validatePost($request, ['sort', 'parent']);
+		
 		if ($data instanceof JsonResponse) {
 			return $data;
 		}
 
+		// Get the page being moved
 		$page = $this->fetchPage($pageID);
 		if (!$page instanceof Page) {
 			return $page;
 		}
+		$movePageId = $page->getId();
 
-		$oldInfo = array(
+		// Set variables for where the page is currently
+		$oldInfo = [
 			'parent'=>(null == $page->getParent() ? null : $page->getParent()->getId()),
 			'sort'=> $page->getSort()
-		);
+		];
     	
-    	// apply data to page and validate
+    // apply data to page and validate - the page will then be moved, other pages sort need adjusting though
 		$validResponse = $this->validateEntity($page, $data);
 		if ($validResponse instanceof JsonResponse) {
 			return $validResponse;
 		}
-
 		$this->doctrine->flush();
 
-		//Update order of other entities where page is moving FROM
-		$this->updateOrder($page->getSession(), $oldInfo['parent'], $oldInfo['sort'], "-1", $page->getId());
-
-	    //Update order of other entities where page is moving TO
-	    $this->updateOrder($page->getSession(), $data['parent'], $data['sort'], "+1", $page->getId());
+		//Update order of OTHER entities where page is moving FROM
+		$this->updateOrder($page->getSession(), $oldInfo['parent'], $oldInfo['sort'], false, $movePageId);
+		
+		//Update order of OTHER entities where page is moving TO
+    $this->updateOrder($page->getSession(), $data['parent'], $data['sort'], true, $movePageId);
 
 		return $this->getOKResponse($page);
+	}
+
+	private function updateOrder($session, $parentID, int $currentPageSort, $newInsert = true, int $excludeId=null)
+	{
+		$changeBy = $newInsert ? 1 : -1;
+
+		$qb = $this->doctrine->createQueryBuilder();
+
+		//Select from the correct session
+    $whereStr = 'p.session = :session';
+    $qb->setParameter('session', $session);
+
+    //Select from the correct parent
+    $whereStr .= ' AND ';
+		if(null !== $parentID) {
+    	$whereStr .= 'p.parent = :parent_id';
+    	$qb->setParameter('parent_id', $parentID);
+    } else {
+    	$whereStr .= $qb->expr()->isNull('p.parent');    	
+    }
+
+    // Only update relevant
+    $whereStr .= ' AND p.sort '.($newInsert ? '>=' : '>').' :sort';
+    $qb->setParameter('sort', $currentPageSort);
+    
+    // Exclude page id if defined
+    if($excludeId !== null) {
+    	$whereStr .= ' AND p.id != :exclude_page_id';
+    	$qb->setParameter('exclude_page_id', $excludeId);
+    }
+
+    // Create query
+    $query = $qb->update('AppBundle\Entity\Page', 'p')
+    	->set('p.sort', 'p.sort+'.$changeBy)
+    	->where($whereStr)
+    	->getQuery()
+    ;
+    // Run the update
+    $query->execute();
+
+    return true;
 	}
 
 	public function deletePage(int $pageID)
@@ -244,14 +291,15 @@ class AdminActions
 			}
 		}
 
-    	// update order of other items so no gaps in the order values
-	    $this->updateOrder($page->getSession(), (null == $page->getParent() ? null : $page->getParent()->getId()), $page->getSort(), "-1");
-	    
-	    // remove the page that was requested
-    	$this->doctrine->remove($page);
-    	$this->doctrine->flush();
+		// remove the page that was requested
+  	$this->doctrine->remove($page);
+  	$this->doctrine->flush();
 
-	    return $this->getOKResponse();
+  	// update order of other items so no gaps in the order values
+  	$parentId = (null == $page->getParent() ? null : $page->getParent()->getId());
+    $this->updateOrder($page->getSession(), $parentId, $page->getSort(), false);
+
+    return $this->getOKResponse();
 	}
 
 	public function addCondition(Request $request)
@@ -535,44 +583,7 @@ class AdminActions
 			return $this->getBadRequestResponse("The answer ID '$answerID' does not exist.");
     	}
     	return $answer;
-	}
-
-	private function updateOrder($session, $parentID, $currentPageSort, $changeBy="+1", int $excludeId=null)
-	{
-		$qb = $this->doctrine->createQueryBuilder();
-
-		if(null === $parentID)
-	    {
-	    	$whereStr = $qb->expr()->isNull('p.parent');
-	    }
-	    else
-	    {
-	    	$whereStr = 'p.parent = :pid';
-	    	$qb->setParameter('pid', $parentID);
-	    }
-
-	    $whereStr .= ' AND p.sort >= :cpsort';
-	    $qb->setParameter('cpsort', $currentPageSort);
-
-	    $whereStr .= ' AND p.session = :session';
-	    $qb->setParameter('session', $session);
-	    if($excludeId)
-	    {
-	    	$whereStr .= ' AND p.id != :exclid';
-	    	$qb->setParameter('exclid', $excludeId);
-	    }
-	    $query = $qb->update('AppBundle\Entity\Page', 'p')
-	    	->set('p.sort', 'p.sort'.$changeBy)
-	    	->where($whereStr)
-	    	->getQuery();
-	    
-	    try
-	    {
-	   		$query->getSingleResult();
-	    }catch(\Doctrine\ORM\NoResultException $e){}
-
-	    return true;
-	}
+	}	
 
 	private function getOKResponse($data = array('success'=>true))
 	{

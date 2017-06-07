@@ -87,9 +87,9 @@ AjaxRequest.prototype.submit = function(data, url, ms, ops){
 	}
 	// set private url var to what has been set for this request if exists, or main url if not
 	url = url || this.url;
-
 	// now we have final data and url vars, we can create a hash based on what makes the request unique (unique requests cannot cancel each other out)
 	var requestHash = hashObj({
+		input_id: localOps.input ? localOps.input.$input.attr("id") : null,
 		data: localOps.uniqueRequest.data ? data : null,
 		url: localOps.uniqueRequest.url ? url : null
 	});
