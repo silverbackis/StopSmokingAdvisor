@@ -102,6 +102,10 @@ AjaxRequest.prototype.submit = function(data, url, ms, ops){
 		if(localOps.abortable)
 		{
 			existingRequest.abort();
+      if(localOps.debug)
+      {
+        console.log('aborted existing request');
+      }
 		}
 		else
 		{
@@ -109,7 +113,7 @@ AjaxRequest.prototype.submit = function(data, url, ms, ops){
 			{
 				console.warn("Request already in progress and is not abortable");
 			}
-			return;
+			// return;
 		}
 	}
 
@@ -121,7 +125,6 @@ AjaxRequest.prototype.submit = function(data, url, ms, ops){
 		contentType: localOps.contentType,
 		data: data || localOps.data,
 		success: function(response){
-			console.log(response);
 			_self.setRequest(requestHash, undefined);
 			_self.ajaxSuccess(localOps, response, this);
 		},
@@ -153,8 +156,15 @@ AjaxRequest.prototype.submit = function(data, url, ms, ops){
 	setSaving(localOps.load);
 
 	clearTimeout(_self.debounceTimer[requestHash]);
+
+  if(localOps.debug) {
+    console.log('timeout', ajaxOps);
+  }
   _self.debounceTimer[requestHash] = setTimeout(function(){
     // Do Ajax call
+    if(localOps.debug) {
+      console.log('send', ajaxOps);
+    }
 		_self.setRequest(requestHash, $.ajax(ajaxOps));
   }, ms || 250);
 };
