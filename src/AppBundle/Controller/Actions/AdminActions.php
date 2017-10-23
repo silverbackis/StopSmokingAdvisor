@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Actions;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +45,7 @@ class AdminActions
 		    ) : $object->getId();
 		});
 
-		$normalizers = array($normalizer);
+		$normalizers = array(new DateTimeNormalizer(), $normalizer);
 		$this->serializer = new Serializer($normalizers, $encoders);
 	}
 

@@ -121,6 +121,7 @@ AjaxRequest.prototype.submit = function(data, url, ms, ops){
 		contentType: localOps.contentType,
 		data: data || localOps.data,
 		success: function(response){
+			console.log(response);
 			_self.setRequest(requestHash, undefined);
 			_self.ajaxSuccess(localOps, response, this);
 		},
@@ -148,7 +149,6 @@ AjaxRequest.prototype.submit = function(data, url, ms, ops){
 	{
 		console.log("AjaxRequest $.ajax options:", ajaxOps);
 	}
-	
 	// Set the saving notice (depending on if this request is loading or saving data)
 	setSaving(localOps.load);
 
