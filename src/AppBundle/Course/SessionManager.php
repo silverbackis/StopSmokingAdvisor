@@ -458,9 +458,8 @@ class SessionManager
                 if ($neg) {
                     $var = substr($var, 1);
                 }
-                if ($this->getData($var)) {
-                    return !$neg;
-                }
+                $data = $this->getData($var);
+                return $neg ? !$data : $data;
             }
         }
 
