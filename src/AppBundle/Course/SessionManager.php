@@ -467,6 +467,15 @@ class SessionManager
         return true;
     }
 
+    public function convertBoolData (string $value)
+    {
+        $boolPrefix = substr($value, 0, 5) === 'bool_';
+        if ($boolPrefix) {
+            $value = !!substr($value, 5);
+        }
+        return $value;
+    }
+
     public function getData($key)
     {
         // find the variable by key for the course in the database
@@ -478,6 +487,9 @@ class SessionManager
                     'course' => $this->session->getCourse()
                 ]
             );
-        return null === $dataEntity ? null : $dataEntity->getValue();
+        if (!$dataEntity) {
+            return null;
+        }
+        return $this->convertBoolData($dataEntity->getValue());
     }
 }

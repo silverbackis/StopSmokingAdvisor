@@ -5,6 +5,7 @@ namespace Tests\AppBundle\Course;
 use AppBundle\Course\SessionManager;
 use AppBundle\Entity\Condition;
 use AppBundle\Entity\Page;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Sonata\SeoBundle\Seo\SeoPage;
@@ -17,6 +18,10 @@ class SessionManagerTest extends TestCase
 {
     private $sm;
     private $checkPageConditions;
+    /**
+     * @var SessionManager
+     */
+    private $smReal;
 
     public function setUp ()
     {
@@ -33,6 +38,12 @@ class SessionManagerTest extends TestCase
                 $this->prophesize(FormFactory::class)->reveal()
             ]
         );
+        $this->smReal = new SessionManager($em->reveal(),
+                                           $this->prophesize(Router::class)->reveal(),
+                                           $this->prophesize(SeoPage::class)->reveal(),
+                                           $ses->reveal(),
+                                           $this->prophesize(TwigEngine::class)->reveal(),
+                                           $this->prophesize(FormFactory::class)->reveal());
         $this->checkPageConditions = new \ReflectionMethod(SessionManager::class, 'checkPageConditions');
         $this->checkPageConditions->setAccessible(true);
     }
@@ -45,6 +56,13 @@ class SessionManagerTest extends TestCase
         $condition->setCondition($conditionStr);
         $page->addCondition($condition);
         return $page;
+    }
+
+    public function test_convertBoolData ()
+    {
+        $this->assertTrue($this->smReal->convertBoolData('bool_1'));
+        $this->assertFalse($this->smReal->convertBoolData('bool_0'));
+        $this->assertEquals('123', $this->smReal->convertBoolData('123'));
     }
 
     public function test_checkPageConditions ()
