@@ -28,9 +28,9 @@ class AdminControllerTest extends WebTestCase
         $newSchema->dropTable('user_session');
         $newSchema->dropTable('page');
     	self::updateSchema();*/
-        //self::runCommand('doctrine:database:drop');
-        //self::runCommand('doctrine:database:create');
-        //self::runCommand('doctrine:fixtures:load --append --no-interaction --fixtures=src/AppBundle/DataFixtures/ORM/LoadSamplePages.php');
+        self::runCommand('doctrine:database:drop');
+        self::runCommand('doctrine:database:create');
+        self::runCommand('doctrine:fixtures:load --append --no-interaction --fixtures=src/AppBundle/DataFixtures/ORM/LoadSamplePages.php');
     }
 
     public function setUp()

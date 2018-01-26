@@ -53,7 +53,8 @@ class ValidateSortValidator extends ConstraintValidator
         ->getUnitOfWork()
         ->getOriginalEntityData($page)
       ;
-      if($old_data['parent_id']!==$page->getParent()) {
+      $parentId = $old_data['parent_id'] ?? null;
+      if($parentId!==$page->getParent()) {
         $totalTreeNodes++;
       }
     }
