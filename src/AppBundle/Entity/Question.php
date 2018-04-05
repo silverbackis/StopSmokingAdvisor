@@ -58,7 +58,7 @@ class Question
 
     /**
      * @ORM\Column(type="integer", options={"default" : 10})
-     * @Assert\Expression("this.getMinAnswers() <= this.getMaxAnswers()", message="The minimum answers required must be less than or equal to the maximum permitted"
+     * @Assert\Expression("this.getMinAnswers() <= this.getMaxAnswers()", message="The minimum answers required must be less than or equal to the maximum permitted")
      * @var int
      */
     protected $maxAnswers = 10;
