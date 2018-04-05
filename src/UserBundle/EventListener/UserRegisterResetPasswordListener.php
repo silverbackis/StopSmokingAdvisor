@@ -24,23 +24,27 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+
 /**
  * Listener responsible to change the redirection at the end of the password resetting
  */
 class UserRegisterResetPasswordListener implements EventSubscriberInterface
 {
-    protected $requestStack, $resetting_ttl, $translator, $token_storage, $session;
+    protected $requestStack;
+    protected $resetting_ttl;
+    protected $translator;
+    protected $token_storage;
+    protected $session;
 
     public function __construct(
-        RequestStack $requestStack, 
-        TranslatorInterface $translator, 
-        TokenStorageInterface $token_storage, 
-        Session $session, 
-        Router $router, 
-        int $resetting_ttl, 
+        RequestStack $requestStack,
+        TranslatorInterface $translator,
+        TokenStorageInterface $token_storage,
+        Session $session,
+        Router $router,
+        int $resetting_ttl,
         string $login_default_target
-    )
-    {
+    ) {
         $this->requestStack = $requestStack;
         $this->translator = $translator;
         $this->token_storage = $token_storage;
@@ -88,7 +92,7 @@ class UserRegisterResetPasswordListener implements EventSubscriberInterface
             'message' => nl2br($this->translator->trans('resetting.check_email', array(), 'FOSUserBundle'))
         ));
         $event->setResponse($response);
-    }  
+    }
 
     public function onRegisterSuccess(FormEvent $event)
     {
@@ -126,38 +130,38 @@ class UserRegisterResetPasswordListener implements EventSubscriberInterface
         $data = [];
         $task = $request->request->get('task');
         //would always fail registering on input validation because not all fields have been submitted - so let's check the field in question
-        if( $task['submit']=='no' ){
+        if ($task['submit']=='no') {
             $fieldID = $task['input'];
-            $inputRef = explode("_",str_replace("fos_user_registration_form_", "", $fieldID));
+            $inputRef = explode("_", str_replace("fos_user_registration_form_", "", $fieldID));
             $formField = $form;
-            foreach($inputRef as $inputRefPart){
+            foreach ($inputRef as $inputRefPart) {
                 $formField = $formField[$inputRefPart];
             }
             $currentError = $formField->getErrors()->current();
-            if($currentError){
+            if ($currentError) {
                 $data[$fieldID] = $currentError->getMessage();
-            }else{
-                $HTTPCode = Response::HTTP_ACCEPTED;   
-            }    
-        }else{
+            } else {
+                $HTTPCode = Response::HTTP_ACCEPTED;
+            }
+        } else {
             //FormErrorIterator
-            $errorIterator = $form->getErrors(true);            
-            while($errorIterator->valid()){
+            $errorIterator = $form->getErrors(true);
+            while ($errorIterator->valid()) {
                 $currentError = $errorIterator->current();
                 $currentOrigin = $currentError->getOrigin();
 
                 $currentField = [ $currentOrigin->getName() ];
-                while( $p = $currentOrigin->getParent() ) {
-                    array_unshift($currentField, $p->getName() );
+                while ($p = $currentOrigin->getParent()) {
+                    array_unshift($currentField, $p->getName());
                     $currentOrigin = $p;
                 }
 
-                $fieldID = join("_",$currentField);
+                $fieldID = join("_", $currentField);
                 
-                if(!isset($data[$fieldID])){
+                if (!isset($data[$fieldID])) {
                     $data[$fieldID] = $currentError->getMessage();
                 }
-                //$data[$fieldName][] = 
+                //$data[$fieldName][] =
                 $errorIterator->next();
             }
         }

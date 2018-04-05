@@ -13,8 +13,8 @@ use AppBundle\Entity\UserSettings;
 
 class LoadUserData implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
-    private $container,
-    $adminUsers = array(
+    private $container;
+    private $adminUsers = array(
         array(
             'daniel',
             'daniel@silverback.is',
@@ -63,13 +63,11 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface, Ordered
 
     public function load(ObjectManager $manager)
     {
-        foreach ($this->adminUsers as $userArray)
-        {
+        foreach ($this->adminUsers as $userArray) {
             $locator = $this->findOrCreateLocator($userArray[0], $manager);
 
             /** Check if the object is managed (so already exists in the database) **/
-            if (!$manager->contains($locator))
-            {
+            if (!$manager->contains($locator)) {
                 $manager->persist($this->generateUser($userArray[0], $userArray[1], $userArray[2]));
             }
         }

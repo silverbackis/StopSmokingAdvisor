@@ -17,7 +17,7 @@ class AccountController extends Controller
     public function dashboardAction(Request $request)
     {
         $seo_page = $this->container->get('sonata.seo.page');
-        $seo_page->setTitle("Dashboard - ".$seo_page->getTitle());
+        $seo_page->setTitle('Dashboard - ' .$seo_page->getTitle());
 
         $course_manager = $this->container->get('app.course_manager');
         $user_settings = $this->container->get('app.user_settings')->getUserSettings();
@@ -28,7 +28,7 @@ class AccountController extends Controller
             'session_available' => $course_manager->isSessionAvailable(),
             'session_expired' => $course_manager->isSessionExpired(),
             'session_expired_date' => null === $EXPIRE ? null : $EXPIRE->format("l jS F Y"),
-            'session_started' => count($course_manager->getCurrentSession()->getViews()) > 0,
+            'session_started' => \count($course_manager->getCurrentSession()->getViews()) > 0,
             'session_number' => $course_manager->getCurrentSession()->getSession(),
             'session_available_date' => null === $AVAIL ? null : $AVAIL->format("l jS F"),
             'weekly_spend' => $course_manager->getData('weekly_spend'),
@@ -59,13 +59,10 @@ class AccountController extends Controller
             // Refresh user from the database again
             $em->refresh($user);
 
-            if( $new_email == $user->getEmail() )
-            {
+            if ($new_email == $user->getEmail()) {
                 $user->setEmailNew(null);
-            }
-            else
-            {
-                if( $old_new_email == $new_email ) {
+            } else {
+                if ($old_new_email == $new_email) {
                     $this->addFlash(
                         'success',
                         'Confirmation email resent'
@@ -79,7 +76,7 @@ class AccountController extends Controller
                 }
                 $this->get('fos_user.mailer')->sendConfirmationEmailChangeMessage($user);
                 $request->getSession()->set('fos_user_send_confirmation_email/email', $user->getEmailNew());
-            }            
+            }
             
             // Make the form again with the correct user data
             $formEmail = $formFactoryEmail->createForm();
@@ -97,7 +94,7 @@ class AccountController extends Controller
         $user_settings = $this->container->get('app.user_settings')->getUserSettings();
         $formNotifications = $this->createForm(ChangeSettingsType::class, $user_settings);
         $formNotifications->handleRequest($request);
-         // Handle the notification form having been submitted
+        // Handle the notification form having been submitted
         if ($formNotifications->isSubmitted() && $formNotifications->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->flush();

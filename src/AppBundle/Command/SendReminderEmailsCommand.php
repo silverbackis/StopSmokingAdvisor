@@ -29,25 +29,25 @@ class SendReminderEmailsCommand extends ContainerAwareCommand
 
         $dispatcher = $this->getContainer()->get('event_dispatcher');
         $dispatcher->addListener(
-            'reminder_emails.info', 
+            'reminder_emails.info',
             function (GenericEvent $event) use ($output) {
                 $output->writeLn('<info>'.$event->getSubject().'</info>');
             }
         );
         $dispatcher->addListener(
-            'reminder_emails.comment', 
+            'reminder_emails.comment',
             function (GenericEvent $event) use ($output) {
                 $output->writeLn('<comment>'.$event->getSubject().'</comment>');
             }
         );
         $dispatcher->addListener(
-            'reminder_emails.question', 
+            'reminder_emails.question',
             function (GenericEvent $event) use ($output) {
                 $output->writeLn('<question>'.$event->getSubject().'</question>');
             }
         );
         $dispatcher->addListener(
-            'reminder_emails.error', 
+            'reminder_emails.error',
             function (GenericEvent $event) use ($output) {
                 $output->writeLn('<error>'.$event->getSubject().'</error>');
             }
@@ -55,6 +55,5 @@ class SendReminderEmailsCommand extends ContainerAwareCommand
 
         $CourseReminderProvider = $this->getContainer()->get('app.course_reminder_provider');
         $CourseReminderProvider->sendReminders();
-        
     }
 }

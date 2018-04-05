@@ -10,12 +10,13 @@ use FOS\UserBundle\Event\FormEvent;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
-class UserChangePasswordListener implements EventSubscriberInterface {
+class UserChangePasswordListener implements EventSubscriberInterface
+{
     private $router;
 
     public function __construct(Router $router)
     {
-         $this->router = $router;
+        $this->router = $router;
     }
 
     /**

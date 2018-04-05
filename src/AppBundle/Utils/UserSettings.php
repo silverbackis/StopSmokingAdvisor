@@ -6,23 +6,22 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\UserSettings as Settings;
 
-class UserSettings {
+class UserSettings
+{
     private $ts;
     private $em;
 
     public function __construct(
         TokenStorageInterface $ts,
         EntityManager $em
-    )
-    {
+    ) {
         $this->ts = $ts;
         $this->em = $em;
     }
 
     public function getUserSettings(AppBundle\Entity\User $User = null)
     {
-        if( is_null($User) )
-        {
+        if (is_null($User)) {
             $User = $this->ts->getToken()->getUser();
         }
 
@@ -32,8 +31,7 @@ class UserSettings {
             ]);
 
         // Setup settings if not already there
-        if(null === $UserSettings)
-        {
+        if (null === $UserSettings) {
             $UserSettings = new Settings();
             $UserSettings->setUser($User);
             $this->em->persist($UserSettings);

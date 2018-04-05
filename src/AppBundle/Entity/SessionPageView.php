@@ -15,72 +15,72 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SessionPageView
 {
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue(strategy="AUTO")
-   */
-  protected $id;
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
 
-  /**
-   * @ORM\Column(type="datetime", nullable=false)
-   */
-  protected $created_at;
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    protected $created_at;
 
-  /**
-   * @ORM\Column(type="datetime", nullable=false)
-   */
-  protected $last_updated;
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    protected $last_updated;
 
-  /**
-   * @ORM\Column(type="integer", nullable=false)
-   */
-  protected $views = 1;
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    protected $views = 1;
 
-  /**
-   * One Session view related to one page.
-   * @ORM\ManyToOne(targetEntity="Page")
-   * @ORM\JoinColumn(name="page_viewed_id", referencedColumnName="id", onDelete="CASCADE")
-   */
-  private $page_viewed;
+    /**
+     * One Session view related to one page.
+     * @ORM\ManyToOne(targetEntity="Page")
+     * @ORM\JoinColumn(name="page_viewed_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $page_viewed;
 
-  /**
-   * One Session view related to session.
-   * @ORM\ManyToOne(targetEntity="Session", inversedBy="views")
-   * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
-   */
-  private $session;
+    /**
+     * One Session view related to session.
+     * @ORM\ManyToOne(targetEntity="Session", inversedBy="views")
+     * @ORM\JoinColumn(name="session_id", referencedColumnName="id")
+     */
+    private $session;
 
-  /**
-   * One Session view related to course.
-   * @ORM\ManyToOne(targetEntity="Course")
-   * @ORM\JoinColumn(name="course_id", referencedColumnName="id")
-   */
-  private $course;
+    /**
+     * One Session view related to course.
+     * @ORM\ManyToOne(targetEntity="Course")
+     * @ORM\JoinColumn(name="course_id", referencedColumnName="id")
+     */
+    private $course;
 
-  /**
-   * @ORM\PrePersist
-   */
-  public function setCreatedAtValue()
-  {
-      $this->created_at = new \DateTime();
-      $this->last_updated = new \DateTime();
-      return $this;
-  }
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->created_at = new \DateTime();
+        $this->last_updated = new \DateTime();
+        return $this;
+    }
 
   
-  /**
-   * Set lastUpdated
-   *
-   * @param \DateTime $lastUpdated
-   *
-   * @return Session
-   * @ORM\PreUpdate
-  */
-  public function setLastUpdatedValue($lastUpdated)
-  {
-      return $this->setLastUpdated(new \DateTime());
-  }
+    /**
+     * Set lastUpdated
+     *
+     * @param \DateTime $lastUpdated
+     *
+     * @return Session
+     * @ORM\PreUpdate
+    */
+    public function setLastUpdatedValue($lastUpdated)
+    {
+        return $this->setLastUpdated(new \DateTime());
+    }
 
 
     /**

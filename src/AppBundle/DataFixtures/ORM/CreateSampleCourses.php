@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\DataFixtures\ORM;
+
 // Class level
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -22,8 +23,9 @@ Create course for daniel for tests (email reminders)
  */
 class CreateSampleCourses implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
-  private $container,
-  $manager;
+    private $container;
+    /** @var ObjectManager */
+    private $manager;
 
     public function setContainer(ContainerInterface $container = null)
     {
@@ -32,21 +34,20 @@ class CreateSampleCourses implements FixtureInterface, ContainerAwareInterface, 
 
     private function setupUserCourse(string $username)
     {
-      $User = $this->manager->getRepository('UserBundle\Entity\User')->findOneBy(['username' => $username]) ?: new User();
-      $User->setUsername($username);
-      $User->setEmail($username);
-      $User->setPlainPassword(bin2hex(random_bytes(20)));
-      //$User->setRoles($roles);
-      $User->setEnabled(true);
+        $User = $this->manager->getRepository(User::class)->findOneBy(['username' => $username]) ?: new User();
+        $User->setUsername($username);
+        $User->setEmail($username);
+        $User->setPlainPassword(bin2hex(random_bytes(20)));
+        //$User->setRoles($roles);
+        $User->setEnabled(true);
 
-      // Create user settings
-      $UserSettings = new Settings();
-      $UserSettings->setUser($User);
-      $UserSettings->setReminderEmails(true);
-      $this->manager->persist($UserSettings);
+        // Create user settings
+        $UserSettings = new Settings();
+        $UserSettings->setUser($User);
+        $UserSettings->setReminderEmails(true);
+        $this->manager->persist($UserSettings);
 
-      switch($username)
-      {
+        switch ($username) {
         case 'testuser2@example.com':
           $available = (new \DateTime())->setTime(0, 0, 0)->modify("-1 Day");
           $expires = null;
@@ -62,27 +63,26 @@ class CreateSampleCourses implements FixtureInterface, ContainerAwareInterface, 
           $expires = (clone $available)->modify("+6 Day");
         break;
       }
-      $Course = new Course();
-      $Course->setUser($User);
-      $Course->setSessionAvailable($available);
-      $Course->setSessionExpire($expires);
+        $Course = new Course();
+        $Course->setUser($User);
+        $Course->setSessionAvailable($available);
+        $Course->setSessionExpire($expires);
 
-      $Session = new Session();
-      $Session->setCourse($Course);
-      $Course->setLatestSession($Session);
+        $Session = new Session();
+        $Session->setCourse($Course);
+        $Course->setLatestSession($Session);
 
-      $this->manager->persist($Course);
-      $this->manager->persist($Session);
-
+        $this->manager->persist($Course);
+        $this->manager->persist($Session);
     }
 
     public function load(ObjectManager $manager)
     {
-      $this->manager = $manager;
-      $this->setupUserCourse('testuser1@example.com');
-      $this->setupUserCourse('testuser2@example.com');
-      $this->setupUserCourse('testuser3@example.com');
-      $this->manager->flush();
+        $this->manager = $manager;
+        $this->setupUserCourse('testuser1@example.com');
+        $this->setupUserCourse('testuser2@example.com');
+        $this->setupUserCourse('testuser3@example.com');
+        $this->manager->flush();
     }
 
     public function getOrder()

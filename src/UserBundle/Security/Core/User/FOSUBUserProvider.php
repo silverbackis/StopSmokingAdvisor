@@ -5,6 +5,7 @@ namespace UserBundle\Security\Core\User;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseClass;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 class FOSUBUserProvider extends BaseClass
 {
     /**
@@ -40,7 +41,7 @@ class FOSUBUserProvider extends BaseClass
         //when the user is registrating
         if (null === $user) {
             $email = $response->getEmail();
-            if($email!==null){
+            if ($email!==null) {
                 //check if user with the email address exists
                 $user = $this->userManager->findUserByEmail($email);
             }

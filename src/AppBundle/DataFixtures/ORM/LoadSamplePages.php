@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\DataFixtures\ORM;
+
 // Class level
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -14,9 +15,9 @@ use AppBundle\Entity\Condition;
 
 class LoadSamplePages implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
-	private static $pageCounter = 1;
-	private $container,
-	$manager;
+    private static $pageCounter = 1;
+    private $container;
+    private $manager;
 
     public function setContainer(ContainerInterface $container = null)
     {
@@ -39,11 +40,11 @@ class LoadSamplePages implements FixtureInterface, ContainerAwareInterface, Orde
         // validate
         $errors = $this->validator->validate($page);
         if (count($errors) > 0) {
-	        $errorsString = (string) $errors;
-	        throw new \Exception($errorsString);
-	    }
+            $errorsString = (string) $errors;
+            throw new \Exception($errorsString);
+        }
 
-	    // persist new page to database and flush
+        // persist new page to database and flush
         $this->manager->persist($page);
         $this->manager->flush();
 
@@ -69,13 +70,11 @@ class LoadSamplePages implements FixtureInterface, ContainerAwareInterface, Orde
 
     public function load(ObjectManager $manager)
     {
-    	$this->manager = $manager;
+        $this->manager = $manager;
         $counter = 6;
-        while($counter>0)
-        {
+        while ($counter>0) {
             $locator = $this->findOrCreateLocator($counter, $this->manager);
-            if (!$this->manager->contains($locator))
-            {
+            if (!$this->manager->contains($locator)) {
                 $this->generatePage($counter);
             }
             $counter--;

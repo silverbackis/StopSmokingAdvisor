@@ -1,206 +1,249 @@
 {% extends '@App/base.html.twig' %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    {% stylesheets 
-    	'@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/css/bootstrap-select.css'
-    	'@AppBundle/Resources/assets/global/bower/trumbowyg/dist/ui/trumbowyg.min.css'
-        '@AppBundle/Resources/assets/local/scss/adminLayout.scss'
-        '@AppBundle/Resources/assets/local/scss/adminManage.scss'
-        filter='cssrewrite' 
-        filter='?uglifycss' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+  {{ parent() }}
+  {% stylesheets
+    '@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/css/bootstrap-select.css'
+    '@AppBundle/Resources/assets/global/bower/trumbowyg/dist/ui/trumbowyg.min.css'
+    '@AppBundle/Resources/assets/local/scss/adminLayout.scss'
+    '@AppBundle/Resources/assets/local/scss/adminManage.scss'
+    filter='cssrewrite'
+    filter='?uglifycss' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+  {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    {% javascripts
-    	'@PlUploadBundle/Resources/public/plupload.full.min.js'
-    	'@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/js/bootstrap-select.min.js'
-    	'@AppBundle/Resources/assets/global/bower/trumbowyg/dist/trumbowyg.min.js'
-        '@AppBundle/Resources/assets/global/BootstrapModalAlerts.js'
-        '@AppBundle/Resources/assets/local/js/adminLayout.js'
-        '@AppBundle/Resources/assets/local/js/Entity/AjaxManager/*.js'
-        '@AppBundle/Resources/assets/local/js/Utils/AjaxManager.js'
-        '@AppBundle/Resources/assets/local/js/Utils/SidePanel.js'
-        '@AppBundle/Resources/assets/local/js/Utils/Answer.js'
-        '@AppBundle/Resources/assets/local/js/Entity/NodeManager/*.js'
-        '@AppBundle/Resources/assets/local/js/Utils/NodeManager.js'
-        '@AppBundle/Resources/assets/local/js/Entity/TreeManager/*.js'
-        '@AppBundle/Resources/assets/local/js/Utils/TreeManager.js'
-        filter='?uglifyjs2' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+  {{ parent() }}
+  {% javascripts
+    '@PlUploadBundle/Resources/public/plupload.full.min.js'
+    '@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/js/bootstrap-select.min.js'
+    '@AppBundle/Resources/assets/global/bower/trumbowyg/dist/trumbowyg.min.js'
+    '@AppBundle/Resources/assets/global/BootstrapModalAlerts.js'
+    '@AppBundle/Resources/assets/local/js/adminLayout.js'
+    '@AppBundle/Resources/assets/local/js/Entity/AjaxManager/*.js'
+    '@AppBundle/Resources/assets/local/js/Utils/AjaxManager.js'
+    '@AppBundle/Resources/assets/local/js/Utils/SidePanel.js'
+    '@AppBundle/Resources/assets/local/js/Utils/Answer.js'
+    '@AppBundle/Resources/assets/local/js/Entity/NodeManager/*.js'
+    '@AppBundle/Resources/assets/local/js/Utils/NodeManager.js'
+    '@AppBundle/Resources/assets/local/js/Entity/TreeManager/*.js'
+    '@AppBundle/Resources/assets/local/js/Utils/TreeManager.js'
+    filter='?uglifyjs2' %}
+    <script src="{{ asset_url }}"></script>
+  {% endjavascripts %}
 {% endblock %}
 
 {% block body %}
-	{% for flash_message in app.session.flashBag.get('notice') %}
-	    <div class="alert alert-success alert-dismissible fade show" role="alert">
-	        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-	            <span aria-hidden="true">&times;</span>
-	        </button>
-	        <strong>{{ flash_message }}</strong>
-	    </div>
-	{% endfor %}
-	<table class="container-fluid w-100 h-100 page-container" id="pageContainer">
-		<tbody>
-			<tr class="top-table-row">
-				<td>
-					<div class="row no-gutters header-bar">
-						<div class="col-12 col-auto align-self-center">
-						  <h1 class="ssa-logo">Stop Smoking Advisor</h1>
-						</div>
-						<div class="col align-self-center">
-						  <select class="selectpicker" data-style="btn-secondary" id="sessionSelect">
-								<option value="1">Session 1</option>
-								<option value="2">Session 2</option>
-								<option value="3">Session 3</option>
-								<option value="4">Session 4</option>
-								<option value="5">Session 5</option>
-								<option value="6">Session 6</option>
-							</select><br />
-							<span class="save-notice" id="saveNotice">Changes saved</span>
-						</div>
-						<div class="col-12 col-auto align-self-center">
-							<a href="#" id="logout" class="logout-link">
-								Logout
-							</a>
-						</div>
+  {% for flash_message in app.session.flashBag.get('notice') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>{{ flash_message }}</strong>
+    </div>
+  {% endfor %}
+  <table class="container-fluid w-100 h-100 page-container" id="pageContainer">
+    <tbody>
+    <tr class="top-table-row">
+      <td>
+        <div class="row no-gutters header-bar">
+          <div class="col-12 col-auto align-self-center">
+            <h1 class="ssa-logo">Stop Smoking Advisor</h1>
+          </div>
+          <div class="col align-self-center">
+            <select class="selectpicker" data-style="btn-secondary" id="sessionSelect">
+              <option value="1">Session 1</option>
+              <option value="2">Session 2</option>
+              <option value="3">Session 3</option>
+              <option value="4">Session 4</option>
+              <option value="5">Session 5</option>
+              <option value="6">Session 6</option>
+            </select><br/>
+            <span class="save-notice" id="saveNotice">Changes saved</span>
+          </div>
+          <div class="col-12 col-auto align-self-center">
+            <div class="row">
+              <div class="col-12">
+                <a href="#" id="logout" class="logout-link">
+                  Logout
+                </a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <a href="{{ path('account_dashboard') }}" class="logout-link dashboard" target="_blank">
+                  User Dashboard
+                </a>
+              </div>
+            </div>
+          </div>
 
-						<div class="alert alert-success tree-alert" role="alert">
-							<span id="targetAction" class="target-action"></span> node by selecting a destination or &nbsp;&nbsp;&nbsp;<a href="#" id="targetCancel" class="btn btn-sm btn-secondary">cancel</a>
-						</div>
-					</div>
-				</td>
-			</tr>
-			<tr class="bottom-table-row">
-				<td class="bottom-tree-area row no-gutters">
-					<div class="col">
-						<div class="bottom-tree-container" id="treeContainer"></div>
-					</div>
-					<div class="col-12 col-auto right-bar">
-						<div class="right-bar-inner">
-							<div class="right-bar-scroller">
-								<button type="button" class="close close-sidebar" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-								<fieldset>
-									<div class="side-bar-top">
-										<button type="button" class="btn btn-sm btn-primary" id="previewButton">Preview as user</button>	
-										<br />
-										<label class="custom-control custom-checkbox">
-										  <input type="checkbox" class="custom-control-input" id="liveToggle" value="1" data-column="live" />
-										  <span class="custom-control-indicator toggle-indicator">
+          <div class="alert alert-success tree-alert" role="alert">
+            <span id="targetAction" class="target-action"></span> node by selecting a destination or &nbsp;&nbsp;&nbsp;<a href="#" id="targetCancel" class="btn btn-sm btn-secondary">cancel</a>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr class="bottom-table-row">
+      <td class="bottom-tree-area row no-gutters">
+        <div class="col">
+          <div class="bottom-tree-container" id="treeContainer"></div>
+        </div>
+        <div class="col-12 col-auto right-bar">
+          <div class="right-bar-inner">
+            <div class="right-bar-scroller">
+              <button type="button" class="close close-sidebar" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <fieldset>
+                <div class="side-bar-top">
+                  <button type="button" class="btn btn-sm btn-primary" id="previewButton">Preview as user</button>
+                  <br/>
+                  <label class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="liveToggle" value="1" data-column="live"/>
+                    <span class="custom-control-indicator toggle-indicator">
 										  	<span class="toggle-circle"></span>
 										  </span>
-										  <span class="custom-control-description" id="liveToggleText"></span>
-										</label>					
-									</div>	
-									<div class="side-bar-form">
-										<div class="form-group">
-											<label for="pageNameInput">Page Name</label>
-											<input type="text" class="form-control" id="pageNameInput" placeholder="Enter page name" data-column="name" />
-										</div>
-										<div class="form-group">
-											<label for="pageDescInput">Admin description</label>
-											<input type="text" class="form-control" id="pageDescInput" placeholder="Enter a description" data-column="adminDescription" />
-											<small id="pageDescHelp" class="form-text">This is to help you understand the page quickly and is never displayed to users.</small>
-										</div>
-										<div class="form-group">
-											<label for="pageDescInput">Conditions</label>
-											<div class="input-group">
-												<input type="text" class="form-control" placeholder="Enter new condition" id="conditionPanelInput" />
-												<span class="input-group-addon">
+                    <span class="custom-control-description" id="liveToggleText"></span>
+                  </label>
+                </div>
+                <div class="side-bar-form">
+                  <div class="form-group">
+                    <label for="pageNameInput">Page Name</label>
+                    <input type="text" class="form-control" id="pageNameInput" placeholder="Enter page name" data-column="name"/>
+                  </div>
+                  <div class="form-group">
+                    <label for="pageDescInput">Admin description</label>
+                    <input type="text" class="form-control" id="pageDescInput" placeholder="Enter a description" data-column="adminDescription"/>
+                    <small id="pageDescHelp" class="form-text">This is to help you understand the page quickly and is never displayed to users.</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="pageDescInput">Conditions</label>
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Enter new condition" id="conditionPanelInput"/>
+                      <span class="input-group-addon">
 													<a href="#" class="btn btn-primary condition-add">&nbsp;</a>
 												</span>
-											</div>
-											<div class="conditions"></div>
-										</div>
+                    </div>
+                    <div class="conditions"></div>
+                  </div>
 
-										<!-- Nav tabs -->
-										<ul class="nav nav-justified nav-tabs" role="tablist">
-										  <li class="nav-item">
-										    <a class="active" data-toggle="tab" href="#mediaTab" role="tab">Media</a>
-										  </li>
-										  <li class="nav-item">
-										    <a class="" data-toggle="tab" href="#textTab" role="tab">Text</a>
-										  </li>
-										  <li class="nav-item">
-										    <a class="" data-toggle="tab" href="#questionsTab" role="tab">Question</a>
-										  </li>
-										</ul>
+                  <!-- Nav tabs -->
+                  <ul class="nav nav-justified nav-tabs" role="tablist">
+                    <li class="nav-item">
+                      <a class="active" data-toggle="tab" href="#mediaTab" role="tab">Media</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="" data-toggle="tab" href="#textTab" role="tab">Text</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="" data-toggle="tab" href="#questionsTab" role="tab">Question</a>
+                    </li>
+                  </ul>
 
-										<!-- Tab panes -->
-										<div class="tab-content">
-											<div class="tab-pane active" id="mediaTab" role="tabpanel">
-												<div class="form-group">
-													<select class="selectpicker" data-style="btn-secondary" id="mediaSelect" data-column="mediaType" data-window-padding="[0, 0, 20, 0]" data-size="3">
-														<option value="none">No Media</option>
-														<option value="video">Video</option>
-														<option value="image">Image</option>
-													</select>
-												</div>
-												<div class="media-tab-type none" id="media-tab-none"></div>
-												<div class="media-tab-type video hidden" id="media-tab-video">
-													<input type="text"  class="form-control" placeholder="Paste Vimeo share URL" data-column="videoUrl" data-update_events="blur" />
-													<div class="media-current video"  id="vimeoFrame"></div>
-												</div>
-												<div class="media-tab-type image hidden" id="media-tab-image">
-													<button type="button" class="btn btn-primary" id="uploadButton">Upload image</button>
-													<div class="progress" id="uploadProgress">
-													  	<div class="progress-bar progress-bar-striped" role="progressbar" style="height: 5px;" id="uploadProgressBar"></div>
-													</div>
-													<div class="media-current image">
-														<img src="" id="nodeImage" />
-													</div>
-												</div>
-												
-										  	</div><!-- end media tab -->
-										  	<div class="tab-pane" id="textTab" role="tabpanel">
-										  		<div id="pageTextEdit" data-column="text"></div>
-										  	</div><!-- end text tab -->
-										  	<div class="tab-pane" id="questionsTab" role="tabpanel">
-											  	<div class="form-group">
-											  		<label for="questionType">Question type</label>
-													<div class="input-group">
-														<select class="selectpicker" data-style="btn-secondary" id="questionType" data-column="inputType" data-entity="question" data-window-padding="[0, 0, 20, 0]" data-size="8">
-															<option value="choice">Dropdown</option>
-															<option value="choice_emotive">Emoticons (Happy/Sad/Neutral)</option>
-															<option value="choice_boolean">Yes / No</option>
-															<option value="text">Text</option>
-															<option value="float">Number</option>
-															<option value="date">Date</option>
-															<option value="date_quit">Quit Date</option>
-															<option value="float_spend_weekly">Weekly Cigarette Spend</option>
-														</select>
-													</div>
-												</div>
-										  		<div class="form-group">
-											  		<label for="questionText">Question</label>
-											  		<div class="input-group">
-											  			<input type="text"  class="form-control" placeholder="Enter question" id="questionText" data-column="question" data-entity="question" />
-											  		</div>
-											  	</div>
-											  	<div class="form-group">
-											  		<label for="variableText">Variable key</label>
-											  		<div class="input-group">
-											  			<input type="text"  class="form-control" placeholder="Enter variable" id="variableText" data-column="variable" data-entity="question" />
-											  		</div>
-											  	</div>
-											  	<div id="answersPanel">
-											  		<div class="answers" id="answers"></div>
-													<button type="button" class="btn btn-sm btn-primary" id="addAnswer">Add Answer Option</button>
-												</div>
-										  	</div><!-- end questions tab -->
-										</div>
-									</div>
-								</fieldset>
-							</div>
-						</div>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+                  <!-- Tab panes -->
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="mediaTab" role="tabpanel">
+                      <div class="form-group">
+                        <select class="selectpicker" data-style="btn-secondary" id="mediaSelect" data-column="mediaType" data-window-padding="[0, 0, 20, 0]" data-size="3">
+                          <option value="none">No Media</option>
+                          <option value="video">Video</option>
+                          <option value="image">Image</option>
+                        </select>
+                      </div>
+                      <div class="media-tab-type none" id="media-tab-none"></div>
+                      <div class="media-tab-type video hidden" id="media-tab-video">
+                        <input type="text" class="form-control" placeholder="Paste Vimeo share URL" data-column="videoUrl" data-update_events="blur"/>
+                        <div class="media-current video" id="vimeoFrame"></div>
+                      </div>
+                      <div class="media-tab-type image hidden" id="media-tab-image">
+                        <button type="button" class="btn btn-primary" id="uploadButton">Upload image</button>
+                        <div class="progress" id="uploadProgress">
+                          <div class="progress-bar progress-bar-striped" role="progressbar" style="height: 5px;" id="uploadProgressBar"></div>
+                        </div>
+                        <div class="media-current image">
+                          <img src="" id="nodeImage"/>
+                        </div>
+                      </div>
+
+                    </div><!-- end media tab -->
+                    <div class="tab-pane" id="textTab" role="tabpanel">
+                      <div id="pageTextEdit" data-column="text"></div>
+                    </div><!-- end text tab -->
+                    <div class="tab-pane" id="questionsTab" role="tabpanel">
+                      <div class="form-group">
+                        <label class="custom-control custom-checkbox pl-0">
+                          <input type="checkbox" class="custom-control-input" id="liveToggle" data-column="quitPlan" data-entity="question" />
+                          <span class="custom-control-indicator toggle-indicator">
+                          <span class="toggle-circle"></span>
+                        </span>
+                          <span class="custom-control-description">Add answer to 'My Quit Plan'</span>
+                        </label>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="questionType">Question type</label>
+                        <div class="input-group">
+                          <select class="selectpicker" data-style="btn-secondary" id="questionType" data-column="inputType" data-entity="question" data-window-padding="[0, 0, 20, 0]" data-size="9">
+                            <option value="choice">Dropdown</option>
+                            <option value="choice_multi">Multiple</option>
+                            <option value="choice_emotive">Emoticons (Happy/Sad/Neutral)</option>
+                            <option value="choice_boolean">Yes / No</option>
+                            <option value="text">Text</option>
+                            <option value="float">Number</option>
+                            <option value="date">Date</option>
+                            <option value="date_quit">Quit Date</option>
+                            <option value="float_spend_weekly">Weekly Cigarette Spend</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="questionText">Question</label>
+                        <div class="input-group">
+                          <input type="text" class="form-control" placeholder="Enter question" id="questionText" data-column="question" data-entity="question"/>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="variableText">Variable key</label>
+                        <div class="input-group">
+                          <input type="text" class="form-control" placeholder="Enter variable" id="variableText" data-column="variable" data-entity="question"/>
+                        </div>
+                      </div>
+                      <div class="row" id="answersPanel">
+                        <div class="col-12 mt-4">
+                          <h5 class="text-primary">Answer Options</h5>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <label for="minAnswers">Min. Required</label>
+                            <div class="input-group">
+                              <input type="text" class="form-control" id="minAnswers" data-column="minAnswers" data-entity="question"/>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <label for="maxAnswers">Max Allowed</label>
+                            <div class="input-group">
+                              <input type="text" class="form-control" id="maxAnswers" data-column="maxAnswers" data-entity="question"/>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="answers" id="answers"></div>
+                          <button type="button" class="btn btn-sm btn-primary" id="addAnswer">Add Answer Option</button>
+                        </div>
+                      </div>
+                    </div><!-- end questions tab -->
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 {% endblock %}

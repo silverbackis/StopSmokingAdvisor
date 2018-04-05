@@ -16,81 +16,82 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="user_course", indexes={@ORM\Index(name="date_search_index", columns={"session_available", "session_expire"})})
  * @ORM\HasLifecycleCallbacks()
  */
-class Course {
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue(strategy="AUTO")
-   */
-  public $id;
+class Course
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    public $id;
 
-  /**
-   * @ORM\Column(type="datetime", nullable=false)
-   */
-  public $created_at;
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    public $created_at;
 
-  /**
-   * @ORM\Column(type="datetime", nullable=false)
-   */
-  public $last_updated;
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    public $last_updated;
 
-  /**
-   * @ORM\Column(type="datetime", nullable=true)
-   */
-  public $session_available;
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    public $session_available;
 
-  /**
-   * @ORM\Column(type="datetime", nullable=true)
-   */
-  public $session_expire;
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    public $session_expire;
 
-  /**
-   * Many Course have One User.
-   * @ORM\ManyToOne(targetEntity="Session")
-   * @ORM\JoinColumn(name="latest_session_id", referencedColumnName="id", onDelete="NO ACTION")
-   */
-  public $latest_session;
+    /**
+     * Many Course have One User.
+     * @ORM\ManyToOne(targetEntity="Session")
+     * @ORM\JoinColumn(name="latest_session_id", referencedColumnName="id", onDelete="NO ACTION")
+     */
+    public $latest_session;
 
-  /**
-   * @ORM\Column(type="boolean", options={"default" : 0})
-   */
-  public $expired = 0;
+    /**
+     * @ORM\Column(type="boolean", options={"default" : 0})
+     */
+    public $expired = 0;
 
-  /**
-   * Many Course have One User.
-   * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
-   * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="NO ACTION", nullable=false)
-   */
-  public $user;
+    /**
+     * Many Course have One User.
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="NO ACTION", nullable=false)
+     */
+    public $user;
 
-  /**
-   * One Course has Many Datas.
-   * @ORM\OneToMany(targetEntity="CourseData", mappedBy="course", cascade={"all"})
-   */
-  public $data;
+    /**
+     * One Course has Many Datas.
+     * @ORM\OneToMany(targetEntity="CourseData", mappedBy="course", cascade={"all"})
+     */
+    public $data;
 
-  /**
-   * One Course has Many Datas.
-   * @ORM\OneToMany(targetEntity="Session", mappedBy="course", cascade={"all"})
-   */
-  public $sessions;
+    /**
+     * One Course has Many Datas.
+     * @ORM\OneToMany(targetEntity="Session", mappedBy="course", cascade={"all"})
+     */
+    public $sessions;
 
-  /**
-   * @ORM\PrePersist
-   */
-  public function setCreatedAtValue()
-  {
-      $this->created_at = new \DateTime();
-      $this->last_updated = new \DateTime();
-  }
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->created_at = new \DateTime();
+        $this->last_updated = new \DateTime();
+    }
 
-  /**
-   * @ORM\PreUpdate
-   */
-  public function setUpdatedValue()
-  {
-      $this->last_updated = new \DateTime();
-  }
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedValue()
+    {
+        $this->last_updated = new \DateTime();
+    }
     /**
      * Constructor
      */

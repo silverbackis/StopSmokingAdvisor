@@ -15,7 +15,7 @@ use AppBundle\Validator\Constraints as SSAPageAssert;
  */
 class Page
 {
-	/**
+    /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -127,14 +127,14 @@ class Page
     public function __construct()
     {
         $this->conditions = new ArrayCollection();
-    	$this->questions = new ArrayCollection();
+        $this->questions = new ArrayCollection();
         $this->children = new ArrayCollection();
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         $deepEntities = ['conditions', 'questions', 'children'];
-        foreach($deepEntities as $subEnt)
-        {
+        foreach ($deepEntities as $subEnt) {
             // method e.g. getConditions
             $getMethod = 'get'.ucfirst($subEnt);
             // call method and assign to variable name e.g. $conditions = $this->getConditions()
@@ -150,11 +150,9 @@ class Page
                 $this->$subEnt->add($clone);
 
                 // setParent if we can or we'll be setting the page
-                if(method_exists($clone, 'setParent'))
-                {
+                if (method_exists($clone, 'setParent')) {
                     $clone->setParent($this);
-                }
-                else{
+                } else {
                     $clone->setPage($this);
                 }
             }
@@ -392,8 +390,7 @@ class Page
         $this->parent = $parent;
 
         // if parent is set to an ID, make sure this entity's session is not the same
-        if($parent)
-        {
+        if ($parent) {
             $this->setSession($parent->getSession());
         }
         return $this;

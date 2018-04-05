@@ -4,7 +4,7 @@ namespace PluploadBundle\Exception;
 
 interface PlUploadExceptionInterface
 {
-	/**
+    /**
      * Returns the status code.
      *
      * @return int An HTTP response status code

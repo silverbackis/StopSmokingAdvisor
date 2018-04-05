@@ -26,8 +26,7 @@ class SessionType extends AbstractType
         $choice_prefix = 'choice';
         $is_choice = substr($input_type, 0, strlen($choice_prefix))==$choice_prefix;
 
-        switch($input_type)
-        {
+        switch ($input_type) {
             case "choice_boolean":
                 $input_type_class = ChoiceType::class;
 
@@ -59,7 +58,7 @@ class SessionType extends AbstractType
                     'Neutral' => 'emot_2',
                     'Happy' => 'emot_3'
                 ];
-                $input_ops['choice_attr'] = function($category, $key, $index) {
+                $input_ops['choice_attr'] = function ($category, $key, $index) {
                     return ['class' => 'custom-control custom-radio emoticon-radio '.strtolower($key)];
                 };
                 $input_ops['attr'] = [
@@ -77,8 +76,7 @@ class SessionType extends AbstractType
                     'data-dropup-auto' => 'false',
                     'data-size' => 'auto'
                 ];
-                foreach($question->getAnswerOptions() as $answer)
-                {
+                foreach ($question->getAnswerOptions() as $answer) {
                     $display_val = $answer->getAnswer();
                     $save_val = $answer->getSaveValue() ?: $display_val;
                     $input_ops['choices'][$display_val] = $save_val;
@@ -102,8 +100,7 @@ class SessionType extends AbstractType
                     'autocomplete' => 'off'
                 ];
                 $input_ops['wrapper_class'] = 'text-input-outer number';
-                if($input_type==='float_spend_weekly')
-                {
+                if ($input_type==='float_spend_weekly') {
                     $input_ops['attr']['class'] = 'money';
                     $input_ops['attr']['step'] = '0.01';
                     $input_ops['input_group_html'] = '<span class="input-group-addon text-pre">
@@ -114,8 +111,7 @@ class SessionType extends AbstractType
             break;
 
             default:
-                if(substr($input_type, 0, strlen('date'))=='date')
-                {
+                if (substr($input_type, 0, strlen('date'))=='date') {
                     $input_type_class = TextType::class;
                     $input_ops['attr'] = [
                         'placeholder' => 'Select date',

@@ -35,7 +35,6 @@ class NumberTypeExtension extends AbstractTypeExtension
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        
         if (isset($options['wrapper_class'])) {
             $view->vars['wrapper_class'] = $options['wrapper_class'];
         }
@@ -45,6 +44,5 @@ class NumberTypeExtension extends AbstractTypeExtension
         }
 
         $view->vars['input_addon_before'] = (isset($options['input_addon_before']) && $options['input_addon_before']);
-        
     }
-  }
+}

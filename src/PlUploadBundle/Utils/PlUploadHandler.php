@@ -13,17 +13,17 @@ use Symfony\Component\Filesystem\Exception\IOException;
 
 class PlUploadHandler
 {
-	protected $cleanUp = true;
-	protected $cleanUpMaxFileAge = 60 * 60; // 1 hour
-	protected $createUploadDir = true;
-	protected $tempSuffix = '.part';
+    protected $cleanUp = true;
+    protected $cleanUpMaxFileAge = 60 * 60; // 1 hour
+    protected $createUploadDir = true;
+    protected $tempSuffix = '.part';
 
-	/**
+    /**
      * @var string
      */
     protected $uploadDir;
 
-	/**
+    /**
      * @var Symfony\Component\HttpFoundation\Request
      */
     protected $request;
@@ -38,7 +38,7 @@ class PlUploadHandler
      * @param Symfony\Component\Filesystem\Filesystem $filesystem
      * @param string $uploadDir
      */
-    function __construct(Filesystem $filesystem, $uploadDir = "uploads")
+    public function __construct(Filesystem $filesystem, $uploadDir = "uploads")
     {
         $this->uploadDir  = rtrim($uploadDir, "/");
         $this->filesystem = $filesystem;
@@ -101,17 +101,17 @@ class PlUploadHandler
      */
     public function cleanUp()
     {
-    	$finder = new Finder();
-    	$finder->files()->in($this->uploadDir)->name('*.'.$this->tempSuffix);
-    	/**
+        $finder = new Finder();
+        $finder->files()->in($this->uploadDir)->name('*.'.$this->tempSuffix);
+        /**
          * @var Symfony\Component\Finder\SplFileInfo
          */
-    	foreach ($finder as $file) {
-		    if ($file->getMTime() < time() - $this->maxFileAge) {
+        foreach ($finder as $file) {
+            if ($file->getMTime() < time() - $this->maxFileAge) {
                 $file = null;
                 unlink($file->getRelativePath());
             }
-		}
+        }
     }
 
     /**
@@ -121,7 +121,7 @@ class PlUploadHandler
      */
     public function handle(Request $request)
     {
-    	$this->request = $request;
+        $this->request = $request;
         if ($this->createUploadDir) {
             try {
                 $this->createUploadDir();
@@ -131,13 +131,13 @@ class PlUploadHandler
         if (!is_dir($this->uploadDir)) {
             throw new PlUploadException(
                 PlUploadException::E_DIR_CREATE,
-                PlUploadException::E_DIR_CREATE_MESSAGE                
+                PlUploadException::E_DIR_CREATE_MESSAGE
             );
         }
         if (!is_readable($this->uploadDir)) {
             throw new PlUploadException(
                 PlUploadException::E_DIR_NOT_OPENABLE,
-                PlUploadException::E_DIR_NOT_OPENABLE_MESSAGE                
+                PlUploadException::E_DIR_NOT_OPENABLE_MESSAGE
             );
         }
 
@@ -147,16 +147,15 @@ class PlUploadHandler
         // Get a file name
         // do not overwrite files
         $count = -1;
-        while(null === $fileName || file_exists($uploadedFilePath))
-        {
-        	$count++;
-        	$fileName = $nameParts['filename']."-$count.".$nameParts['extension'];
-        	$uploadedFilePath = $this->uploadDir . DIRECTORY_SEPARATOR . $fileName;
+        while (null === $fileName || file_exists($uploadedFilePath)) {
+            $count++;
+            $fileName = $nameParts['filename']."-$count.".$nameParts['extension'];
+            $uploadedFilePath = $this->uploadDir . DIRECTORY_SEPARATOR . $fileName;
         }
 
         // Check if chunking is enabled
         $chunk  = $this->request->get('chunk') ? (int) $this->request->get('chunk') : 0;
-        $chunks = $this->request->get('chunks') ? (int) $this->request->get('chunks') : 0;        
+        $chunks = $this->request->get('chunks') ? (int) $this->request->get('chunks') : 0;
 
         // Open temp file - output stream.
         // Append if chunked, otherwise will be writing a new file
@@ -165,7 +164,7 @@ class PlUploadHandler
         if (!$partialFileHandle) {
             throw new PlUploadException(
                 PlUploadException::E_FILE_OUTPUT,
-                PlUploadException::E_FILE_OUTPUT_MESSAGE                
+                PlUploadException::E_FILE_OUTPUT_MESSAGE
             );
         }
 
@@ -179,7 +178,7 @@ class PlUploadHandler
             if ($file->getError() || !file_exists($file->getPathname())) {
                 throw new PlUploadException(
                     PlUploadException::E_FILE_MOVE,
-                    PlUploadException::E_FILE_MOVE_MESSAGE                    
+                    PlUploadException::E_FILE_MOVE_MESSAGE
                 );
             }
 
@@ -188,16 +187,16 @@ class PlUploadHandler
             if (!$inputHandle) {
                 throw new PlUploadException(
                     PlUploadException::E_FILE_INPUT,
-                    PlUploadException::E_FILE_INPUT_MESSAGE                    
+                    PlUploadException::E_FILE_INPUT_MESSAGE
                 );
             }
         } else {
-        	// Real input stream
+            // Real input stream
             $inputHandle = @fopen("php://input", "rb");
             if (!$inputHandle) {
                 throw new PlUploadException(
                     PlUploadException::E_FILE_INPUT,
-                    PlUploadException::E_FILE_INPUT_MESSAGE                    
+                    PlUploadException::E_FILE_INPUT_MESSAGE
                 );
             }
         }
@@ -220,18 +219,18 @@ class PlUploadHandler
 
             // Remove old temp files - only when we have a completed file upload
             // Don't want it taking up resources on every chunk upload
-	        if ($this->cleanUp) {
-	            $this->cleanUp();
-	        }
-        	return $uploadedFilePath;
+            if ($this->cleanUp) {
+                $this->cleanUp();
+            }
+            return $uploadedFilePath;
         }
 
         // Return success response
-       	$response = new JsonResponse(array(
-       		"jsonrpc"=>"2.0",
-       		"result"=>null,
-       		"id"=>"pluploader"
-       	),JsonResponse::HTTP_OK);
-       	return $response;
+        $response = new JsonResponse(array(
+               "jsonrpc"=>"2.0",
+               "result"=>null,
+               "id"=>"pluploader"
+           ), JsonResponse::HTTP_OK);
+        return $response;
     }
 }

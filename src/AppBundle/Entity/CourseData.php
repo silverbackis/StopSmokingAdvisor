@@ -16,59 +16,60 @@ use AppBundle\Validator\Constraints as AppBundleAssert;
  * @ORM\Table(name="user_course_data", uniqueConstraints={@UniqueConstraint(name="var_key_unique", columns={"course_id", "var"})})
  * @ORM\HasLifecycleCallbacks()
  */
-class CourseData {
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue(strategy="AUTO")
-   */
-  protected $id;
+class CourseData
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
 
-  /**
-   * @ORM\Column(type="datetime", nullable=false)
-   */
-  protected $created_at;
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    protected $created_at;
 
-  /**
-   * @ORM\Column(type="datetime", nullable=false)
-   */
-  protected $last_updated;
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    protected $last_updated;
 
-  /**
-   * Many Datas have One Course.
-   * @ORM\ManyToOne(targetEntity="Course", inversedBy="data")
-   * @ORM\JoinColumn(name="course_id", referencedColumnName="id", onDelete="NO ACTION")
-   */
-  private $course;
+    /**
+     * Many Datas have One Course.
+     * @ORM\ManyToOne(targetEntity="Course", inversedBy="data")
+     * @ORM\JoinColumn(name="course_id", referencedColumnName="id", onDelete="NO ACTION")
+     */
+    private $course;
 
-  /**
-   * @ORM\Column(type="string", length=255, nullable=true)
-   * @AppBundleAssert\CourseDataVar()
-   */
-  protected $var;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @AppBundleAssert\CourseDataVar()
+     */
+    protected $var;
 
-  /**
-   * @ORM\Column(type="string", length=255, nullable=true)
-   * @Assert\NotBlank()
-  */
-  protected $value;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
+    */
+    protected $value;
 
-  /**
-   * @ORM\PrePersist
-   */
-  public function setCreatedAtValue()
-  {
-      $this->created_at = new \DateTime();
-      $this->last_updated = new \DateTime();
-  }
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->created_at = new \DateTime();
+        $this->last_updated = new \DateTime();
+    }
 
-  /**
-   * @ORM\PreUpdate
-   */
-  public function setUpdatedValue()
-  {
-      $this->last_updated = new \DateTime();
-  }
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedValue()
+    {
+        $this->last_updated = new \DateTime();
+    }
 
     /**
      * Get id

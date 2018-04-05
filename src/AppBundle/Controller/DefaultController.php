@@ -21,13 +21,13 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        if($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $nextURL = $this->getParameter('login_default_target');
             $roles = $this->getUser()->getRoles();
-            if(in_array('ROLE_ADMIN', $roles)){
+            if (in_array('ROLE_ADMIN', $roles)) {
                 $nextURL =  $this->getParameter('login_admin_target');
             }
-            return new RedirectResponse( $nextURL );
+            return new RedirectResponse($nextURL);
         }
         /** @var $formFactory FactoryInterface */
         $formFactory = $this->get('fos_user.registration.form.factory');

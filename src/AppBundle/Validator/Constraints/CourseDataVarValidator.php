@@ -6,6 +6,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 use AppBundle\Course\CourseManager;
+
 /**
  * @Annotation
  */

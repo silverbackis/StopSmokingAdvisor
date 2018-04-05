@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Question
 {
-	/**
+    /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -41,7 +41,7 @@ class Question
 
     /**
      * @ORM\Column(type="string", length=30, nullable=false)
-     * @Assert\Choice(choices = {"choice", "choice_emotive", "choice_boolean", "text", "float", "date", "date_quit", "float_spend_weekly"}, message = "The question type selected is not valid", strict = true)
+     * @Assert\Choice(choices = {"choice", "choice_multi", "choice_emotive", "choice_boolean", "text", "float", "date", "date_quit", "float_spend_weekly"}, message = "The question type selected is not valid", strict = true)
      */
     protected $input_type;
 
@@ -50,9 +50,29 @@ class Question
      */
     protected $answer_options;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default" : 0})
+     * @var boolean
+     */
+    protected $quit_plan = false;
+
+    /**
+     * @ORM\Column(type="integer", options={"default" : 10})
+     * @Assert\Expression("this.getMinAnswers() <= this.getMaxAnswers()", message="The minimum answers required must be less than or equal to the maximum permitted"
+     * @var int
+     */
+    protected $maxAnswers = 10;
+
+    /**
+     * @ORM\Column(type="integer", options={"default" : 1})
+     * @Assert\Expression("this.getMinAnswers() <= this.getMaxAnswers()", message="The minimum answers required must be less than or equal to the maximum permitted")
+     * @var int
+     */
+    protected $minAnswers = 1;
+
     public function __construct()
     {
-    	$this->answer_options = new ArrayCollection();
+        $this->answer_options = new ArrayCollection();
     }
 
     /**
@@ -193,5 +213,53 @@ class Question
     public function getAnswerOptions()
     {
         return $this->answer_options;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isQuitPlan(): bool
+    {
+        return $this->quit_plan;
+    }
+
+    /**
+     * @param bool $quit_plan
+     */
+    public function setQuitPlan(bool $quit_plan): void
+    {
+        $this->quit_plan = $quit_plan;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxAnswers(): int
+    {
+        return $this->maxAnswers;
+    }
+
+    /**
+     * @param int $maxAnswers
+     */
+    public function setMaxAnswers(int $maxAnswers): void
+    {
+        $this->maxAnswers = $maxAnswers;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinAnswers(): int
+    {
+        return $this->minAnswers;
+    }
+
+    /**
+     * @param int $minAnswers
+     */
+    public function setMinAnswers(int $minAnswers): void
+    {
+        $this->minAnswers = $minAnswers;
     }
 }

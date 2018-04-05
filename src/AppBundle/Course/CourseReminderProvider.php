@@ -11,7 +11,8 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class CourseReminderProvider {
+class CourseReminderProvider
+{
     private $em;
     private $mailer;
     private $dates = [];
@@ -27,8 +28,7 @@ class CourseReminderProvider {
         string $mailer_user,
         string $mailer_sender_name,
         Router $router
-    )
-    {
+    ) {
         $this->mailer = $mailer;
         $this->em = $em;
         $this->dispatcher = $dispatcher;
@@ -47,7 +47,7 @@ class CourseReminderProvider {
        
         /*
         THIS WORKS
-        SELECT c.*, s1.id, s1.last_updated 
+        SELECT c.*, s1.id, s1.last_updated
         FROM user_course c
           INNER JOIN user_session s1
             ON (c.id = s1.course_id)
@@ -59,7 +59,7 @@ class CourseReminderProvider {
         //$this->writeln('<info>Querying database for courses needing reminders</info>');
 
         $this->dispatcher->dispatch(
-            'reminder_emails.comment', 
+            'reminder_emails.comment',
             new GenericEvent('Querying database for courses needing reminders')
         );
 
@@ -69,7 +69,7 @@ class CourseReminderProvider {
             
             // Coursees linked to users with reminders enabled
             /*->from(
-                'AppBundle:Course', 
+                'AppBundle:Course',
                 'c1'
             )
 
@@ -84,18 +84,18 @@ class CourseReminderProvider {
             )*/
 
             ->from(
-                'UserBundle:User', 
+                'UserBundle:User',
                 'u'
             )
 
             ->join(
-                'AppBundle:Course', 
+                'AppBundle:Course',
                 'c1',
                 'WITH',
                 $qb->expr()->andX(
                     $qb->expr()->eq(
                         'c1.user',
-                        'u'                    
+                        'u'
                     ),
                     $qb->expr()->orX(
                         $qb->expr()->andX(
@@ -120,7 +120,7 @@ class CourseReminderProvider {
                         )
                     )
                 )
-            )            
+            )
 
             // Will have NULL id for old entries
             ->leftJoin(
@@ -170,7 +170,7 @@ class CourseReminderProvider {
 
             // Users with reminders enabled
             ->join(
-                'AppBundle:UserSettings', 
+                'AppBundle:UserSettings',
                 'us1',
                 'WITH',
                 $qb->expr()->andX(
@@ -200,12 +200,12 @@ class CourseReminderProvider {
         ;
 
         /*$this->dispatcher->dispatch(
-            'reminder_emails.comment', 
+            'reminder_emails.comment',
             new GenericEvent($qb->getQuery()->getSql())
         );
 
         $this->dispatcher->dispatch(
-            'reminder_emails.comment', 
+            'reminder_emails.comment',
             new GenericEvent(dump($qb->getQuery()->getParameters()))
         );*/
 
@@ -216,16 +216,15 @@ class CourseReminderProvider {
     private function processSessionReminders(array $Courses)
     {
         $this->dispatcher->dispatch(
-            'reminder_emails.info', 
+            'reminder_emails.info',
             new GenericEvent('Found '.count($Courses).' courses')
         );
 
-        foreach( $Courses as $UserCourse )
-        {
+        foreach ($Courses as $UserCourse) {
             $all_sessions = $UserCourse->getSessions()->toArray();
 
             $this->dispatcher->dispatch(
-                'reminder_emails.comment', 
+                'reminder_emails.comment',
                 new GenericEvent(''.count($all_sessions).' sessions in course id '.$UserCourse->getId())
             );
 
@@ -237,20 +236,17 @@ class CourseReminderProvider {
     public function sendEmail(Session $session)
     {
         $this->dispatcher->dispatch(
-            'reminder_emails.comment', 
+            'reminder_emails.comment',
             new GenericEvent('Preparing email for Session ID '.$session->getId().'')
         );
         $HomePageUrl = "[Stop Smoking Advisor](".$this->router->generate('homepage', [], UrlGeneratorInterface::ABSOLUTE_URL).")";
         $text = ["Hello,"];
-        if( $session->getCourse()->getSessionExpire() == $this->dates['tomorrow'] )
-        {
+        if ($session->getCourse()->getSessionExpire() == $this->dates['tomorrow']) {
             // SEND REMINDER EMAIL - SESSION EXPIRING TOMORROW
             $email_subject = "Your session is expiring";
             $type = 'expiring_tomorrow';
             $text[] = "**Your session is expiring tomorrow, ".$session->getCourse()->getSessionExpire()->format("jS F")."**.";
-        }
-        elseif( $session->getCourse()->getSessionAvailable() == $this->dates['today'] )
-        {
+        } elseif ($session->getCourse()->getSessionAvailable() == $this->dates['today']) {
             // SEND REMINDER EMAIL - SESSION UNLOCKED TODAY
             $email_subject = "Your next video session is now available";
             $type = 'available_today';
@@ -258,13 +254,10 @@ class CourseReminderProvider {
             $text[] = "**Session ".$session->getSession()." is available now!**";
             $text[] = "We've got a great set of videos lined up tailored just for you.";
 
-            if( $session->getCourse()->getSessionExpire() )
-            {
+            if ($session->getCourse()->getSessionExpire()) {
                 $text[] = "> **Please note that this session expires on ".$session->getCourse()->getSessionExpire()->format("jS F").".**";
             }
-        }
-        elseif( $session->getCourse()->getSessionAvailable() == $this->dates['yesterday'] )
-        {
+        } elseif ($session->getCourse()->getSessionAvailable() == $this->dates['yesterday']) {
             // Send reminder email - session unlocked yesterday
             $email_subject = "Please complete session ".$session->getSession()." today";
             $type = 'available_yesterday';
@@ -272,8 +265,7 @@ class CourseReminderProvider {
 
             $text[] = "Session ".$session->getSession()." on Stop Smoking Advisor was unlocked yesterday.";
 
-            if( $session->getCourse()->getSessionExpire() )
-            {
+            if ($session->getCourse()->getSessionExpire()) {
                 $text[] = "> **Your current session wil expire on ".$session->getCourse()->getSessionExpire()->format("jS F").".**";
             }
         }
@@ -316,7 +308,7 @@ class CourseReminderProvider {
         ;
         $this->mailer->send($message);
         $this->dispatcher->dispatch(
-            'reminder_emails.info', 
+            'reminder_emails.info',
             new GenericEvent('Sent email for Session ID '.$session->getId().'')
         );
     }

@@ -23,7 +23,7 @@ class SessionManager
     private $em;
     private $session = null;
     private $_session;
-    private $current_page = false;
+    private $current_page;
     private $router;
     private $max_pages_remain = 0;
     private $seoPage;
@@ -37,8 +37,7 @@ class SessionManager
         HTTPSession $_session,
         TwigEngine $templating,
         FormFactory $formFactory
-    )
-    {
+    ) {
         $this->em = $em;
         $this->router = $router;
         $this->seoPage = $seoPage;
@@ -51,8 +50,7 @@ class SessionManager
     {
         $this->session = $session;
 
-        if (null !== $this->session->getLastPage() && $this->session->getLastPage()->getLive()) // Check for the last page id that was viewed to continue
-        {
+        if (null !== $this->session->getLastPage() && $this->session->getLastPage()->getLive()) { // Check for the last page id that was viewed to continue
             // Find the last page and return if it still exists and is available
             $this->current_page = $this->session->getLastPage();
         } else {
@@ -176,12 +174,21 @@ class SessionManager
         );
     }
 
+    /**
+     * @param Request $request
+     * @param int|null $pageID
+     * @return RedirectResponse|Response
+     * @throws \InvalidArgumentException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Twig\Error\Error
+     */
     public function sessionPageAction(Request $request, int $pageID = null)
     {
         if ($pageID) {
             $preview = true;
 
-            $page = $this->em->getRepository('AppBundle\Entity\Page')
+            $page = $this->em->getRepository(Page::class)
                 ->findOneBy(
                     [
                         'id' => $pageID
@@ -230,15 +237,15 @@ class SessionManager
         $page_name = $page->getName();
 
         // Set title tag
-        $this->seoPage->setTitle("Session " . $session_number . ", " . $page_title . " - " . $page_name . " - " . $this->seoPage->getTitle());
+        $this->seoPage->setTitle(sprintf('Session %d, %s - %s - %s', $session_number, $page_title, $page_name, $this->seoPage->getTitle()));
 
         // Get the question for the page
         $questions = $page->getQuestions();
         $question = $questions[0];
-        // If the quesiton variable name is set
+        // If the question variable name is set
         if ($this->isValidQuestion($question)) {
             // Find CourseData Entity
-            $CourseData = $this->em->getRepository('AppBundle\Entity\CourseData')
+            $CourseData = $this->em->getRepository(CourseData::class)
                 ->findOneBy(
                     [
                         'course' => $this->session->getCourse(),
@@ -254,7 +261,9 @@ class SessionManager
 
             // Create the form
             $form = $this->formFactory->create(
-                SessionType::class, $CourseData, [
+                SessionType::class,
+                $CourseData,
+                [
                 'attr' => ['id' => 'session_form'],
                 'question' => $question
             ]
@@ -295,13 +304,14 @@ class SessionManager
         // Render page with variables
         return new Response(
             $this->templating->render(
-                '@App/Account/session.html.twig', [
+                '@App/Account/session.html.twig',
+                [
                 'session_number' => $session_number,
                 'name' => $page_name,
                 'media_type' => $page->getMediaType(),
                 'image_path' => $page->getImagePath(),
                 'video_url' => $page->getVideoUrl(),
-                'text' => $page->getText(),
+                'text' => $this->loadVariables($page->getText()),
                 'question_type' => null === $question ? null : $question->getInputType(),
                 'answers' => null === $question ? null : $question->getAnswerOptions(),
                 'title' => $page_title,
@@ -311,6 +321,19 @@ class SessionManager
             ]
             )
         );
+    }
+
+    private function loadVariables(?string $text) {
+        if (!$text) {
+            return '';
+        }
+        return preg_replace_callback('/{{\s?(.+)\s?}}/i', function ($matches) {
+            $data = $this->getData($matches[1]);
+            if (\is_bool($data)) {
+                return $data ? 'Yes' : 'No';
+            }
+            return $data;
+        }, $text);
     }
 
     private function getChildren(Page $page, $parentIds = [], $depth = 0)
@@ -329,7 +352,7 @@ class SessionManager
                 if ($child->getType() === 'page') {
                     $key = $child->getId();
                     // check if page ID already visited in parents (linear)
-                    if (in_array($child->getId(), $parentIds)) {
+                    if (\in_array($child->getId(), $parentIds, true)) {
                         $children[$key] = [];
                     } else {
                         $children[$key] = $this->getChildren($child, $parentIds, $depth + 1);
@@ -339,7 +362,7 @@ class SessionManager
                     $key = 'l_' . $linked_child->getId();
 
                     // check if page ID already visited in parents (linear)
-                    if (in_array($linked_child->getId(), $parentIds)) {
+                    if (\in_array($linked_child->getId(), $parentIds, true)) {
                         $children[$key] = [];
                     } else {
                         $children[$key] = $this->getChildren($linked_child, $parentIds, $depth + 1);
@@ -353,7 +376,7 @@ class SessionManager
 
     private function findPage(int $week, Page $parent_page = null)
     {
-        $pages = $this->em->getRepository('AppBundle:Page')
+        $pages = $this->em->getRepository(Page::class)
             ->findBy(
                 [
                     'live' => true,
@@ -379,12 +402,11 @@ class SessionManager
                         continue;
                     }
                     return $GoToPage;
-                } else {
-                    return $page;
                 }
-                break;
+                return $page;
             }
         }
+        return null;
     }
 
     /**
@@ -394,7 +416,7 @@ class SessionManager
      */
     private function checkPageConditions(Page $page)
     {
-        if (0 === count($page->getConditions())) {
+        if (0 === \count($page->getConditions())) {
             return true;
         }
 
@@ -414,46 +436,46 @@ class SessionManager
 
                 // Do comparisons where we will return false if condition not matched
                 switch ($op) {
-                    case "<":
+                    case '<':
                         if ((float)$data >= (float)$val) {
                             return false;
                         }
                         break;
 
-                    case ">":
+                    case '>':
                         if ((float)$data <= (float)$val) {
                             return false;
                         }
                         break;
 
-                    case "<=":
+                    case '<=':
                         if ((float)$data > (float)$val) {
                             return false;
                         }
                         break;
 
-                    case ">=":
+                    case '>=':
                         if ((float)$data < (float)$val) {
                             return false;
                         }
                         break;
-                    case "!=":
-                    case "<>":
+                    case '!=':
+                    case '<>':
                         if ($data == $val) {
                             return false;
                         }
                         break;
-                    case "=":
-                    case "==":
+                    case '=':
+                    case '==':
                         if ($data != $val) {
                             return false;
                         }
                         break;
                 }
             } // e.g. var (variable exists and not null or false)
-            elseif (preg_match("/^(!?[a-z0-9_-]+ ?)$/i", $condition->getCondition(), $re_matches)) {
+            elseif (preg_match('/^(!?[a-z0-9_-]+ ?)$/i', $condition->getCondition(), $re_matches)) {
                 //the condition can be evaluated, does a variable exist
-                $neg = substr($condition->getCondition(), 0, 1) === '!';
+                $neg = $condition->getCondition()[0] === '!';
                 $var = $re_matches[1];
                 if ($neg) {
                     $var = substr($var, 1);
@@ -466,11 +488,15 @@ class SessionManager
         return true;
     }
 
-    public function convertBoolData (string $value)
+    /**
+     * @param string $value
+     * @return bool|string
+     */
+    public function convertBoolData(string $value)
     {
-        $boolPrefix = substr($value, 0, 5) === 'bool_';
+        $boolPrefix = 0 === strpos($value, 'bool_');
         if ($boolPrefix) {
-            $value = !!substr($value, 5);
+            return (bool)substr($value, 5);
         }
         return $value;
     }

@@ -2,29 +2,34 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Sonata\SeoBundle\Seo\SeoPage;
 use AppBundle\Controller\Actions\AdminActions;
 use AppBundle\Course\CourseManager;
-
-use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use PlUploadBundle\Utils\PlUploadHandler;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sonata\SeoBundle\Seo\SeoPage;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * @Route(service="app.admin_manage")
  */
 class AdminController
 {
+    private $templating;
+    private $seoPage;
+    private $kernelRoot;
+    private $PlHandler;
+    private $CourseManager;
 
-    private $templating,
-    $seoPage,
-    $kernelRoot,
-    $PlHandler,
-    $CourseManager;
-
-    public function __construct(EngineInterface $templating, SeoPage $seoPage, string $kernelRoot, AdminActions $ama, PlUploadHandler $PlHandler, CourseManager $CourseManager)
-    {
+    public function __construct(
+        EngineInterface $templating,
+        SeoPage $seoPage, string $kernelRoot,
+        AdminActions $ama,
+        PlUploadHandler $PlHandler,
+        CourseManager $CourseManager
+    ) {
         // for the default tree page
         $this->templating = $templating;
         $this->seoPage = $seoPage;
@@ -43,11 +48,13 @@ class AdminController
      */
     public function manageAction(Request $request)
     {
-        $this->seoPage->setTitle("Manage page - ".$this->seoPage->getTitle());
+        $this->seoPage->setTitle("Manage page - " . $this->seoPage->getTitle());
 
-        return $this->templating->renderResponse('@App/Admin/manage.html.twig', [
-            'base_dir' => realpath($this->kernelRoot.'/..').DIRECTORY_SEPARATOR,
-        ]);
+        return $this->templating->renderResponse(
+            '@App/Admin/manage.html.twig', [
+            'base_dir' => \dirname($this->kernelRoot) . '' . DIRECTORY_SEPARATOR,
+        ]
+        );
     }
 
     /**
@@ -156,7 +163,7 @@ class AdminController
     {
         $file = $this->PlHandler->handle($request);
         if ($file instanceof JsonResponse) {
-            return $data;
+            return $file;
         }
         // file is a string with a path to the filename
         $request->request->set('imagePath', $file);

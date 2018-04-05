@@ -9,7 +9,6 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-
 class ChoiceTypeExtension extends AbstractTypeExtension
 {
     /**

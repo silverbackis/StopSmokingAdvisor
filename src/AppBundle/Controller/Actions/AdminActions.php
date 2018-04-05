@@ -19,16 +19,16 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AdminActions
 {
-    private $doctrine,
-        $serializer,
-        $validator,
-        $response;
+    private $doctrine;
+    private $serializer;
+    private $validator;
+    private $ccConverter;
 
     public function __construct(EntityManager $doctrine, ValidatorInterface $validator)
     {
         $this->doctrine = $doctrine;
         $this->validator = $validator;
-        $this->ccConverter = $ccConverter = new CamelCaseToSnakeCaseNameConverter();
+        $this->ccConverter = new CamelCaseToSnakeCaseNameConverter();
 
         $encoders = array(new JsonEncoder());
         $normalizer = new ObjectNormalizer();
@@ -36,9 +36,9 @@ class AdminActions
         //instead of a circular reference where we would continue looping around the  parent and children, just return the parent's ID
         $normalizer->setCircularReferenceHandler(
             function ($object) {
-                $className = $this->doctrine->getClassMetadata(get_class($object))->getName();
+                $className = $this->doctrine->getClassMetadata(\get_class($object))->getName();
 
-                return $className == 'AppBundle\Entity\Page' ? array(
+                return $className === Page::class ? array(
                     "id" => $object->getId(),
                     "name" => $object->getName()
                 ) : $object->getId();
@@ -51,7 +51,7 @@ class AdminActions
 
     public function getSessionPages(int $session)
     {
-        $pages = $this->doctrine->getRepository('AppBundle\Entity\Page')->findBy(array('session' => $session, 'parent' => null), array('sort' => 'ASC'));
+        $pages = $this->doctrine->getRepository(Page::class)->findBy(array('session' => $session, 'parent' => null), array('sort' => 'ASC'));
         return $this->getOKResponse($pages);
     }
 
@@ -334,7 +334,7 @@ class AdminActions
 
     public function updateQuestion(int $questionID, Request $request, $postedVar = false)
     {
-        $data = $this->validatePost($request, [], ['inputType', 'question', 'variable'], $postedVar);
+        $data = $this->validatePost($request, [], ['inputType', 'question', 'variable', 'quitPlan', 'minAnswers', 'maxAnswers'], $postedVar);
         if ($data instanceof JsonResponse) {
             return $data;
         }
@@ -363,7 +363,9 @@ class AdminActions
 
         $answer = new Answer();
         $validResponse = $this->validateEntity(
-            $answer, $data, [
+            $answer,
+            $data,
+            [
             'AppBundle:Question' => array(
                 'question'
             )
@@ -459,7 +461,8 @@ class AdminActions
                     'forwardToPage',
                     'page'
                 )
-            ], $extraEntityRefs
+            ],
+            $extraEntityRefs
         );
 
         $unlinkPaths = [];

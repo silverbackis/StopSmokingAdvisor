@@ -103,11 +103,10 @@ td {
   }
 
   .logout-link {
-    background: $teal;
     color: $white;
     display: inline-block;
-    font-size: 22px;
-    line-height: 100px;
+    font-size: 18px;
+    line-height: 50px;
     margin-left: 100px;
     transition: background-color $transition-dur;
     width: 175px;
@@ -115,9 +114,26 @@ td {
     &:hover,
     &:active,
     &:focus {
-      background: $teal-dark;
       color: $white;
       text-decoration: none;
+    }
+
+    &.dashboard {
+      background: $teal;
+      &:hover,
+      &:active,
+      &:focus {
+        background: $teal-dark;
+      }
+    }
+
+    &:not(.dashboard) {
+      background: $gray-light;
+      &:hover,
+      &:active,
+      &:focus {
+        background: $gray-dark;
+      }
     }
   }
 }

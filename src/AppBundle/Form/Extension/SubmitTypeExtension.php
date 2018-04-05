@@ -35,4 +35,4 @@ class SubmitTypeExtension extends AbstractTypeExtension
     {
         $view->vars['append_arrow'] = (isset($options['append_arrow']) && $options['append_arrow']);
     }
-  }
+}

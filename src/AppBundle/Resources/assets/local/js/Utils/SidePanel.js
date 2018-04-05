@@ -135,7 +135,7 @@ var SidePanel = (function($){
 		this.questionDom.$type.on("change", function(){
 			var $type = $(this),
 			selVal = $type.val();
-			if(selVal==='choice')
+			if(selVal==='choice' || selVal==='choice_multi')
 			{
 				_self.questionDom.$answersPanel.show();
 			}
