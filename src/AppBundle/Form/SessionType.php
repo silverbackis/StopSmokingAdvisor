@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Question;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,6 +17,7 @@ class SessionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var Question $question */
         $question = $options['question'];
         $input_ops = [
             'label' => $question->getQuestion(),
@@ -23,11 +25,9 @@ class SessionType extends AbstractType
             'required' => true
         ];
         $input_type = $question->getInputType();
-        $choice_prefix = 'choice';
-        $is_choice = substr($input_type, 0, strlen($choice_prefix))==$choice_prefix;
-
         switch ($input_type) {
-            case "choice_boolean":
+            case 'choice_boolean':
+            case 'choice_boolean_continue':
                 $input_type_class = ChoiceType::class;
 
                 $input_ops['custom'] = true;
@@ -46,7 +46,7 @@ class SessionType extends AbstractType
                 ];
             break;
 
-            case "choice_emotive":
+            case 'choice_emotive':
                 $input_type_class = ChoiceType::class;
 
                 $input_ops['custom'] = true;
@@ -66,7 +66,7 @@ class SessionType extends AbstractType
                 ];
             break;
 
-            case "choice":
+            case 'choice':
                 $input_type_class = ChoiceType::class;
 
                 $input_ops['attr'] = [
@@ -76,14 +76,15 @@ class SessionType extends AbstractType
                     'data-dropup-auto' => 'false',
                     'data-size' => 'auto'
                 ];
-                foreach ($question->getAnswerOptions() as $answer) {
+                $ops = $question->getAnswerOptions();
+                foreach ($ops as $answer) {
                     $display_val = $answer->getAnswer();
                     $save_val = $answer->getSaveValue() ?: $display_val;
                     $input_ops['choices'][$display_val] = $save_val;
                 }
             break;
 
-            case "text":
+            case 'text':
                 $input_type_class = TextType::class;
                 $input_ops['attr'] = [
                     'placeholder' => 'Enter your answer here',
@@ -92,8 +93,8 @@ class SessionType extends AbstractType
                 $input_ops['wrapper_class'] = 'text-input-outer text';
             break;
 
-            case "float":
-            case "float_spend_weekly":
+            case 'float':
+            case 'float_spend_weekly':
                 $input_type_class = NumberType::class;
                 $input_ops['attr'] = [
                     'placeholder' => 'Enter number',
@@ -111,7 +112,7 @@ class SessionType extends AbstractType
             break;
 
             default:
-                if (substr($input_type, 0, strlen('date'))=='date') {
+                if (0 === strpos($input_type, 'date')) {
                     $input_type_class = TextType::class;
                     $input_ops['attr'] = [
                         'placeholder' => 'Select date',
@@ -128,7 +129,7 @@ class SessionType extends AbstractType
 
         $builder
             ->add('var', HiddenType::class, [])
-            ->add('value', $input_type_class, $input_ops)
+            ->add('value', $input_type_class ?? '', $input_ops)
             ->add('save', SubmitType::class, array(
                 'attr' => array('class' => 'btn btn-lg btn-success btn-start'),
                 'append_arrow' => true,

@@ -106,7 +106,7 @@
                       {% elseif session_expired %}
                       <h1>Oh No!</h1>
                       <h2>Session {{ session_number }} expired on {{ session_expired_date }}.</h2>
-                      <h2 class="text-next-session">Remember: Each session only available for 1 week after it unlocks.</h2>
+                      <h2 class="text-next-session">Remember: Each session is only available for 1 week after it unlocks.</h2>
                       <a href="{{ path('account_restart') }}" class="btn btn-lg btn-success btn-start">Start Again <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="Restart Stop Smoking Advisor" /></a>
                       {% else %}
                       <h1>Great job!<br />

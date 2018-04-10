@@ -41,7 +41,7 @@ class Question
 
     /**
      * @ORM\Column(type="string", length=30, nullable=false)
-     * @Assert\Choice(choices = {"choice", "choice_multi", "choice_emotive", "choice_boolean", "text", "float", "date", "date_quit", "float_spend_weekly"}, message = "The question type selected is not valid", strict = true)
+     * @Assert\Choice(choices = {"choice", "choice_multi", "choice_emotive", "choice_boolean", "text", "float", "date", "date_quit", "float_spend_weekly", "choice_boolean_continue"}, message = "The question type selected is not valid", strict = true)
      */
     protected $input_type;
 
