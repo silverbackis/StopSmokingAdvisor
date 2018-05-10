@@ -10,9 +10,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 
 use AppBundle\Validator\Constraints as AppBundleAssert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CourseDataRepository")
  * @ORM\Table(name="user_course_data", uniqueConstraints={@UniqueConstraint(name="var_key_unique", columns={"course_id", "var"})})
  * @ORM\HasLifecycleCallbacks()
  */
@@ -36,7 +37,7 @@ class CourseData
     protected $last_updated;
 
     /**
-     * Many Datas have One Course.
+     * Many Datum have One Course.
      * @ORM\ManyToOne(targetEntity="Course", inversedBy="data")
      * @ORM\JoinColumn(name="course_id", referencedColumnName="id", onDelete="NO ACTION")
      */
@@ -49,10 +50,44 @@ class CourseData
     protected $var;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
+     * @ORM\Column(type="json", length=255, nullable=true)
+     * @Assert\NotBlank(message="Please answer the question before you continue")
     */
     protected $value;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Question")
+     * @ORM\JoinColumn(nullable=false)
+     * @var Question
+     */
+    private $question;
+
+    public function __construct(Question $question)
+    {
+        $this->question = $question;
+        $this->setVar($question->getVariable());
+    }
+
+    /**
+     * @Assert\Callback
+     * @param ExecutionContextInterface $context
+     */
+    public function validate(ExecutionContextInterface $context)
+    {
+        if ($this->question->getInputType() === 'choice_multi') {
+            $answersProvided  = \count($this->value);
+            if ($answersProvided < $this->question->getMinAnswers()) {
+                $context->buildViolation(sprintf('Please select at least %d answers', $this->question->getMinAnswers()))
+                    ->atPath('value')
+                    ->addViolation();
+            }
+            if ($answersProvided > $this->question->getMaxAnswers()) {
+                $context->buildViolation(sprintf('Sorry, you cannot select more than %d answers', $this->question->getMaxAnswers()))
+                    ->atPath('value')
+                    ->addViolation();
+            }
+        }
+    }
 
     /**
      * @ORM\PrePersist
@@ -199,5 +234,10 @@ class CourseData
     public function getCourse()
     {
         return $this->course;
+    }
+
+    public function setQuestion(Question $question)
+    {
+        $this->question = $question;
     }
 }

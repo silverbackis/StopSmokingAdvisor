@@ -468,7 +468,7 @@ class Page
     /**
      * Get questions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|Question[]
      */
     public function getQuestions()
     {

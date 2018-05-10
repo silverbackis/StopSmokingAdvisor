@@ -3,6 +3,7 @@
 namespace AppBundle\Course;
 
 use AppBundle\Entity\Course;
+use AppBundle\Entity\CourseData;
 use AppBundle\Entity\Session;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,8 +24,9 @@ class CourseManager
     /** @var Session|null */
     private $current_session;
     private $router;
-    private $token_storage;
     private $quit_date;
+    private $session_manager;
+    private $auth_checker;
 
     public function __construct(
         AuthorizationChecker $AuthorizationChecker,
@@ -40,8 +42,7 @@ class CourseManager
         $this->em = $em;
         $this->session_manager = $session_manager;
         $this->router = $router;
-        $this->token_storage = $TokenStorage;
-        $this->setUser($this->token_storage->getToken()->getUser());
+        $this->setUser($TokenStorage->getToken()->getUser());
     }
 
     /**
@@ -114,10 +115,22 @@ class CourseManager
      */
     public function createNewCourse()
     {
+        $courseData = $this->course ?
+            $this->em->getRepository(CourseData::class)->findByCourseAndSession($this->course, 1)
+            : [];
+
         // Create a user's first course and add to the database
         $this->course = new Course();
         $this->course->setUser($this->user);
         $this->em->persist($this->course);
+
+        foreach($courseData as $datum)
+        {
+            $newDatum = clone $datum;
+            $newDatum->setCourse($this->course);
+            $this->em->persist($newDatum);
+        }
+
         $this->em->flush();
         return $this;
     }
@@ -239,7 +252,7 @@ class CourseManager
     public function sessionPageAction(Request $request, int $pageID = null)
     {
         if ($pageID !== null && !$this->auth_checker->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException("You are not permitted to request a page to view");
+            throw new AccessDeniedException('You are not permitted to request a page to view');
         }
         if (!$this->isSessionAvailable()) {
             $this->session_manager->addFlash(

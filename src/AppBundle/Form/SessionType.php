@@ -15,6 +15,16 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class SessionType extends AbstractType
 {
+    private function getQuestionAnswerOps(Question $question) {
+        $choices = [];
+        $ops = $question->getAnswerOptions();
+        foreach ($ops as $answer) {
+            $display_val = $answer->getAnswer();
+            $save_val = $answer->getSaveValue() ?: $display_val;
+            $choices[$display_val] = $save_val;
+        }
+        return $choices;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         /** @var Question $question */
@@ -28,21 +38,31 @@ class SessionType extends AbstractType
         switch ($input_type) {
             case 'choice_boolean':
             case 'choice_boolean_continue':
+            case 'choice_multi':
                 $input_type_class = ChoiceType::class;
 
                 $input_ops['custom'] = true;
                 $input_ops['text_class'] = 'custom-control-description';
                 $input_ops['expanded'] = true;
-                $input_ops['multiple'] = false;
-                $input_ops['choices'] = [
-                    'No' => 'bool_0',
-                    'Yes' => 'bool_1'
-                ];
+                $input_ops['multiple'] = $input_type === 'choice_multi';
+                if ($input_type !== 'choice_multi') {
+                    $input_ops['choices'] = [
+                        'No' => 'bool_0',
+                        'Yes' => 'bool_1'
+                    ];
+                    $cls = 'custom-radio';
+                    $clsOuter = 'radio-wrapper-outer';
+                } else {
+                    $input_ops['choices'] = $this->getQuestionAnswerOps($question);
+                    $cls = 'custom-checkbox';
+                    $clsOuter = 'checkbox-wrapper-outer';
+                }
+
                 $input_ops['label_attr'] = [
-                    'class' =>  'custom-control custom-radio text-radio'
+                    'class' =>  'custom-control text-radio ' . $cls
                 ];
                 $input_ops['attr'] = [
-                    'class' =>  'radio-wrapper-outer'
+                    'class' =>  $clsOuter
                 ];
             break;
 
@@ -76,12 +96,7 @@ class SessionType extends AbstractType
                     'data-dropup-auto' => 'false',
                     'data-size' => 'auto'
                 ];
-                $ops = $question->getAnswerOptions();
-                foreach ($ops as $answer) {
-                    $display_val = $answer->getAnswer();
-                    $save_val = $answer->getSaveValue() ?: $display_val;
-                    $input_ops['choices'][$display_val] = $save_val;
-                }
+                $input_ops['choices'] = $this->getQuestionAnswerOps($question);
             break;
 
             case 'text':

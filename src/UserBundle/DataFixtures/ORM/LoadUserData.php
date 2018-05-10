@@ -49,22 +49,22 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface, Ordered
     }
 
     /**
-     * Helper method to return an already existing Locator from the database, else create and return a new one
+     * Helper method to return an already existing User from the database, else create and return a new one
      *
      * @param string        $name
      * @param ObjectManager $manager
      *
-     * @return Locator
+     * @return User
      */
-    protected function findOrCreateLocator($name, ObjectManager $manager)
+    protected function findOrCreateUser($name, ObjectManager $manager): User
     {
-        return $manager->getRepository('UserBundle\Entity\User')->findOneBy(['username' => $name]) ?: new User();
+        return $manager->getRepository(User::class)->findOneBy(['username' => $name]) ?: new User();
     }
 
     public function load(ObjectManager $manager)
     {
         foreach ($this->adminUsers as $userArray) {
-            $locator = $this->findOrCreateLocator($userArray[0], $manager);
+            $locator = $this->findOrCreateUser($userArray[0], $manager);
 
             /** Check if the object is managed (so already exists in the database) **/
             if (!$manager->contains($locator)) {

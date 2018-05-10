@@ -8,6 +8,7 @@ use AppBundle\Entity\Question;
 use AppBundle\Entity\Session;
 use AppBundle\Entity\SessionPageView;
 use AppBundle\Form\SessionType;
+use function array_walk;
 use Doctrine\ORM\EntityManager;
 use Sonata\SeoBundle\Seo\SeoPage;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -21,7 +22,8 @@ use Symfony\Component\Routing\RouterInterface;
 class SessionManager
 {
     private $em;
-    private $session = null;
+    /** @var Session|null */
+    private $session;
     private $_session;
     private $current_page;
     private $router;
@@ -37,7 +39,8 @@ class SessionManager
         HTTPSession $_session,
         TwigEngine $templating,
         FormFactory $formFactory
-    ) {
+    )
+    {
         $this->em = $em;
         $this->router = $router;
         $this->seoPage = $seoPage;
@@ -61,14 +64,14 @@ class SessionManager
         return $this;
     }
 
-    public function getSession(Session $session)
+    public function getSession()
     {
         return $this->session;
     }
 
     public function isValidQuestion(Question $question = null)
     {
-        return null !== $question && null !== $question->getVariable() && "" !== $question->getVariable();
+        return null !== $question && null !== $question->getVariable() && '' !== $question->getVariable();
     }
 
     public function getCurrentPage()
@@ -115,7 +118,7 @@ class SessionManager
 
     public function recordPageView()
     {
-        $SessionView = $this->em->getRepository('AppBundle\Entity\SessionPageView')
+        $SessionView = $this->em->getRepository(SessionPageView::class)
             ->findOneBy(
                 [
                     'course' => $this->session->getCourse(),
@@ -140,16 +143,14 @@ class SessionManager
         $this->em->flush();
 
         $this->getSessionProgress();
-
-        return;
     }
 
     public function getSessionProgress()
     {
         // This includes the page we are on by now
         // We are probably admin (or there is a bug) if views are 0 - find how many parents there are to current page.
-        $TotalPagesViewed = count($this->session->getViews());
-        if ($TotalPagesViewed == 0) {
+        $TotalPagesViewed = \count($this->session->getViews());
+        if ($TotalPagesViewed === 0) {
             $current = $this->current_page;
             while ($current->getParent() !== null) {
                 $current = $current->getParent();
@@ -162,7 +163,7 @@ class SessionManager
 
         $MaxTotalPages = $this->max_pages_remain + $TotalPagesViewed + 0.5;
 
-        $PercViewed = round(($TotalPagesViewed / $MaxTotalPages) * 100, 2);
+        $PercViewed = !$MaxTotalPages ? 0.5 : round(($TotalPagesViewed / $MaxTotalPages) * 100, 2);
         return $PercViewed;
     }
 
@@ -185,9 +186,35 @@ class SessionManager
      */
     public function sessionPageAction(Request $request, int $pageID = null)
     {
-        if ($pageID) {
+        $quitPlan = [];
+        if (!$pageID) {
+            $preview = false;
+            $page = $this->getCurrentPage();
+            $quitPlanQuestions = $this->em->getRepository(Question::class)->findBy(['quit_plan' => true]);
+            $variables = array_map(
+                function (Question $question) {
+                    return $question->getVariable();
+                }, $quitPlanQuestions
+            );
+            $courseData = $this->em
+                ->getRepository(CourseData::class)
+                ->findByCourseAndVariables($this->session->getCourse(), $variables);
+            $dataWithKeys = [];
+            foreach ($courseData as $datum)
+            {
+                $dataWithKeys[$datum->getVar()] = $datum;
+            }
+            foreach ($quitPlanQuestions as $question)
+            {
+                if (isset($dataWithKeys[$question->getVariable()])) {
+                    $quitPlan[] = [
+                        'question' => $question,
+                        'answer' => $this->convertDataToHumanReadable($dataWithKeys[$question->getVariable()]->getValue())
+                    ];
+                }
+            }
+        } else {
             $preview = true;
-
             $page = $this->em->getRepository(Page::class)
                 ->findOneBy(
                     [
@@ -198,7 +225,7 @@ class SessionManager
             if (!$page) {
                 $this->_session->getFlashBag()->add(
                     'danger',
-                    "Sorry, that page was not found in the database."
+                    'Sorry, that page was not found in the database.'
                 );
                 return new RedirectResponse($this->router->generate('admin_manage_view'));
             }
@@ -206,24 +233,21 @@ class SessionManager
             if (!$page->getLive()) {
                 $this->_session->getFlashBag()->add(
                     'warning',
-                    "Preview of a DRAFT page"
+                    'Preview of a DRAFT page'
                 );
             } else {
                 $this->_session->getFlashBag()->add(
                     'success',
-                    "Preview of a LIVE page"
+                    'Preview of a LIVE page'
                 );
             }
-        } else {
-            $preview = false;
-            $page = $this->getCurrentPage();
         }
 
         if ($page === null) {
             // No page available, return user to dashboard
             $this->_session->getFlashBag()->add(
                 'warning',
-                "Sorry, there are no live pages we can show right now."
+                'Sorry, there are no live pages we can show right now.'
             );
             return new RedirectResponse($this->router->generate('account_dashboard'));
         }
@@ -241,6 +265,7 @@ class SessionManager
 
         // Get the question for the page
         $questions = $page->getQuestions();
+        /** @var Question $question */
         $question = $questions[0];
         // If the question variable name is set
         if ($this->isValidQuestion($question)) {
@@ -254,9 +279,10 @@ class SessionManager
                 );
             // Create CourseData Entity if it doesn't exist
             if (null === $CourseData) {
-                $CourseData = new CourseData();
+                $CourseData = new CourseData($question);
                 $CourseData->setCourse($this->session->getCourse());
-                $CourseData->setVar($question->getVariable());
+            } else {
+                $CourseData->setQuestion($question);
             }
 
             // Create the form
@@ -264,9 +290,9 @@ class SessionManager
                 SessionType::class,
                 $CourseData,
                 [
-                'attr' => ['id' => 'session_form'],
-                'question' => $question
-            ]
+                    'attr' => ['id' => 'session_form'],
+                    'question' => $question
+                ]
             );
 
             $form->handleRequest($request);
@@ -278,20 +304,22 @@ class SessionManager
 
                     $this->em->persist($CourseData);
                     $this->em->flush();
+                    if ($question->getInputType() === 'choice_boolean_continue' && $CourseData->getValue() !== 'bool_1') {
+                        return new RedirectResponse($this->router->generate('account_restart'));
+                    }
 
                     // Update last_page variable to the next page that should be shown.
                     // This function wil flush too, but need to flush data first for next page function to use it if necessary
                     return $this->setNextPage();
-                } else {
-                    $this->em->detach($CourseData);
-                    foreach ($form->getErrors(true) as $error) {
-                        $this->_session->getFlashBag()->add(
-                            'danger',
-                            $error->getMessage()
-                        );
-                    }
-                    return new RedirectResponse($this->router->generate('account_session'));
                 }
+                $this->em->detach($CourseData);
+                foreach ($form->getErrors(true) as $error) {
+                    $this->_session->getFlashBag()->add(
+                        'danger',
+                        $error->getMessage()
+                    );
+                }
+                return new RedirectResponse($this->router->generate('account_session'));
             }
         } else {
             $form = null;
@@ -306,34 +334,51 @@ class SessionManager
             $this->templating->render(
                 '@App/Account/session.html.twig',
                 [
-                'session_number' => $session_number,
-                'name' => $page_name,
-                'media_type' => $page->getMediaType(),
-                'image_path' => $page->getImagePath(),
-                'video_url' => $page->getVideoUrl(),
-                'text' => $this->loadVariables($page->getText()),
-                'question_type' => null === $question ? null : $question->getInputType(),
-                'answers' => null === $question ? null : $question->getAnswerOptions(),
-                'title' => $page_title,
-                'form' => null === $form ? null : $form->createView(),
-                'session_progress_percent' => $this->getSessionProgress(),
-                'preview' => $preview
-            ]
+                    'session_number' => $session_number,
+                    'name' => $page_name,
+                    'media_type' => $page->getMediaType(),
+                    'image_path' => $page->getImagePath(),
+                    'video_url' => $page->getVideoUrl(),
+                    'text' => $this->loadVariables($page->getText()),
+                    'question_type' => null === $question ? null : $question->getInputType(),
+                    'answers' => null === $question ? null : $question->getAnswerOptions(),
+                    'title' => $page_title,
+                    'form' => null === $form ? null : $form->createView(),
+                    'session_progress_percent' => $this->getSessionProgress(),
+                    'preview' => $preview,
+                    'quit_plan' => $quitPlan
+                ]
             )
         );
     }
 
-    private function loadVariables(?string $text) {
+    private function loadVariables(?string $text)
+    {
         if (!$text) {
             return '';
         }
-        return preg_replace_callback('/{{\s?(.+)\s?}}/i', function ($matches) {
+        return preg_replace_callback(
+            '/{{\s?(.+)\s?}}/i', function ($matches) {
             $data = $this->getData($matches[1]);
-            if (\is_bool($data)) {
-                return $data ? 'Yes' : 'No';
+            return $this->convertDataToHumanReadable($data);
+        }, $text
+        );
+    }
+
+    private function convertDataToHumanReadable($data)
+    {
+        if (\is_array($data)) {
+            $newData = [];
+            foreach($data as $datum) {
+                $newData[] = $this->convertDataToHumanReadable($datum);
             }
-            return $data;
-        }, $text);
+            return $newData;
+        }
+        $newData = $this->convertBoolData($data);
+        if (\is_bool($newData)) {
+            return $newData ? 'Yes' : 'No';
+        }
+        return $newData;
     }
 
     private function getChildren(Page $page, $parentIds = [], $depth = 0)
@@ -505,7 +550,7 @@ class SessionManager
     {
         // find the variable by key for the course in the database
         $dataEntity = $this->em
-            ->getRepository('AppBundle:CourseData')
+            ->getRepository(CourseData::class)
             ->findOneBy(
                 [
                     'var' => $key,

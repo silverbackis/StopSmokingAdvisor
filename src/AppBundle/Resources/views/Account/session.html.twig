@@ -1,129 +1,172 @@
 {% extends '@App/base.html.twig' %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    {% stylesheets
-        '@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/css/bootstrap-select.css'
-        '@AppBundle/Resources/assets/global/bower/flatpickr/dist/flatpickr.min.css'
-        '@AppBundle/Resources/assets/global/flatpickr_theme.css'
-        '@AppBundle/Resources/assets/local/scss/accountLayout.scss'
-        '@AppBundle/Resources/assets/local/scss/accountSession.scss'
-        filter='cssrewrite' 
-        filter='?uglifycss' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+  {{ parent() }}
+  {% stylesheets
+    '@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/css/bootstrap-select.css'
+    '@AppBundle/Resources/assets/global/bower/flatpickr/dist/flatpickr.min.css'
+    '@AppBundle/Resources/assets/global/flatpickr_theme.css'
+    '@AppBundle/Resources/assets/local/scss/accountLayout.scss'
+    '@AppBundle/Resources/assets/local/scss/accountSession.scss'
+    filter='cssrewrite'
+    filter='?uglifycss' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+  {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    {% javascripts
-        '@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/js/bootstrap-select.min.js'
-        '@AppBundle/Resources/assets/global/bower/flatpickr/dist/flatpickr.js'
-        '@AppBundle/Resources/assets/local/js/accountSession.js'
-        filter='?uglifyjs2' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+  {{ parent() }}
+  {% javascripts
+    '@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/js/bootstrap-select.min.js'
+    '@AppBundle/Resources/assets/global/bower/flatpickr/dist/flatpickr.js'
+    '@AppBundle/Resources/assets/local/js/accountSession.js'
+    filter='?uglifyjs2' %}
+    <script src="{{ asset_url }}"></script>
+  {% endjavascripts %}
 {% endblock %}
 
 {% block body %}
 
-{% set finish_button %}
+  {% set finish_button %}
     <a href="javascript:window.close();" class="btn btn-lg btn-success btn-start">Finished</a>
-{% endset %}
+  {% endset %}
 
-<div class="container-fluid">
-  {% set flashes = app.session.flashbag.all() %}
-  {% if flashes | length > 0 %}
-    <div class="row no-gutters session-notices">
-      <div class="col-12">
-      {% for type, messages in flashes %}
-          {% for message in messages %}
+  <div class="container-fluid">
+    {% set flashes = app.session.flashbag.all() %}
+    {% if flashes | length > 0 %}
+      <div class="row no-gutters session-notices">
+        <div class="col-12">
+          {% for type, messages in flashes %}
+            {% for message in messages %}
               <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-                  <strong>{{ message }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{ message }}</strong>
               </div>
+            {% endfor %}
           {% endfor %}
-      {% endfor %}
+        </div>
       </div>
-    </div>
-  {% endif %}
+    {% endif %}
 
-  <div class="row no-gutters session-header-row">
-    <div class="col-12">
+    <div class="row no-gutters session-header-row">
+      <div class="col-12">
       <span class="logo-header">
         <h2>Session {{ session_number }}</h2>
         <h1>{{ title }}</h1>
       </span>
-      <a href="{{ preview ? 'javascript:window.close();' : path('account_dashboard') }}" class="exit-link">Exit session</a>
-    </div>
-    <div class="col-12">
-      <div class="progress-bar">
-        <div class="progress bg-success" style="width: {{ session_progress_percent }}%;"></div>
+        <a href="{{ preview ? 'javascript:window.close();' : path('account_dashboard') }}" class="exit-link">Exit session</a>
       </div>
-    </div>
-  </div>
-  <div class="row session-content-row">
-    <div class="col">
-      <div class="session-text-outer">
-        <h3>{{ name }}</h3>
-        <div class="session-text">
-          {{ text|raw }}
+      <div class="col-12">
+        <div class="progress-bar">
+          <div class="progress bg-success" style="width: {{ session_progress_percent }}%;"></div>
         </div>
       </div>
     </div>
-    {% if media_type != 'none' %}
-    <div class="col-12 col-lg-auto col-media">
-      <div class="session-media">
-        {% if media_type == 'image' and image_path is not empty %}
-          <img src="{{ asset(image_path) }}" />
-        {% endif %}
-        {% if media_type == 'video' and video_url is not empty %}
-          <div class='embed-container'>
-          <iframe id="vimeoVideo" class="vimeo-video" src="https://player.vimeo.com/video/{{ video_url|split('/')|last }}?title=0&amp;byline=0&amp;portrait=0&amp;color=1e92c1" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true"></iframe>
+    <div class="row session-content-row">
+      <div class="col">
+        <div class="session-text-outer">
+          <h3>{{ name }}</h3>
+          <div class="session-text">
+            {{ text|raw }}
           </div>
-        {% endif %}
+        </div>
       </div>
+      {% if media_type != 'none' %}
+        <div class="col-12 col-lg-auto col-media">
+          <div class="session-media">
+            {% if media_type == 'image' and image_path is not empty %}
+              <img src="{{ asset(image_path) }}"/>
+            {% endif %}
+            {% if media_type == 'video' and video_url is not empty %}
+              <div class='embed-container'>
+                <iframe id="vimeoVideo" class="vimeo-video" src="https://player.vimeo.com/video/{{ video_url|split('/')|last }}?title=0&amp;byline=0&amp;portrait=0&amp;color=1e92c1" frameborder="0"
+                        webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true"></iframe>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
     </div>
+    {% if form %}
+      {{ form_start(form) }}
+      <div class="row no-gutters session-question-row">
+        <div class="col-12">
+          <div class="session-question">
+            {{ form_label(form.value) }}
+          </div>
+          <div class="session-input">
+            {{ form_widget(form.value) }}
+          </div>
+        </div>
+      </div>
+      <div class="row session-continue-row">
+        <div class="col-12">
+          {% if preview %}
+            {{ finish_button }}
+            <div class="sr-only">
+              {{ form_widget(form.save) }}
+            </div>
+          {% else %}
+            {{ form_widget(form.save) }}
+          {% endif %}
+        </div>
+      </div>
+      {{ form_end(form) }}
+    {% else %}
+      <div class="row session-continue-row">
+        <div class="col-12">
+          {% if preview %}
+            {{ finish_button }}
+          {% else %}
+            <a href="{{ path('account_session_next') }}" class="btn btn-lg btn-success btn-start">Continue <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt=""/></a>
+          {% endif %}
+        </div>
+      </div>
     {% endif %}
   </div>
-  {% if form %}
-  {{ form_start(form) }}
-  <div class="row no-gutters session-question-row">
-    <div class="col-12">
-      <div class="session-question">
-        {{ form_label(form.value) }}
+  <div class="quit-plan" id="quit-plan">
+    <button class="quit-plan-tab" id="quit-plan-button"></button>
+    <div class="quit-plan-info container-fluid px-0">
+      <div class="row text-center">
+        <div class="col-12">
+          <h2 class="text-info mb-3">My Quit Plan</h2>
+        </div>
       </div>
-      <div class="session-input">
-        {{ form_widget(form.value) }}
+      <div class="row">
+        <div class="col-12">
+          <table class="table table-striped">
+            <tbody>
+              {% if quit_plan is empty %}
+                <tr>
+                  <td class="text-center">
+                    <p class="question">When you answer questions pertinent to your quit plan they will appear here.</p>
+                  </td>
+                </tr>
+              {% endif %}
+              {% for data in quit_plan %}
+                <tr>
+                  <td>
+                    <p class="question">{{ data.question.question }}</p>
+                    {% if data.answer is iterable  %}
+                      <ul class="answer">
+                      {% for value in data.answer %}
+                        <li>{{ value }}</li>
+                      {% endfor %}
+                      </ul>
+                    {% else %}
+                      <p class="answer">
+                          {{ data.answer }}
+                      </p>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
-  <div class="row session-continue-row">
-    <div class="col-12">
-      {% if preview %}
-      {{ finish_button }}
-      <div class="sr-only">
-        {{ form_widget(form.save) }}
-      </div>
-      {% else %}
-      {{ form_widget(form.save) }}
-      {% endif %}
-    </div>
-  </div>
-  {{ form_end(form) }}
-  {% else %}
-  <div class="row session-continue-row">
-    <div class="col-12">
-      {% if preview %}
-      {{ finish_button }}
-      {% else %}
-      <a href="{{ path('account_session_next') }}" class="btn btn-lg btn-success btn-start">Continue <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="" /></a>
-      {% endif %}
-    </div>
-  </div>
-  {% endif %}
-  
-</div>
 {% endblock %}
