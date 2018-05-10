@@ -360,7 +360,17 @@ class SessionManager
         return preg_replace_callback(
             '/{{\s?(.+)\s?}}/i', function ($matches) {
             $data = $this->getData($matches[1]);
-            return $this->convertDataToHumanReadable($data);
+            $readable = $this->convertDataToHumanReadable($data);
+            if (\is_array($readable)) {
+                $html = '<ul>';
+                foreach($readable as $item)
+                {
+                    $html .= sprintf('<li>%s</li>', $item);
+                }
+                $html .= '<ul>';
+                return $html;
+            }
+            return $readable;
         }, $text
         );
     }
