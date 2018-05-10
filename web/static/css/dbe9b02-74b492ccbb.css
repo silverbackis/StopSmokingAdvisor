@@ -1,37 +1,37 @@
-/* line 3, assetic_compassmPRiIG.scss */
+/* line 3, assetic_compass2pdqHt.scss */
 html,
 body {
   height: 100%;
 }
 
-/* line 8, assetic_compassmPRiIG.scss */
+/* line 8, assetic_compass2pdqHt.scss */
 .btn-start {
   position: relative;
 }
-/* line 11, assetic_compassmPRiIG.scss */
+/* line 11, assetic_compass2pdqHt.scss */
 .btn-start:focus {
   color: #fff;
 }
 
-/* line 16, assetic_compassmPRiIG.scss */
+/* line 16, assetic_compass2pdqHt.scss */
 .next-icon {
   height: 20px;
   margin-left: .5rem;
   margin-top: -3px;
 }
 
-/* line 22, assetic_compassmPRiIG.scss */
+/* line 22, assetic_compass2pdqHt.scss */
 .alert {
   margin-bottom: 0;
 }
 
-/* line 26, assetic_compassmPRiIG.scss */
+/* line 26, assetic_compass2pdqHt.scss */
 .no-gutters[class*="session-"] {
   margin-left: -15px;
   margin-right: -15px;
 }
 
-/* line 31, assetic_compassmPRiIG.scss */
+/* line 31, assetic_compass2pdqHt.scss */
 .exit-link {
   color: #737373;
   font-family: 'Comfortaa', cursive;
@@ -41,36 +41,36 @@ body {
   top: 0;
 }
 
-/* line 40, assetic_compassmPRiIG.scss */
+/* line 40, assetic_compass2pdqHt.scss */
 .session-header-row {
   padding: 15px;
 }
-/* line 43, assetic_compassmPRiIG.scss */
+/* line 43, assetic_compass2pdqHt.scss */
 .session-header-row .logo-header {
   background: url("/bundles/app/svg/logo_icon.svg") 0 50% no-repeat;
   display: inline-block;
   padding-left: 70px;
 }
-/* line 48, assetic_compassmPRiIG.scss */
+/* line 48, assetic_compass2pdqHt.scss */
 .session-header-row .logo-header h2 {
   color: #cccccc;
   font-size: 1.1rem;
   margin: 0;
 }
-/* line 54, assetic_compassmPRiIG.scss */
+/* line 54, assetic_compass2pdqHt.scss */
 .session-header-row .logo-header h1 {
   color: #1e92c1;
   font-size: 1.8rem;
   margin: .3rem 0 0;
 }
-/* line 61, assetic_compassmPRiIG.scss */
+/* line 61, assetic_compass2pdqHt.scss */
 .session-header-row .progress-bar {
   background: #cccccc;
   height: 8px;
   margin-top: .7rem;
   position: relative;
 }
-/* line 68, assetic_compassmPRiIG.scss */
+/* line 68, assetic_compass2pdqHt.scss */
 .session-header-row .progress {
   display: inline-block;
   height: 100%;
@@ -81,89 +81,89 @@ body {
 }
 
 @media (max-width: 809px) {
-  /* line 80, assetic_compassmPRiIG.scss */
+  /* line 80, assetic_compass2pdqHt.scss */
   .session-header-row .logo-header {
     background-size: 40px auto;
     margin-top: 1.2rem;
     padding-left: 50px;
   }
-  /* line 85, assetic_compassmPRiIG.scss */
+  /* line 85, assetic_compass2pdqHt.scss */
   .session-header-row .logo-header h1 {
     margin: 0;
   }
 
-  /* line 91, assetic_compassmPRiIG.scss */
+  /* line 91, assetic_compass2pdqHt.scss */
   .exit-link {
     font-size: .7rem;
   }
 }
 @media (min-width: 810px) {
-  /* line 97, assetic_compassmPRiIG.scss */
+  /* line 97, assetic_compass2pdqHt.scss */
   .btn-start {
     padding: 1.15rem 4.5rem;
   }
 }
 
-/* line 3, assetic_compassRwMmKc.scss */
+/* line 3, assetic_compassUYYoZk.scss */
 .page {
   min-height: 700px;
   padding: 0;
 }
 
-/* line 8, assetic_compassRwMmKc.scss */
+/* line 8, assetic_compassUYYoZk.scss */
 .page-table {
   height: 100%;
   width: 100%;
 }
-/* line 12, assetic_compassRwMmKc.scss */
+/* line 12, assetic_compassUYYoZk.scss */
 .page-table td {
   padding: 0;
   vertical-align: top;
 }
-/* line 16, assetic_compassRwMmKc.scss */
+/* line 16, assetic_compassUYYoZk.scss */
 .page-table td.dashboard-feature-content {
   color: #1e92c1;
   font-family: 'Comfortaa', cursive;
   padding: 2rem;
   vertical-align: middle;
 }
-/* line 23, assetic_compassRwMmKc.scss */
+/* line 23, assetic_compassUYYoZk.scss */
 .page-table td.dashboard-top {
   background: url("/bundles/app/images/bg_landscape.png") 50% 50% no-repeat;
   background-size: cover;
 }
-/* line 28, assetic_compassRwMmKc.scss */
+/* line 28, assetic_compassUYYoZk.scss */
 .page-table td.dashboard-bottom {
   height: 33%;
 }
-/* line 31, assetic_compassRwMmKc.scss */
+/* line 31, assetic_compassUYYoZk.scss */
 .page-table td.dashboard-bottom > .row {
   min-height: 300px;
 }
 
-/* line 38, assetic_compassRwMmKc.scss */
+/* line 38, assetic_compassUYYoZk.scss */
 .header-row {
   padding: 2rem 2rem 0;
 }
 
-/* line 42, assetic_compassRwMmKc.scss */
+/* line 42, assetic_compassUYYoZk.scss */
 .logo {
   width: 280px;
 }
 
-/* line 46, assetic_compassRwMmKc.scss */
+/* line 46, assetic_compassUYYoZk.scss */
 .settings-dropdown {
   position: absolute;
   right: 0;
   top: -1rem;
 }
-/* line 51, assetic_compassRwMmKc.scss */
+/* line 51, assetic_compassUYYoZk.scss */
 .settings-dropdown .dropdown-menu {
   margin-top: 0.65rem;
   min-width: 8.5rem;
   padding: 0;
 }
-/* line 56, assetic_compassRwMmKc.scss */
+/* line 56, assetic_compassUYYoZk.scss */
 .settings-dropdown .dropdown-menu:BEFORE {
   content: "\A";
   border-style: solid;
@@ -174,7 +174,7 @@ body {
   bottom: 100%;
   margin-bottom: 0px;
 }
-/* line 67, assetic_compassRwMmKc.scss */
+/* line 67, assetic_compassUYYoZk.scss */
 .settings-dropdown .dropdown-menu:AFTER {
   content: "\A";
   border-style: solid;
@@ -185,22 +185,22 @@ body {
   bottom: 100%;
   margin-bottom: -1px;
 }
-/* line 79, assetic_compassRwMmKc.scss */
+/* line 79, assetic_compassUYYoZk.scss */
 .settings-dropdown .dropdown-item {
   color: #1e92c1;
   padding: .5rem 1rem;
   text-align: center;
 }
-/* line 84, assetic_compassRwMmKc.scss */
+/* line 84, assetic_compassUYYoZk.scss */
 .settings-dropdown .dropdown-item:active {
   background: #eceeef;
 }
-/* line 89, assetic_compassRwMmKc.scss */
+/* line 89, assetic_compassUYYoZk.scss */
 .settings-dropdown .dropdown-divider {
   margin: 0;
 }
 
-/* line 94, assetic_compassRwMmKc.scss */
+/* line 94, assetic_compassUYYoZk.scss */
 .settings-cog {
   background: url("/bundles/app/svg/cog.svg") 50% 50% no-repeat;
   display: block;
@@ -208,96 +208,96 @@ body {
   width: 40px;
 }
 
-/* line 101, assetic_compassRwMmKc.scss */
+/* line 101, assetic_compassUYYoZk.scss */
 .dashboard-progress {
   background: #f8f8f8;
   color: #1e92c1;
 }
 
-/* line 106, assetic_compassRwMmKc.scss */
+/* line 106, assetic_compassUYYoZk.scss */
 .dashboard-savings {
   background: #fff;
   color: #ef4467;
 }
 
-/* line 111, assetic_compassRwMmKc.scss */
+/* line 111, assetic_compassUYYoZk.scss */
 .dashboard-progress,
 .dashboard-savings {
   text-align: center;
 }
 
-/* line 116, assetic_compassRwMmKc.scss */
+/* line 116, assetic_compassUYYoZk.scss */
 .dashboard-book {
   color: #4d4d4d;
   background: #eceeef;
 }
-/* line 119, assetic_compassRwMmKc.scss */
+/* line 119, assetic_compassUYYoZk.scss */
 .dashboard-book .btn-danger {
   background-color: #ef4467;
   border-color: #ef4467;
 }
-/* line 122, assetic_compassRwMmKc.scss */
+/* line 122, assetic_compassUYYoZk.scss */
 .dashboard-book .btn-danger:hover {
   background-color: #ed2d54;
   border-color: #ed2d54;
 }
-/* line 127, assetic_compassRwMmKc.scss */
+/* line 127, assetic_compassUYYoZk.scss */
 .dashboard-book .book-cover {
   height: 80px;
 }
 
-/* line 132, assetic_compassRwMmKc.scss */
+/* line 132, assetic_compassUYYoZk.scss */
 h1 {
   line-height: 1.4;
   margin-bottom: .8rem;
 }
 
-/* line 137, assetic_compassRwMmKc.scss */
+/* line 137, assetic_compassUYYoZk.scss */
 h2 {
   font-size: 1.4rem;
   margin-bottom: 0;
 }
 
-/* line 142, assetic_compassRwMmKc.scss */
+/* line 142, assetic_compassUYYoZk.scss */
 .text-next-session {
   margin-top: 2rem;
   margin-bottom: 2.8rem;
 }
 
-/* line 147, assetic_compassRwMmKc.scss */
+/* line 147, assetic_compassUYYoZk.scss */
 .reminder-info {
   font-size: 1.2rem;
 }
-/* line 150, assetic_compassRwMmKc.scss */
+/* line 150, assetic_compassUYYoZk.scss */
 .reminder-info a {
   font-size: .8rem;
 }
 
-/* line 155, assetic_compassRwMmKc.scss */
+/* line 155, assetic_compassUYYoZk.scss */
 .btn-start {
   margin-top: 3rem;
 }
 
-/* line 159, assetic_compassRwMmKc.scss */
+/* line 159, assetic_compassUYYoZk.scss */
 .dashboard-bottom-box-pad {
   padding: 3rem;
 }
 
-/* line 163, assetic_compassRwMmKc.scss */
+/* line 163, assetic_compassUYYoZk.scss */
 .dashboard-bottom-image {
   height: 115px;
   margin-bottom: 1.2rem;
   position: relative;
 }
 
-/* line 169, assetic_compassRwMmKc.scss */
+/* line 169, assetic_compassUYYoZk.scss */
 .piggy-coin {
   left: 50%;
   margin-left: -15px;
   position: absolute;
 }
 
-/* line 175, assetic_compassRwMmKc.scss */
+/* line 175, assetic_compassUYYoZk.scss */
 .piggy {
   bottom: 0;
   left: 50%;
@@ -305,37 +305,37 @@ h2 {
   position: absolute;
 }
 
-/* line 182, assetic_compassRwMmKc.scss */
+/* line 182, assetic_compassUYYoZk.scss */
 .dashboard-bottom-info {
   font-family: 'Comfortaa', cursive;
 }
-/* line 185, assetic_compassRwMmKc.scss */
+/* line 185, assetic_compassUYYoZk.scss */
 .dashboard-bottom-info h3 {
   font-size: 1.6rem;
   margin-bottom: 1.1rem;
 }
-/* line 189, assetic_compassRwMmKc.scss */
+/* line 189, assetic_compassUYYoZk.scss */
 .dashboard-bottom-info h3.large {
   font-size: 2.5rem;
   margin-bottom: 0;
 }
-/* line 195, assetic_compassRwMmKc.scss */
+/* line 195, assetic_compassUYYoZk.scss */
 .dashboard-bottom-info h4 {
   font-size: 1rem;
   margin-bottom: 0;
 }
-/* line 199, assetic_compassRwMmKc.scss */
+/* line 199, assetic_compassUYYoZk.scss */
 .dashboard-bottom-info h4.small {
   font-size: 1.1rem;
   margin-bottom: .5rem;
 }
 
-/* line 206, assetic_compassRwMmKc.scss */
+/* line 206, assetic_compassUYYoZk.scss */
 .text-next-session {
   color: #ef4467;
 }
 
-/* line 210, assetic_compassRwMmKc.scss */
+/* line 210, assetic_compassUYYoZk.scss */
 .pie {
   background: #cccccc;
   border-radius: 50%;
@@ -345,7 +345,7 @@ h2 {
   width: 116px;
 }
 
-/* line 219, assetic_compassRwMmKc.scss */
+/* line 219, assetic_compassUYYoZk.scss */
 .pie-semi-crop,
 .pie-semi-crop > .slice {
   border-radius: 0 116px 116px 0;
@@ -359,7 +359,7 @@ h2 {
   -webkit-transform-origin: 0 50%;
   transform-origin: 0 50%;
 }
-/* line 233, assetic_compassRwMmKc.scss */
+/* line 233, assetic_compassUYYoZk.scss */
 .pie-semi-crop.left,
 .pie-semi-crop > .slice.left {
   -moz-transform: rotate(-180deg);
@@ -373,69 +373,69 @@ h2 {
   transform: rotate(-180deg);
 }
 
-/* line 242, assetic_compassRwMmKc.scss */
+/* line 242, assetic_compassUYYoZk.scss */
 .pie-semi-crop {
   left: 50%;
 }
-/* line 245, assetic_compassRwMmKc.scss */
+/* line 245, assetic_compassUYYoZk.scss */
 .pie-semi-crop > .slice {
   background: #1e92c1;
 }
 
 @media (max-width: 809px) {
-  /* line 251, assetic_compassRwMmKc.scss */
+  /* line 251, assetic_compassUYYoZk.scss */
   .header-row {
     padding: 2rem 1rem 0;
   }
 
-  /* line 255, assetic_compassRwMmKc.scss */
+  /* line 255, assetic_compassUYYoZk.scss */
   .logo {
     margin-top: 1.5rem;
     max-width: 280px;
     width: 80%;
   }
 
-  /* line 261, assetic_compassRwMmKc.scss */
+  /* line 261, assetic_compassUYYoZk.scss */
   h1 {
     font-size: 1.4rem;
   }
 
-  /* line 265, assetic_compassRwMmKc.scss */
+  /* line 265, assetic_compassUYYoZk.scss */
   h2 {
     font-size: 1rem;
   }
 
-  /* line 269, assetic_compassRwMmKc.scss */
+  /* line 269, assetic_compassUYYoZk.scss */
   .btn-start {
     margin-top: 1.2rem;
   }
 
-  /* line 273, assetic_compassRwMmKc.scss */
+  /* line 273, assetic_compassUYYoZk.scss */
   .text-next-session {
     margin: 1.5rem 0;
   }
 
-  /* line 277, assetic_compassRwMmKc.scss */
+  /* line 277, assetic_compassUYYoZk.scss */
   .settings-cog {
     background-size: 100% auto;
     height: 30px;
     width: 30px;
   }
 
-  /* line 285, assetic_compassRwMmKc.scss */
+  /* line 285, assetic_compassUYYoZk.scss */
   .settings-dropdown .dropdown-menu:BEFORE {
     right: 3px;
   }
-  /* line 289, assetic_compassRwMmKc.scss */
+  /* line 289, assetic_compassUYYoZk.scss */
   .settings-dropdown .dropdown-menu:AFTER {
     right: 4px;
   }
 
-  /* line 295, assetic_compassRwMmKc.scss */
+  /* line 295, assetic_compassUYYoZk.scss */
   .reminder-info {
     font-size: 1rem;
   }
-  /* line 298, assetic_compassRwMmKc.scss */
+  /* line 298, assetic_compassUYYoZk.scss */
   .reminder-info a {
     font-size: .6rem;
   }
