@@ -9,7 +9,6 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use UserBundle\Entity\User;
-use AppBundle\Entity\UserSettings;
 
 class LoadUserData implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {

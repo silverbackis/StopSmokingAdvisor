@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_settings")
+ * @ORM\Table(name="user_settings",uniqueConstraints={@ORM\UniqueConstraint(name="user", columns={"user"})})
  */
 class UserSettings
 {

@@ -5,6 +5,7 @@ namespace AppBundle\Utils;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\UserSettings as Settings;
+use UserBundle\Entity\User;
 
 class UserSettings
 {
@@ -19,13 +20,17 @@ class UserSettings
         $this->em = $em;
     }
 
-    public function getUserSettings(AppBundle\Entity\User $User = null)
+    public function getUserSettings(User $User = null)
     {
-        if (is_null($User)) {
-            $User = $this->ts->getToken()->getUser();
+        if (null === $User) {
+            $token = $this->ts->getToken();
+            if (!$token) {
+                return null;
+            }
+            $User = $token->getUser();
         }
 
-        $UserSettings = $this->em->getRepository('AppBundle\Entity\UserSettings')
+        $UserSettings = $this->em->getRepository(Settings::class)
             ->findOneBy([
                 'user' => $User
             ]);
