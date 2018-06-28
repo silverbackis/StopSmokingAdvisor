@@ -1,37 +1,37 @@
-/* line 3, assetic_compass3gMRMy.scss */
+/* line 3, assetic_compasslI0vwA.scss */
 html,
 body {
   height: 100%;
 }
 
-/* line 8, assetic_compass3gMRMy.scss */
+/* line 8, assetic_compasslI0vwA.scss */
 .btn-start {
   position: relative;
 }
-/* line 11, assetic_compass3gMRMy.scss */
+/* line 11, assetic_compasslI0vwA.scss */
 .btn-start:focus {
   color: #fff;
 }
 
-/* line 16, assetic_compass3gMRMy.scss */
+/* line 16, assetic_compasslI0vwA.scss */
 .next-icon {
   height: 20px;
   margin-left: .5rem;
   margin-top: -3px;
 }
 
-/* line 22, assetic_compass3gMRMy.scss */
+/* line 22, assetic_compasslI0vwA.scss */
 .alert {
   margin-bottom: 0;
 }
 
-/* line 26, assetic_compass3gMRMy.scss */
+/* line 26, assetic_compasslI0vwA.scss */
 .no-gutters[class*="session-"] {
   margin-left: -15px;
   margin-right: -15px;
 }
 
-/* line 31, assetic_compass3gMRMy.scss */
+/* line 31, assetic_compasslI0vwA.scss */
 .exit-link {
   color: #737373;
   font-family: 'Comfortaa', cursive;
@@ -41,36 +41,36 @@ body {
   top: 0;
 }
 
-/* line 40, assetic_compass3gMRMy.scss */
+/* line 40, assetic_compasslI0vwA.scss */
 .session-header-row {
   padding: 15px;
 }
-/* line 43, assetic_compass3gMRMy.scss */
+/* line 43, assetic_compasslI0vwA.scss */
 .session-header-row .logo-header {
   background: url("/bundles/app/svg/logo_icon.svg") 0 50% no-repeat;
   display: inline-block;
   padding-left: 70px;
 }
-/* line 48, assetic_compass3gMRMy.scss */
+/* line 48, assetic_compasslI0vwA.scss */
 .session-header-row .logo-header h2 {
   color: #cccccc;
   font-size: 1.1rem;
   margin: 0;
 }
-/* line 54, assetic_compass3gMRMy.scss */
+/* line 54, assetic_compasslI0vwA.scss */
 .session-header-row .logo-header h1 {
   color: #1e92c1;
   font-size: 1.8rem;
   margin: .3rem 0 0;
 }
-/* line 61, assetic_compass3gMRMy.scss */
+/* line 61, assetic_compasslI0vwA.scss */
 .session-header-row .progress-bar {
   background: #cccccc;
   height: 8px;
   margin-top: .7rem;
   position: relative;
 }
-/* line 68, assetic_compass3gMRMy.scss */
+/* line 68, assetic_compasslI0vwA.scss */
 .session-header-row .progress {
   display: inline-block;
   height: 100%;
@@ -81,24 +81,24 @@ body {
 }
 
 @media (max-width: 809px) {
-  /* line 80, assetic_compass3gMRMy.scss */
+  /* line 80, assetic_compasslI0vwA.scss */
   .session-header-row .logo-header {
     background-size: 40px auto;
     margin-top: 1.2rem;
     padding-left: 50px;
   }
-  /* line 85, assetic_compass3gMRMy.scss */
+  /* line 85, assetic_compasslI0vwA.scss */
   .session-header-row .logo-header h1 {
     margin: 0;
   }
 
-  /* line 91, assetic_compass3gMRMy.scss */
+  /* line 91, assetic_compasslI0vwA.scss */
   .exit-link {
     font-size: .7rem;
   }
 }
 @media (min-width: 810px) {
-  /* line 97, assetic_compass3gMRMy.scss */
+  /* line 97, assetic_compasslI0vwA.scss */
   .btn-start {
     padding: 1.15rem 4.5rem;
   }

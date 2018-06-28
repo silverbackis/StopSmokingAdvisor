@@ -1,113 +1,113 @@
-/* line 4, assetic_compassbfFdS0.scss */
+/* line 4, assetic_compassApLj91.scss */
 body,
 html {
   height: 100%;
   min-width: 820px;
 }
 
-/* line 10, assetic_compassbfFdS0.scss */
+/* line 10, assetic_compassApLj91.scss */
 a:focus,
 a:hover {
   color: #1b82a7;
 }
 
-/* line 15, assetic_compassbfFdS0.scss */
+/* line 15, assetic_compassApLj91.scss */
 ::-webkit-input-placeholder {
   color: #1b82a7;
 }
 
-/* line 18, assetic_compassbfFdS0.scss */
+/* line 18, assetic_compassApLj91.scss */
 ::-moz-placeholder {
   color: #1b82a7;
 }
 
-/* line 21, assetic_compassbfFdS0.scss */
+/* line 21, assetic_compassApLj91.scss */
 :-ms-input-placeholder {
   color: #1b82a7;
 }
 
-/* line 24, assetic_compassbfFdS0.scss */
+/* line 24, assetic_compassApLj91.scss */
 :-moz-placeholder {
   color: #1b82a7;
 }
 
-/* line 27, assetic_compassbfFdS0.scss */
+/* line 27, assetic_compassApLj91.scss */
 .form-control,
 .input-group-addon {
   border-color: #a8d2e4;
 }
-/* line 31, assetic_compassbfFdS0.scss */
+/* line 31, assetic_compassApLj91.scss */
 .form-control.error,
 .input-group-addon.error {
   border-color: #a61d39;
 }
 
-/* line 36, assetic_compassbfFdS0.scss */
+/* line 36, assetic_compassApLj91.scss */
 .btn {
   font-family: 'Comfortaa', cursive;
 }
-/* line 39, assetic_compassbfFdS0.scss */
+/* line 39, assetic_compassApLj91.scss */
 .btn.btn-primary:hover, .btn.btn-primary:focus {
   color: #fff;
 }
 
-/* line 45, assetic_compassbfFdS0.scss */
+/* line 45, assetic_compassApLj91.scss */
 td {
   padding: 0;
 }
 
-/* line 49, assetic_compassbfFdS0.scss */
+/* line 49, assetic_compassApLj91.scss */
 .popover {
   color: #4d4d4d;
 }
 
-/* line 53, assetic_compassbfFdS0.scss */
+/* line 53, assetic_compassApLj91.scss */
 .popover-title {
   font-size: .8rem;
   padding: 4px 25px;
 }
 
-/* line 58, assetic_compassbfFdS0.scss */
+/* line 58, assetic_compassApLj91.scss */
 .popover-content {
   text-align: center;
 }
 
-/* line 62, assetic_compassbfFdS0.scss */
+/* line 62, assetic_compassApLj91.scss */
 .popover-content > .btn-group {
   display: inline-block;
 }
-/* line 65, assetic_compassbfFdS0.scss */
+/* line 65, assetic_compassApLj91.scss */
 .popover-content > .btn-group > .btn {
   border: 0;
 }
-/* line 69, assetic_compassbfFdS0.scss */
+/* line 69, assetic_compassApLj91.scss */
 .popover-content > .btn-group .btn + .btn {
   margin-left: 0;
 }
 
-/* line 74, assetic_compassbfFdS0.scss */
+/* line 74, assetic_compassApLj91.scss */
 .col-auto {
   flex: 0 0 auto;
   width: auto;
 }
 
-/* line 79, assetic_compassbfFdS0.scss */
+/* line 79, assetic_compassApLj91.scss */
 .page-container {
   padding: 0;
 }
 
-/* line 83, assetic_compassbfFdS0.scss */
+/* line 83, assetic_compassApLj91.scss */
 .top-table-row {
   height: 0;
 }
-/* line 86, assetic_compassbfFdS0.scss */
+/* line 86, assetic_compassApLj91.scss */
 .top-table-row .header-bar {
   background: #fff;
   position: relative;
   text-align: center;
   width: 100%;
 }
-/* line 93, assetic_compassbfFdS0.scss */
+/* line 93, assetic_compassApLj91.scss */
 .top-table-row .ssa-logo {
   background: url("/bundles/app/images/logo.png") 50% 50% no-repeat;
   background-size: 100% auto;
@@ -119,7 +119,7 @@ td {
   text-indent: -1000px;
   width: 250px;
 }
-/* line 105, assetic_compassbfFdS0.scss */
+/* line 105, assetic_compassApLj91.scss */
 .top-table-row .logout-link {
   color: #fff;
   display: inline-block;
@@ -129,29 +129,29 @@ td {
   transition: background-color 0.3s;
   width: 175px;
 }
-/* line 114, assetic_compassbfFdS0.scss */
+/* line 114, assetic_compassApLj91.scss */
 .top-table-row .logout-link:hover, .top-table-row .logout-link:active, .top-table-row .logout-link:focus {
   color: #fff;
   text-decoration: none;
 }
-/* line 121, assetic_compassbfFdS0.scss */
+/* line 121, assetic_compassApLj91.scss */
 .top-table-row .logout-link.dashboard {
   background: #1e92c1;
 }
-/* line 123, assetic_compassbfFdS0.scss */
+/* line 123, assetic_compassApLj91.scss */
 .top-table-row .logout-link.dashboard:hover, .top-table-row .logout-link.dashboard:active, .top-table-row .logout-link.dashboard:focus {
   background: #1b82a7;
 }
-/* line 130, assetic_compassbfFdS0.scss */
+/* line 130, assetic_compassApLj91.scss */
 .top-table-row .logout-link:not(.dashboard) {
   background: #cccccc;
 }
-/* line 132, assetic_compassbfFdS0.scss */
+/* line 132, assetic_compassApLj91.scss */
 .top-table-row .logout-link:not(.dashboard):hover, .top-table-row .logout-link:not(.dashboard):active, .top-table-row .logout-link:not(.dashboard):focus {
   background: #4d4d4d;
 }
 
-/* line 141, assetic_compassbfFdS0.scss */
+/* line 141, assetic_compassApLj91.scss */
 .bottom-table-row {
   height: 100%;
 }
