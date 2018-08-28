@@ -1,0 +1,428 @@
+/* line 3, assetic_compassNPxkHu.scss */
+html,
+body {
+  background: #fff;
+  color: #737373;
+}
+
+/* line 9, assetic_compassNPxkHu.scss */
+.bootstrap-select.show > .dropdown-menu {
+  height: 100vh;
+  min-height: 100px !important;
+}
+
+/* line 14, assetic_compassNPxkHu.scss */
+.bootstrap-select.show > .dropdown-menu > .dropdown-menu {
+  display: block;
+  height: 100%;
+  max-height: none !important;
+  min-height: none !important;
+  position: absolute;
+  top: 0;
+}
+
+/* line 23, assetic_compassNPxkHu.scss */
+.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+  vertical-align: middle;
+}
+
+/* line 27, assetic_compassNPxkHu.scss */
+.text-input::-webkit-input-placeholder {
+  color: #fff;
+  opacity: .4;
+}
+
+/* line 32, assetic_compassNPxkHu.scss */
+.text-input::-moz-placeholder {
+  @extends .home-form-control::-webkit-input-placeholder;
+}
+
+/* line 36, assetic_compassNPxkHu.scss */
+.text-input:-ms-input-placeholder {
+  @extends .home-form-control::-webkit-input-placeholder;
+}
+
+/* line 40, assetic_compassNPxkHu.scss */
+h3 {
+  color: #1e92c1;
+  font-size: 1.4rem;
+}
+
+/* line 45, assetic_compassNPxkHu.scss */
+.session-text-outer {
+  padding: 55px 20px 55px 45px;
+}
+
+/* line 49, assetic_compassNPxkHu.scss */
+.session-text {
+  font-size: 1.1rem;
+}
+
+/* line 53, assetic_compassNPxkHu.scss */
+.session-media {
+  padding: 45px 45px 45px 20px;
+}
+
+/* line 58, assetic_compassNPxkHu.scss */
+.col-media {
+  max-width: 1000px;
+  width: 50%;
+}
+
+/* line 64, assetic_compassNPxkHu.scss */
+.session-media img {
+  width: 100%;
+}
+/* line 68, assetic_compassNPxkHu.scss */
+.session-media .embed-container {
+  height: auto;
+  max-width: 100%;
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+}
+/* line 76, assetic_compassNPxkHu.scss */
+.session-media .embed-container iframe,
+.session-media .embed-container object,
+.session-media .embed-container embed {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+/* line 87, assetic_compassNPxkHu.scss */
+.session-question-row {
+  background: #1e92c1;
+  color: #fff;
+  font-size: 1.6rem;
+  padding: 40px;
+  text-align: center;
+}
+
+/* line 95, assetic_compassNPxkHu.scss */
+.session-question {
+  margin-bottom: .5rem;
+}
+
+/* line 99, assetic_compassNPxkHu.scss */
+.session-input {
+  display: block;
+  font-size: 0;
+  margin-bottom: 10px;
+  position: relative;
+  text-align: center;
+}
+/* line 106, assetic_compassNPxkHu.scss */
+.session-input .radio-wrapper-outer,
+.session-input .checkbox-wrapper-outer {
+  display: inline-block;
+  max-width: 600px;
+  position: relative;
+  width: 100%;
+}
+/* line 112, assetic_compassNPxkHu.scss */
+.session-input .radio-wrapper-outer .custom-control-indicator,
+.session-input .checkbox-wrapper-outer .custom-control-indicator {
+  display: none;
+}
+/* line 117, assetic_compassNPxkHu.scss */
+.session-input .custom-control {
+  margin: 0;
+  padding: 0;
+}
+/* line 121, assetic_compassNPxkHu.scss */
+.session-input .custom-control.text-radio {
+  width: 50%;
+}
+/* line 125, assetic_compassNPxkHu.scss */
+.session-input .custom-control.emoticon-radio {
+  margin: 0 20px;
+}
+/* line 130, assetic_compassNPxkHu.scss */
+.session-input .custom-control-description {
+  background: #1b82a7;
+  border: 1px solid #1e92c1;
+  color: rgba(255, 255, 255, 0.6);
+  padding: .5rem 1rem;
+  transition: color .3s;
+  width: 100%;
+}
+/* line 139, assetic_compassNPxkHu.scss */
+.session-input .custom-control-description,
+.session-input .bootstrap-select .btn,
+.session-input .text-input,
+.session-input .input-group-addon.text-pre {
+  font-size: 1.4rem;
+}
+/* line 146, assetic_compassNPxkHu.scss */
+.session-input .bootstrap-select .btn,
+.session-input .text-input,
+.session-input .input-group-addon.text-pre {
+  background: rgba(255, 255, 255, 0.2);
+  border: 0;
+  color: #fff;
+}
+/* line 153, assetic_compassNPxkHu.scss */
+.session-input .bootstrap-select .btn ~ .input-group-addon,
+.session-input .text-input ~ .input-group-addon,
+.session-input .input-group-addon.text-pre ~ .input-group-addon {
+  background: rgba(255, 255, 255, 0.2);
+  border: 0;
+  color: #fff;
+}
+/* line 160, assetic_compassNPxkHu.scss */
+.session-input .input-group-addon.text-pre {
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+/* line 164, assetic_compassNPxkHu.scss */
+.session-input .bootstrap-select {
+  max-width: 500px;
+  padding: 0;
+}
+/* line 169, assetic_compassNPxkHu.scss */
+.session-input .bootstrap-select > .dropdown-toggle:hover, .session-input .bootstrap-select > .dropdown-toggle:focus, .session-input .bootstrap-select > .dropdown-toggle:active {
+  color: #fff;
+  outline: none !important;
+}
+/* line 178, assetic_compassNPxkHu.scss */
+.session-input .dropdown-toggle::after {
+  border-width: .4em .3em  0;
+  margin-left: 0;
+}
+/* line 183, assetic_compassNPxkHu.scss */
+.session-input .dropdown-menu {
+  padding: 0;
+}
+/* line 186, assetic_compassNPxkHu.scss */
+.session-input .dropdown-menu li a {
+  display: inline-block;
+  font-size: 1.2rem;
+  padding: .5rem 1rem;
+  width: 100%;
+}
+/* line 192, assetic_compassNPxkHu.scss */
+.session-input .dropdown-menu li a:focus {
+  outline: none;
+}
+/* line 198, assetic_compassNPxkHu.scss */
+.session-input .text-input-outer {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+}
+/* line 203, assetic_compassNPxkHu.scss */
+.session-input .text-input-outer.text {
+  max-width: 800px;
+}
+/* line 207, assetic_compassNPxkHu.scss */
+.session-input .text-input-outer.number, .session-input .text-input-outer.date {
+  max-width: 360px;
+}
+/* line 213, assetic_compassNPxkHu.scss */
+.session-input .text-input {
+  line-height: 1.25;
+  padding: 15px;
+  width: 100%;
+}
+/* line 218, assetic_compassNPxkHu.scss */
+.session-input .text-input:focus {
+  outline: none;
+}
+/* line 223, assetic_compassNPxkHu.scss */
+.session-input .custom-radio .custom-control-input:checked ~ .custom-control-description,
+.session-input .custom-checkbox .custom-control-input:checked ~ .custom-control-description {
+  color: #fff;
+}
+/* line 228, assetic_compassNPxkHu.scss */
+.session-input .custom-control-emoticon {
+  display: inline-block;
+  height: 75px;
+  opacity: .2;
+  transition: opacity .3s;
+  width: 75px;
+}
+/* line 236, assetic_compassNPxkHu.scss */
+.session-input .happy .custom-control-emoticon {
+  background: url("/bundles/app/svg/happy.svg") 50% 50% no-repeat;
+}
+/* line 240, assetic_compassNPxkHu.scss */
+.session-input .neutral .custom-control-emoticon {
+  background: url("/bundles/app/svg/neutral.svg") 50% 50% no-repeat;
+}
+/* line 244, assetic_compassNPxkHu.scss */
+.session-input .sad .custom-control-emoticon {
+  background: url("/bundles/app/svg/sad.svg") 50% 50% no-repeat;
+}
+/* line 248, assetic_compassNPxkHu.scss */
+.session-input .custom-radio .custom-control-input:checked ~ .custom-control-emoticon {
+  opacity: 1;
+}
+
+/* line 253, assetic_compassNPxkHu.scss */
+.session-continue-row {
+  padding: 30px;
+  text-align: center;
+}
+
+/* line 258, assetic_compassNPxkHu.scss */
+.custom-control {
+  margin-right: 0;
+  padding-left: 0;
+}
+
+/* line 263, assetic_compassNPxkHu.scss */
+.quit-plan {
+  position: fixed;
+  left: 100%;
+  height: 96vh;
+  top: 2vh;
+  width: 600px;
+  transition: .5s transform;
+}
+/* line 270, assetic_compassNPxkHu.scss */
+.quit-plan .quit-plan-tab {
+  position: absolute;
+  box-shadow: -2px 2px 2px 0 rgba(115, 115, 115, 0.5);
+  bottom: .5rem;
+  right: 100%;
+  background: url("/bundles/app/svg/calendar-blue.svg") 50% 0.75rem no-repeat #fff;
+  -webkit-background-size: 1.9rem auto;
+  background-size: 1.9rem auto;
+  width: 6.5rem;
+  height: 6.5rem;
+  padding: 3.2rem 1rem 1rem 1rem;
+  color: #1e92c1;
+  text-align: center;
+  font-size: .9rem;
+  line-height: normal;
+  z-index: 2;
+  border: 0 solid #cccccc;
+  border-top-width: 1px;
+}
+/* line 288, assetic_compassNPxkHu.scss */
+.quit-plan .quit-plan-tab:after {
+  content: "Show my quit plan";
+}
+/* line 293, assetic_compassNPxkHu.scss */
+.quit-plan.open {
+  transform: translate3d(-600px, 0, 0);
+}
+/* line 295, assetic_compassNPxkHu.scss */
+.quit-plan.open .quit-plan-tab {
+  background-image: url("/bundles/app/svg/close.svg");
+}
+/* line 297, assetic_compassNPxkHu.scss */
+.quit-plan.open .quit-plan-tab:after {
+  content: "Hide my quit plan";
+}
+/* line 303, assetic_compassNPxkHu.scss */
+.quit-plan .quit-plan-info {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: #fff;
+  box-shadow: -1px 1px 2px 1px rgba(115, 115, 115, 0.5);
+  z-index: 1;
+}
+/* line 312, assetic_compassNPxkHu.scss */
+.quit-plan .quit-plan-info h2 {
+  margin-top: 3rem;
+  font-size: 1.8rem;
+}
+/* line 315, assetic_compassNPxkHu.scss */
+.quit-plan .quit-plan-info h2:before {
+  content: '';
+  width: 2.5rem;
+  height: 2.5rem;
+  position: relative;
+  margin-right: .5rem;
+  background: url("/bundles/app/svg/calendar-blue.svg") 50% 50% no-repeat;
+  background-size: contain;
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: -.7rem;
+}
+/* line 330, assetic_compassNPxkHu.scss */
+.quit-plan .quit-plan-info .table td {
+  padding: 1.5rem;
+}
+/* line 334, assetic_compassNPxkHu.scss */
+.quit-plan .quit-plan-info .table p.question {
+  font-weight: bold;
+  margin-bottom: .5rem;
+}
+/* line 338, assetic_compassNPxkHu.scss */
+.quit-plan .quit-plan-info .table p.answer {
+  margin-bottom: 0;
+}
+@media (max-width: 809px) {
+  /* line 263, assetic_compassNPxkHu.scss */
+  .quit-plan {
+    width: 98vw;
+  }
+  /* line 347, assetic_compassNPxkHu.scss */
+  .quit-plan.open {
+    transform: translate3d(-98vw, 0, 0);
+  }
+  /* line 350, assetic_compassNPxkHu.scss */
+  .quit-plan .quit-plan-tab {
+    transition: .5s transform;
+    width: 3.5rem;
+    height: 3.5rem;
+    -webkit-background-size: 1.2rem auto;
+    background-size: 1.2rem auto;
+    padding: 2rem .2rem .2rem .2rem;
+    border-width: 1px;
+  }
+  /* line 358, assetic_compassNPxkHu.scss */
+  .quit-plan .quit-plan-tab:after {
+    content: 'Show';
+  }
+  /* line 363, assetic_compassNPxkHu.scss */
+  .quit-plan.open .quit-plan-tab {
+    transform: translate3d(3rem, 0, 0);
+  }
+  /* line 365, assetic_compassNPxkHu.scss */
+  .quit-plan.open .quit-plan-tab:after {
+    content: 'Hide';
+  }
+  /* line 371, assetic_compassNPxkHu.scss */
+  .quit-plan .quit-plan-info h2 {
+    font-size: 1.4rem;
+  }
+  /* line 373, assetic_compassNPxkHu.scss */
+  .quit-plan .quit-plan-info h2:before {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+@media (max-width: 809px) {
+  /* line 383, assetic_compassNPxkHu.scss */
+  .session-text-outer {
+    padding: 30px 10px;
+  }
+
+  /* line 387, assetic_compassNPxkHu.scss */
+  .session-text {
+    font-size: .9rem;
+  }
+
+  /* line 391, assetic_compassNPxkHu.scss */
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  /* line 395, assetic_compassNPxkHu.scss */
+  .session-media {
+    padding: 0 0 45px;
+  }
+
+  /* line 399, assetic_compassNPxkHu.scss */
+  .session-question-row {
+    font-size: 1.45rem;
+  }
+}
