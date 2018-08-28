@@ -26,7 +26,7 @@ class Page
      * @ORM\Column(type="integer", nullable=false, options={"default" : 1})
      * @Assert\Range(
      *      min = 1,
-     *      max = 6,
+     *      max = 8,
      *      minMessage = "The session week number must be at least 1",
      *      maxMessage = "The session week number cannot be greater than 6"
      * )

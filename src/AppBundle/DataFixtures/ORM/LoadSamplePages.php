@@ -39,7 +39,7 @@ class LoadSamplePages implements FixtureInterface, ContainerAwareInterface, Orde
 
         // validate
         $errors = $this->validator->validate($page);
-        if (count($errors) > 0) {
+        if (\count($errors) > 0) {
             $errorsString = (string) $errors;
             throw new \Exception($errorsString);
         }
@@ -58,20 +58,20 @@ class LoadSamplePages implements FixtureInterface, ContainerAwareInterface, Orde
     /**
      * Helper method to return an already existing Locator from the database, else create and return a new one
      *
-     * @param string        $name
+     * @param $sessionNumber
      * @param ObjectManager $manager
      *
      * @return Page
      */
-    protected function findOrCreateLocator($sessioNumber, ObjectManager $manager)
+    protected function findOrCreateLocator($sessionNumber, ObjectManager $manager)
     {
-        return $manager->getRepository('AppBundle\Entity\Page')->findOneBy(['session' => $sessioNumber]) ?: new Page();
+        return $manager->getRepository(Page::class)->findOneBy(['session' => $sessionNumber]) ?: new Page();
     }
 
     public function load(ObjectManager $manager)
     {
         $this->manager = $manager;
-        $counter = 6;
+        $counter = 8;
         while ($counter>0) {
             $locator = $this->findOrCreateLocator($counter, $this->manager);
             if (!$this->manager->contains($locator)) {

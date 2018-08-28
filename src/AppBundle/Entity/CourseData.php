@@ -51,7 +51,6 @@ class CourseData
 
     /**
      * @ORM\Column(type="json", length=255, nullable=true)
-     * @Assert\NotBlank(message="Please answer the question before you continue")
     */
     protected $value;
 
@@ -62,6 +61,11 @@ class CourseData
      */
     private $question;
 
+    /**
+     * @ORM\Column(type="json", length=255, nullable=true)
+     */
+    private $displayText;
+
     public function __construct(Question $question)
     {
         $this->question = $question;
@@ -69,10 +73,10 @@ class CourseData
     }
 
     /**
-     * @Assert\Callback
+     * @Assert\Callback()
      * @param ExecutionContextInterface $context
      */
-    public function validate(ExecutionContextInterface $context)
+    public function validate(ExecutionContextInterface $context): void
     {
         if ($this->question->getInputType() === 'choice_multi') {
             $answersProvided  = \count($this->value);
@@ -86,6 +90,10 @@ class CourseData
                     ->atPath('value')
                     ->addViolation();
             }
+        } elseif($this->value === '' || $this->value === null) {
+            $context->buildViolation('Please answer the question before you continue')
+                ->atPath('value')
+                ->addViolation();
         }
     }
 
@@ -239,5 +247,28 @@ class CourseData
     public function setQuestion(Question $question)
     {
         $this->question = $question;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDisplayText()
+    {
+        return $this->displayText ?: $this->getValue();
+    }
+
+    /**
+     * @param mixed $displayText
+     * @return self
+     */
+    public function setDisplayText($displayText): self
+    {
+        $this->displayText = $displayText;
+        return $this;
+    }
+
+    public function getInputType(): string
+    {
+        return $this->question->getInputType();
     }
 }

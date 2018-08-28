@@ -2,8 +2,10 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use function is_array;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -47,6 +49,7 @@ class Question
 
     /**
      * @ORM\OneToMany(targetEntity="Answer", mappedBy="question", cascade={"all"})
+     * @var Answer[]|Collection
      */
     protected $answer_options;
 
@@ -208,7 +211,7 @@ class Question
     /**
      * Get answerOptions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|Answer[]
      */
     public function getAnswerOptions()
     {
@@ -261,5 +264,25 @@ class Question
     public function setMinAnswers(int $minAnswers): void
     {
         $this->minAnswers = $minAnswers;
+    }
+
+    public function getDisplayTextForAnswerValue($value)
+    {
+        // $value may be an array
+        if (is_array($value)) {
+            $return = [];
+            foreach ($value as $v) {
+                $return[] = $this->getDisplayTextForAnswerValue($v);
+            }
+            return $return;
+        }
+
+        foreach($this->answer_options as $answer)
+        {
+            if ($answer->getSaveValue() === $value) {
+                return $answer->getAnswer();
+            }
+        }
+        return null;
     }
 }

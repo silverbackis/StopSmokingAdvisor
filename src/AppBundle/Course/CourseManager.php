@@ -4,6 +4,7 @@ namespace AppBundle\Course;
 
 use AppBundle\Entity\Course;
 use AppBundle\Entity\CourseData;
+use AppBundle\Entity\Page;
 use AppBundle\Entity\Session;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -71,7 +72,7 @@ class CourseManager
         return $this->session_manager->getData($key);
     }
 
-    public function getCurrentPage()
+    public function getCurrentPage(): ?Page
     {
         return $this->session_manager->getCurrentPage();
     }
@@ -214,18 +215,18 @@ class CourseManager
         // Set the availability of the current session
         $quit_date = $this->session_manager->getData('quit_date');
         $this->quit_date = null === $quit_date ? null : new \DateTime($quit_date);
-
         if (
             null === $this->course->getLatestSession() ||
             $this->course->getLatestSession()->getId() !== $this->current_session->getId()
         ) {
             $this->course->setLatestSession($this->current_session);
-
+            $available = (new \DateTime())->setTime(0, 0, 0);
             if ($this->current_session->getCompleted()) {
                 $this->course->setSessionAvailable(null);
                 $this->course->setSessionExpire(null);
-            } elseif (null === $this->quit_date || 1 === $this->current_session->getSession()) {
-                $this->course->setSessionAvailable((new \DateTime())->setTime(0, 0, 0));
+            } elseif (null === $this->quit_date || 1 === $this->current_session->getSession() || $this->auth_checker->isGranted('ROLE_ADMIN')) {
+                // Available now if we don't have a quit date or it is the first session or admin user
+                $this->course->setSessionAvailable($available);
                 $this->course->setSessionExpire(null);
             } else {
                 // The available from and expiry dates will be based on the week number and the quit date
@@ -241,7 +242,7 @@ class CourseManager
                 $this->course->setSessionAvailable($available->modify("+$daysFromQuitAvailable days"));
 
                 $expire = clone $available;
-                $this->course->setSessionExpire($expire->modify("+6 days"));
+                $this->course->setSessionExpire($expire->modify('+6 days'));
             }
 
             $this->em->persist($this->course);
@@ -251,15 +252,16 @@ class CourseManager
 
     public function sessionPageAction(Request $request, int $pageID = null)
     {
-        if ($pageID !== null && !$this->auth_checker->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException('You are not permitted to request a page to view');
-        }
-        if (!$this->isSessionAvailable()) {
-            $this->session_manager->addFlash(
-                'warning',
-                "Sorry, it doesn't look like you have any sessions available at the moment."
-            );
-            return new RedirectResponse($this->router->generate('account_dashboard'));
+        if ($pageID === null) {
+            if (!$this->isSessionAvailable()) {
+                $this->session_manager->addFlash(
+                    'warning',
+                    "Sorry, it doesn't look like you have any sessions available at the moment."
+                );
+                return new RedirectResponse($this->router->generate('account_dashboard'));
+            }
+        } elseif (!$this->auth_checker->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException('You are not permitted to request a page to view. Only administrators can do that.');
         }
         return $this->session_manager->sessionPageAction($request, $pageID);
     }
@@ -270,11 +272,14 @@ class CourseManager
         $questions = $page->getQuestions();
         $question = $questions[0];
         if ($this->session_manager->isValidQuestion($question)) {
-            $this->addFlash(
-                'danger',
-                'Please answer the question before proceeding'
-            );
-            return new RedirectResponse($this->router->generate('account_session'));
+            $answerRequired = $question->getInputType() === 'choice_multi' ?  $question->getMinAnswers() > 0 : true;
+            if ($answerRequired) {
+                $this->addFlash(
+                    'danger',
+                    'Please answer the question before proceeding'
+                );
+                return new RedirectResponse($this->router->generate('account_session'));
+            }
         }
 
         // If we get here, we can proceed to next page

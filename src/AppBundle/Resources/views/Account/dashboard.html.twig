@@ -99,20 +99,20 @@
                   <tr>
                     <td class="h-100 dashboard-feature-content text-center">
                       {% if session_available %}
-                      <h1>{{ session_number > 1 ? 'Welcome Back!' : 'Ready to try and quit?' }}</h1>
-                      <h2>Your {{ session_number > 1 ? 'next' : 'first' }} session is {{ session_started ? 'still' : 'now' }} available</h2>
+                        <h1>{{ session_number > 1 ? 'Welcome Back!' : 'Ready to try and quit?' }}</h1>
+                        <h2>Your {{ session_number > 1 ? 'next' : 'first' }} session is {{ session_started ? 'still' : 'now' }} available</h2>
 
-                      <a href="{{ path('account_session') }}" class="btn btn-lg btn-success btn-start">{{ session_started ? 'Continue' : 'Start Now' }} <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="Continue to session" /></a>
+                        <a href="{{ path('account_session') }}" class="btn btn-lg btn-success btn-start">{{ session_started ? 'Continue' : 'Start Now' }} <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="Continue to session" /></a>
                       {% elseif session_expired %}
-                      <h1>Oh No!</h1>
-                      <h2>Session {{ session_number }} expired on {{ session_expired_date }}.</h2>
-                      <h2 class="text-next-session">Remember: Each session is only available for 1 week after it unlocks.</h2>
-                      <a href="{{ path('account_restart') }}" class="btn btn-lg btn-success btn-start">Start Again <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="Restart Stop Smoking Advisor" /></a>
+                        <h1>Oh No!</h1>
+                        <h2>Session {{ session_number }} expired on {{ session_expired_date }}.</h2>
+                        <h2 class="text-next-session">Remember: Each session is only available for 1 week after it unlocks.</h2>
+                        <a href="{{ path('account_restart') }}" class="btn btn-lg btn-success btn-start">Start Again <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="Restart Stop Smoking Advisor" /></a>
                       {% else %}
-                      <h1>Great job!<br />
-                      You've finished session {{ session_number-1 }}</h1>
-                      <h2 class="text-next-session">Your next session: {{ session_available_date }}</h2>
-                      <h3 class="reminder-info">{{ reminder_emails ? 'You will receive a reminder email' : 'Please be aware you will not receive a reminder email' }} <a href="{{ path('account_settings') }}">(change)</a></h3>
+                        <h1>Great job!<br />
+                        You've completed session {{ session_number-1 }}.</h1>
+                        <h2 class="text-next-session">Your next session: {{ session_available_date }}</h2>
+                        <h3 class="reminder-info">{{ reminder_emails ? 'You will receive a reminder email' : 'Please be aware you will not receive a reminder email' }} <a href="{{ path('account_settings') }}">(change)</a></h3>
                       {% endif %}
                     </td>
                   </tr>

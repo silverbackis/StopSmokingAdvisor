@@ -8,8 +8,9 @@ use AppBundle\Entity\Question;
 use AppBundle\Entity\Session;
 use AppBundle\Entity\SessionPageView;
 use AppBundle\Form\SessionType;
-use function array_walk;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Sonata\SeoBundle\Seo\SeoPage;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
@@ -69,9 +70,11 @@ class SessionManager
         return $this->session;
     }
 
-    public function isValidQuestion(Question $question = null)
+    public function isValidQuestion(Question $question = null): bool
     {
-        return null !== $question && null !== $question->getVariable() && '' !== $question->getVariable();
+        $questionExists = null !== $question;
+        $variableExists = null !== $question->getVariable() && '' !== $question->getVariable();
+        return $questionExists && $variableExists;
     }
 
     public function getCurrentPage()
@@ -207,9 +210,11 @@ class SessionManager
             foreach ($quitPlanQuestions as $question)
             {
                 if (isset($dataWithKeys[$question->getVariable()])) {
+                    /** @var CourseData $courseDataItem */
+                    $courseDataItem = $dataWithKeys[$question->getVariable()];
                     $quitPlan[] = [
                         'question' => $question,
-                        'answer' => $this->convertDataToHumanReadable($dataWithKeys[$question->getVariable()]->getValue())
+                        'answer' => $this->convertDataToHumanReadable($courseDataItem)
                     ];
                 }
             }
@@ -301,7 +306,9 @@ class SessionManager
                     if ($preview) {
                         return new RedirectResponse($this->router->generate('admin_manage_view'));
                     }
-
+                    /** @var CourseData $CourseData */
+                    $CourseData = $form->getData();
+                    $CourseData->setDisplayText($question->getDisplayTextForAnswerValue($CourseData->getValue()));
                     $this->em->persist($CourseData);
                     $this->em->flush();
                     if ($question->getInputType() === 'choice_boolean_continue' && $CourseData->getValue() !== 'bool_1') {
@@ -312,6 +319,7 @@ class SessionManager
                     // This function wil flush too, but need to flush data first for next page function to use it if necessary
                     return $this->setNextPage();
                 }
+
                 $this->em->detach($CourseData);
                 foreach ($form->getErrors(true) as $error) {
                     $this->_session->getFlashBag()->add(
@@ -375,18 +383,33 @@ class SessionManager
         );
     }
 
-    private function convertDataToHumanReadable($data)
+    /**
+     * @param CourseData $data
+     * @param null $value
+     * @return array|bool|string
+     */
+    private function convertDataToHumanReadable(CourseData $data, $value = null)
     {
-        if (\is_array($data)) {
+        if (!$value) {
+            $value = $data->getDisplayText();
+        }
+        if (\is_array($value)) {
             $newData = [];
-            foreach($data as $datum) {
-                $newData[] = $this->convertDataToHumanReadable($datum);
+            foreach($value as $childValue) {
+                $newData[] = $this->convertDataToHumanReadable($data, $childValue);
             }
             return $newData;
         }
-        $newData = $this->convertBoolData($data);
+        $newData = $this->convertBoolData($value);
         if (\is_bool($newData)) {
             return $newData ? 'Yes' : 'No';
+        }
+        $datePrefix = 'date';
+        if ($newData && strpos($data->getInputType(), $datePrefix) === 0) {
+            try {
+                $newData = (new DateTimeImmutable($newData))->format('dS F Y');
+            } catch (Exception $e) {
+            }
         }
         return $newData;
     }
