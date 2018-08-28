@@ -157,7 +157,7 @@ class AdminActions
 
     public function copyPage(int $pageID, Request $request)
     {
-        $data = $this->validatePost($request, ['sort', 'parent']);
+        $data = $this->validatePost($request, ['sort', 'parent', 'session']);
         if ($data instanceof JsonResponse) {
             return $data;
         }
@@ -168,6 +168,7 @@ class AdminActions
         }
 
         $pageCopy = clone $page;
+        $pageCopy->setSession($data['session']);
 
         // apply data to page and validate
         $validResponse = $this->validateEntity($pageCopy, $data);
@@ -176,7 +177,7 @@ class AdminActions
         }
 
         // Page will be added, update other page orders to make room for the new page
-        $this->updateOrder($page->getSession(), $data['parent'], $data['sort'], true);
+        $this->updateOrder($data['session'], $data['parent'], $data['sort'], true);
 
         //persist new page the database
         $this->doctrine->persist($pageCopy);
@@ -253,7 +254,7 @@ class AdminActions
         }
 
         // Create query
-        $query = $qb->update('AppBundle\Entity\Page', 'p')
+        $query = $qb->update(Page::class, 'p')
             ->set('p.sort', 'p.sort+' . $changeBy)
             ->where($whereStr)
             ->getQuery();

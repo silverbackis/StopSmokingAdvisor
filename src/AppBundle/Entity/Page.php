@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -120,6 +121,7 @@ class Page
     /**
      * @ORM\OneToMany(targetEntity="Page", mappedBy="parent", cascade={"all"})
      * @ORM\OrderBy({"sort" = "ASC"})
+     * @var Page[]|Collection
      */
     protected $children;
     
@@ -196,7 +198,9 @@ class Page
     public function setSession($session)
     {
         $this->session = $session;
-
+        foreach($this->children as $child) {
+            $child->setSession($session);
+        }
         return $this;
     }
 
