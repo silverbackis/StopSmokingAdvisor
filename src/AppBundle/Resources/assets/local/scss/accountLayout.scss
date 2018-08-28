@@ -35,6 +35,15 @@ body {
   position: absolute;
   right: 0;
   top: 0;
+  a {
+    color: inherit;
+  }
+}
+
+.faq-modal {
+  h6 {
+    color: $brand-primary;
+  }
 }
 
 .session-header-row {

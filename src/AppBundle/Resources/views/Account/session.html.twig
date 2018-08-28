@@ -26,6 +26,7 @@
 {% endblock %}
 
 {% block body %}
+  {% include 'AppBundle:Account:faqs.html.twig' %}
 
   {% set finish_button %}
     <a href="javascript:window.close();" class="btn btn-lg btn-success btn-start">Finished</a>
@@ -52,11 +53,14 @@
 
     <div class="row no-gutters session-header-row">
       <div class="col-12">
-      <span class="logo-header">
-        <h2>Session {{ session_number }}</h2>
-        <h1>{{ title }}</h1>
-      </span>
-        <a href="{{ preview ? 'javascript:window.close();' : path('account_dashboard') }}" class="exit-link">Exit session</a>
+        <span class="logo-header">
+          <h2>Session {{ session_number }}</h2>
+          <h1>{{ title }}</h1>
+        </span>
+        <div class="exit-link">
+          <a href="#" data-toggle="modal" data-target="#faqModal">FAQs</a> |
+          <a href="{{ preview ? 'javascript:window.close();' : path('account_dashboard') }}">Exit session</a>
+        </div>
       </div>
       <div class="col-12">
         <div class="progress-bar">

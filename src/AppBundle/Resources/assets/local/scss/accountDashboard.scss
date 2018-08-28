@@ -43,7 +43,7 @@
   width: 280px;
 }
 
-.settings-dropdown {
+.dashboard-nav {
   position: absolute;
   right: 0;
   top: -1rem;
@@ -89,6 +89,15 @@
   .dropdown-divider {
     margin: 0;
   }
+}
+
+.faqs {
+  //background: url($asset-svg-base + 'cog.svg') 50% 50% no-repeat;
+  display: block;
+  height: 40px;
+  width: 40px;
+  margin-right: 20px;
+  line-height: 40px;
 }
 
 .settings-cog {
@@ -264,7 +273,7 @@ h2 {
     width: 30px;
   }
 
-  .settings-dropdown {
+  .dashboard-nav {
     .dropdown-menu {
       &:BEFORE {
         right: 3px;

@@ -50,6 +50,7 @@
 {% endblock %}
 
 {% block body %}
+  {% include 'AppBundle:Account:faqs.html.twig' %}
 <div class="container-fluid h-100 page">
     <table class="page-table">
       <tbody>
@@ -80,8 +81,13 @@
                       <div class="row header-row">
                         <div class="col text-center">
                           <img src="{{ asset('bundles/app/svg/logo.svg') }}" class="logo" alt="Stop Smoking Advisor Logo" />
-                          <div class="settings-dropdown">
-                            <div class="dropdown">
+                          <ul class="nav dashboard-nav">
+                            <li class="nav-item dropdown">
+                              <a href="#" data-toggle="modal" data-target="#faqModal" class="faqs">
+                                <span>FAQs</span>
+                              </a>
+                            </li>
+                            <li class="nav-item dropdown">
                               <a href="#" class="settings-cog" id="dropdownSettingsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="sr-only">Settings</span>
                               </a>
@@ -90,8 +96,8 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ path('fos_user_security_logout') }}">Logout</a>
                               </div>
-                            </div>
-                          </div>
+                            </li>
+                          </ul>
                         </div>
                       </div>
                     </td>
