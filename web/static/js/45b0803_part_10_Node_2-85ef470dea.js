@@ -373,7 +373,8 @@ Node.prototype.setCopyMoveAjax = function(child){
 	targetNode = this;
 	var data = {
 		parent: child ? targetNode.nodeData.id : targetNode.getParentId(),
-		sort: child ? 1 : targetNode.nodeData.sort+1
+		sort: child ? 1 : targetNode.nodeData.sort+1,
+		session: targetNode.nodeData.session
 	};
 	// change the sort if we are moving to the same tree/branch just later in the list
 	// e.g. if we are at sort position 1, and we want to move it to beneath sort position 2
