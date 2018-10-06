@@ -1,5 +1,5 @@
 //custom bootstrap variables
-@import 'bootstrap/bootstrap';
+@import '../../global/bootstrap/variables';
 
 $hfcbg: rgba(255, 255, 255, .2);
 $hfcbgon: rgba(255, 255, 255, .25);
@@ -137,7 +137,7 @@ body {
 }
 
 .home-text {
-  text-align: left;
+  text-align: justify;
 }
 
 .copy-notice {
@@ -535,14 +535,15 @@ button:active:hover .link-text-size,
     z-index: 1;
   }
 
-  .form-control-feedback>a {
+  .form-control-feedback > .btn {
     text-decoration: underline;
   }
 }
 
-.form-control-feedback>a {
+.form-control-feedback > a.btn {
   color: $teal-lighter;
   transition: color $transition-dur;
+  padding-right: 0;
 }
 
 .form-control-feedback>a:hover,
@@ -580,7 +581,7 @@ button:active:hover .link-text-size,
   color: $white;
   font-size: 28px;
   font-weight: 300;
-  margin-top: 10px;
+  // margin-top: 10px;
   position: relative;
   z-index: 2;
 }
@@ -590,17 +591,24 @@ button:active:hover .link-text-size,
   color: $white;
 }
 
-.home-form-control::-webkit-input-placeholder {
-  color: $white;
-  opacity: .4;
-}
-
-.home-form-control::-moz-placeholder {
-  @extends .home-form-control::-webkit-input-placeholder;
-}
-
-.home-form-control:-ms-input-placeholder {
-  @extends .home-form-control::-webkit-input-placeholder;
+//.home-form-control::-webkit-input-placeholder {
+//  color: $white;
+//  opacity: .4;
+//}
+//
+//.home-form-control::-moz-placeholder {
+//  @extend .home-form-control::-webkit-input-placeholder;
+//}
+//
+//.home-form-control:-ms-input-placeholder {
+//  @extend .home-form-control::-webkit-input-placeholder;
+//}
+.home-form-control.form-control {
+  &::placeholder {
+    color: $white;
+    // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526.
+    opacity: .4;
+  }
 }
 
 .btn-login,

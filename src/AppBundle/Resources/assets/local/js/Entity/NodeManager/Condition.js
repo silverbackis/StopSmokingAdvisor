@@ -1,3 +1,6 @@
+import NodeManager from '../../Utils/NodeManager'
+import { requests as ajax } from '../../Utils/AjaxManager'
+
 // Condition object and protos
 function Condition(conditionData, nodeID)
 {
@@ -14,7 +17,7 @@ function Condition(conditionData, nodeID)
 	this.nodeID = nodeID;
 	this.conditionData = conditionData;
 	this.$condition = $("<a />",{
-		class: 'btn btn-secondary btn-sm',
+		class: 'btn btn-outline-light btn-sm btn-condition',
 		href: '#',
 		html: conditionData.condition+'&nbsp;&nbsp;',
 		id: 'condition_'+conditionData.id
@@ -28,3 +31,4 @@ function Condition(conditionData, nodeID)
 	this.$conditionSidePanel = this.$condition.clone(true).removeClass("btn-sm").attr("id", 'panel_condition_'+conditionData.id);
 	return this;
 }
+export default Condition

@@ -1,7 +1,11 @@
-var NodeManager = (function($, alert, confirm){
-	var nodes = {};
+import jQuery from 'jquery'
+import BootstrapModalAlerts from '../../../global/BootstrapModalAlerts'
+import Node from '../Entity/NodeManager/Node'
 
-	var public = {
+const NodeManager = (function($, alert, confirm){
+	let nodes = {};
+
+	return {
 		new: function(nodeData, treeBranch){
 			var newNode = new Node(nodeData, treeBranch);
 			nodes[newNode.nodeData.id] = newNode;
@@ -15,5 +19,6 @@ var NodeManager = (function($, alert, confirm){
 			nodes = {};
 		}
 	};
-	return public;
 })(jQuery, BootstrapModalAlerts.alert, BootstrapModalAlerts.confirm);
+
+export default NodeManager

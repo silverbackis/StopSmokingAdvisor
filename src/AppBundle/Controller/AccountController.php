@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Faq;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -32,7 +33,8 @@ class AccountController extends Controller
             'session_available_date' => null === $AVAIL ? null : $AVAIL->format("l jS F"),
             'weekly_spend' => $course_manager->getData('weekly_spend'),
             'quit_date' =>$course_manager->getData('quit_date'),
-            'reminder_emails' => $user_settings->getReminderEmails()
+            'reminder_emails' => $user_settings->getReminderEmails(),
+            'faqs' => $this->getDoctrine()->getRepository(Faq::class)->findBy([], ['sortOrder' => 'ASC'])
         ]);
     }
 

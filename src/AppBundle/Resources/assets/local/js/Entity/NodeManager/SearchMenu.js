@@ -1,3 +1,5 @@
+import { requests as ajax } from '../../Utils/AjaxManager'
+
 function SearchMenu(parentNode)
 {
 	var _self = this;
@@ -133,3 +135,4 @@ SearchMenu.prototype.setResults = function(results){
 		});
 	}
 };
+export default SearchMenu;

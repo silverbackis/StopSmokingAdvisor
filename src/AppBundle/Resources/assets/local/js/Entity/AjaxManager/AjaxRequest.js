@@ -1,3 +1,19 @@
+import { setSaving, submitComplete, setSaved, setError } from '../../Utils/AjaxManager'
+
+export const hashObj = function (object){
+  var string = JSON.stringify(object);
+
+  var hash = 0,
+    i = 0;
+  if (string.length === 0) return hash;
+  for (i; i < string.length; i++) {
+    const char = string.charCodeAt(i);
+    hash = ((hash<<5)-hash)+char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 // Ajax Object
 function AjaxRequest(url, ops)
 {
@@ -39,6 +55,24 @@ function AjaxRequest(url, ops)
 	{
 		return currentRequests[hash];
 	};
+	this.setOps = function(ops) {
+    $.extend(this.ops, ops);
+	}
+	this.getOps = function () {
+		return this.ops
+	}
+  this.extendFn = (fnName, fn) => {
+		const opKey = `${fnName}Fn`
+		if (!this.ops[opKey]) {
+      this.ops[opKey] = fn
+		} else {
+			const orig = this.ops[opKey]
+      this.ops[opKey] = () => {
+        orig(...arguments)
+        fn(...arguments)
+			}
+    }
+  }
 }
 AjaxRequest.prototype.submit = function(data, url, ms, ops){
 	var _self = this;
@@ -214,3 +248,7 @@ AjaxRequest.prototype.ajaxSuccess = function(localOps, response, jqueryAjaxScope
 		localOps.successFn(response, this, jqueryAjaxScope);
 	}
 };
+
+export default AjaxRequest
+
+

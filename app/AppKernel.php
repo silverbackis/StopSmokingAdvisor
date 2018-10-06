@@ -16,15 +16,16 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
-            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
-            new Irozgar\GulpRevVersionsBundle\IrozgarGulpRevVersionsBundle(),
             new Sonata\SeoBundle\SonataSeoBundle(),
             new BW\BaseBundle\BWBaseBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new UserBundle\UserBundle(),
+            new Http\HttplugBundle\HttplugBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
             new PlUploadBundle\PlUploadBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle(),
+            new FOS\CKEditorBundle\FOSCKEditorBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

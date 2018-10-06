@@ -189,7 +189,7 @@ class AdminActions
     public function movePage(int $pageID, Request $request)
     {
         // Get the post data (sort and parent)
-        $data = $this->validatePost($request, ['sort', 'parent']);
+        $data = $this->validatePost($request, ['sort', 'parent', 'session']);
 
         if ($data instanceof JsonResponse) {
             return $data;
@@ -204,7 +204,7 @@ class AdminActions
 
         // Set variables for where the page is currently
         $oldInfo = [
-            'parent' => (null == $page->getParent() ? null : $page->getParent()->getId()),
+            'parent' => null === $page->getParent() ? null : $page->getParent()->getId(),
             'sort' => $page->getSort()
         ];
 
@@ -216,10 +216,10 @@ class AdminActions
         $this->doctrine->flush();
 
         //Update order of OTHER entities where page is moving FROM
-        $this->updateOrder($page->getSession(), $oldInfo['parent'], $oldInfo['sort'], false, $movePageId);
+        $this->updateOrder($data['session'], $oldInfo['parent'], $oldInfo['sort'], false, $movePageId);
 
         //Update order of OTHER entities where page is moving TO
-        $this->updateOrder($page->getSession(), $data['parent'], $data['sort'], true, $movePageId);
+        $this->updateOrder($data['session'], $data['parent'], $data['sort'], true, $movePageId);
 
         return $this->getOKResponse($page);
     }

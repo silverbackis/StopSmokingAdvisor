@@ -56,7 +56,7 @@ class CourseData
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Question")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      * @var Question
      */
     private $question;

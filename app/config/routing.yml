@@ -13,6 +13,11 @@ user_bundle:
     resource: "@UserBundle/Controller/DefaultController.php"
     type:     annotation
 
+easy_admin_bundle:
+    resource: "@EasyAdminBundle/Controller/AdminController.php"
+    type:     annotation
+    prefix:   /admin/manage
+
 
 #HWIOAuthBundle routes
 hwi_oauth_security:
@@ -21,11 +26,12 @@ hwi_oauth_security:
 
 hwi_oauth_connect:
     resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
-    prefix: /login
+    prefix: /connect
 
 hwi_oauth_redirect:
     resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
-    prefix:   /login
+    prefix:   /connect
+
 
 #OAuth Callbacks
 facebook_login:

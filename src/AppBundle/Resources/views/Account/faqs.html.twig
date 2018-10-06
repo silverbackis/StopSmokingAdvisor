@@ -1,3 +1,7 @@
+{% macro faq(question, answer) %}
+  <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
+{% endmacro %}
+
 <div class="modal fade faq-modal" id="faqModal" tabindex="-1" role="dialog" aria-labelledby="faqModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -7,230 +11,27 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <h6>What if I suffer from a mental health problem?</h6>
-        <section>
-          <p>A Roughly a quarter of all adults in Britain suffer some kind of mental health problem. Whatever your problem, you may be worried that quitting smoking will make it worse. In fact,
-            usually things improve. Here are a few tips:</p>
-          <ul>
-            <li>Consider using either Champix or nicotine replacement therapy (NRT). Champix has been shown to help smokers with depression and schizophrenia to give up cigarettes. If your doctor says
-              you can’t use Champix you can point them to the guidance from the medicine regulators.
-            </li>
-            <li>Getting support for your mental health problem can help with stopping smoking. Find a qualified psychologist who can teach you CBT (cognitive behavioural therapy), or try an
-              internet-based course like Moodgym: https://moodgym.com.au/
-            </li>
-            <li>If you’re taking medication for schizophrenia, your doctor will need to check your dose and potentially reduce it as time goes by. This is because when you stop smoking your liver
-              doesn’t get rid of the medicine so quickly.
-            </li>
-            <li>Don’t be alarmed by the nicotine withdrawal symptoms. Irritability, sleep problems, and many other reactions are normal and go away fairly quickly. If you’re using a nicotine product,
-              use more of it to reduce these symptoms.
-            </li>
-            <li>You may need to take NRT or Champix for longer than 8-12 weeks. Your doctor should be able to give you a prescription for as long as you need.</li>
-          </ul>
-        </section>
-
-
-        <h6>I’m over 70 – do you have any special advice?</h6>
-        <section>
-          <p>A If you’re over 70, statistically your chances of stopping smoking are pretty good. Here are a few tips:</p>
-          <ul>
-            <li>You might already have some poor health caused by smoking, and it may get worse for a short while before it improves e.g. your cough might get worse for a couple of weeks. Also, if you
-              have chronic lung disease, stopping smoking could trigger an acute event, so make sure your doctor knows what you’re doing, and you’re ready with your inhaler.
-            </li>
-            <li>If you have an issue with your kidneys, you should probably take half the dose of your stop smoking medicine, or just stick to nicotine products.</li>
-            <li>A common reason for quitting is to be able to spend as much time with your grandchildren as possible. Thinking about this can be a strong source of motivation.</li>
-          </ul>
-        </section>
-
-         
-        <h6>I’m a teenager – is there any special advice you can give me?</h6>
-        <section>
-          <p>A My research shows that very often young smokers want to stop even more than older ones – but they find it more difficult. Fortunately, there are many benefits to quitting when you’re
-            young. First: you’ll be happier. Research shows that most people, no matter what they’re age, are more satisfied and happier with life after stopping smoking. Second: you’ll save a lot of
-            money. Money is often in short supply when you’re young, so that’s a big bonus. Also, your complexion will be better, you won’t smell of cigarettes, you’ll enjoy food more, and so on . .
-            .</p>
-
-          <p>But because you’re young, you may think: ‘I can always stop later on’. And this makes it easier to cave in. It’s also harder to avoid peer pressure when you’re a teenager. Nevertheless,
-            it can be done! Here are my tips:</p>
-          <ul>
-            <li>Follow the same advice I give to adult smokers – in particular, work on viewing yourself as a non-smoker, and making that part of your core identity.</li>
-            <li>Prepare ways of saying you don’t smoke anymore, so you don’t feel pressured by your friends into smoking.</li>
-            <li>Try using a nicotine product to help you cope with the withdrawal symptoms, like feeling irritable. This will be particularly important during exam season when you need to
-              concentrate!
-            </li>
-          </ul>
-        </section>
-
-        <h6>What if I’m pregnant?</h6>
-        <section>
-          <p>A Obviously stopping smoking is incredibly important if you’re pregnant – it will improve your child’s entire life. But I know it can be difficult and stressful. You shouldn’t take any
-            stop smoking prescription medicines (Champix, Zyban or cytisine). However, don’t worry if you have been taking them and discover you’re pregnant. We have no evidence they harm the
-            baby.</p>
-          <ul>
-            <li>I recommend using a combination of the nicotine patch and a faster-acting product like a lozenge, gum, or inhaler. This is especially useful if you’re pregnant, because your body gets
-              rid of nicotine more quickly, so you need to keep your levels topped up.
-            </li>
-            <li>It is never too late to stop smoking when you’re pregnant. Most of the damage to your baby is done later in the pregnancy, so please don’t think it isn’t worth it.</li>
-            <li>You’re likely to be tempted to go back to smoking after your baby is born. I recommend trying to cultivate the identity of a non-smoker. Also, remember that exposing your baby to smoke
-              is a very common cause of breathing problems and chest infections in babies.
-            </li>
-          </ul>
-        </section>
-
-
-        <h6>What if I already have an illness caused by smoking?</h6>
-        <section>
-          <p>A This gives you an immediate reason to quit, and the benefits should be noticeable fairly soon. If you suffer from lung problems, your breathing will probably improve a bit, and you’ll
-            have fewer acute attacks. If you’ve had a heart attack, then the research shows you are less likely to have another one if you give up cigarettes. If you have lung cancer, your chances of
-            recovery are increased by stopping smoking.</p>
-
-          <p>I strongly recommend finding a stop-smoking advisor who can work with you personally (or in a group) to help you quit smoking. If that’s not possible, try to follow this course through to
-            the end.</p>
-        </section>
-
-
-        <h6>What if I use illegal drugs?</h6>
-
-        <p>A Research shows that smokers who also use illegal drugs, including cannabis, are less likely to succeed at stopping smoking. You may want to think seriously about giving up cigarettes and
-          illegal drugs all in one go. Try a range of nicotine products/Champix, and see what works for you. Don’t feel you need to go cold turkey (i.e. stopping without these medicines).</p>
-
-
-        <h6>What if I have a drinking problem?</h6>
-
-        <section>
-          <p>A If you’ve had an alcohol problem in the past it won’t affect your chances of stopping smoking. If you have one at the moment, it does reduce your chances slightly. However, the evidence
-            is clear that giving up cigarettes won’t get in the way of recovering from alcohol addiction: in fact, it may help you.</p>
-
-          <p>My only advice is to say that, because you’ll probably find it harder to quit smoking, you should seriously consider using at least two nicotine products for as long as necessary.</p>
-        </section>
-
-        <h6>What if I don’t smoke every day?</h6>
-
-        <section>
-          <p>A Any amount of smoking is dangerous, so it’s a good idea to stop. It can still be hard to quit if you’re a light smoker. This is probably because it’s a struggle not to smoke when you’d
-            usually have a cigarette. Here are a few tips:</p>
-
-          <ul>
-            <li>Work on changing your identity so that you’re not the kind of person who smokes at parties, or when you’re out with friends. Indeed, try to think of yourself as a person who never
-              smokes.
-            </li>
-            <li>I would recommend using a fast-acting nicotine product (gum/lozenge/spray) when you feel a strong urge to smoke.</li>
-            <li>Plan what you’re going to say to your friends when they offer you a cigarette – be friendly but assertive.</li>
-          </ul>
-        </section>
-
-        <h6>What if I’m overweight?</h6>
-        <section>
-          <p>Exercising regularly and eating healthy snacks are a good way to limit weight gain and reduce cravings. I recommend making a clear, structured plan for your exercise. Try to get at least
-            a 30 minute brisk walk in every day. Take the stairs instead of the lift, and walk up escalators instead of standing on them. Over time, the little things make a big difference.</p>
-
-          <p>For some people, dieting and stopping smoking at the same time is too much to cope with. Don’t worry if that’s true for you. Smoking is easily the biggest threat to your health. Even if
-            you put on weight, you will still be much healthier without cigarettes. A few months down the line, when the withdrawal symptoms have disappeared, you can start thinking about losing
-            weight.</p>
-        </section>
-
-
-        <h6>If I feel ready to quit now, should I wait so I can prepare?</h6>
-        <section>
-          <p>My advice is: strike while the iron is hot! Unless you want to seek extra support from a stop-smoking advisor, quitting now is a great idea. Feel free to get some NRT to help reduce the
-            cravings, and experiment to see what works best for you.</p>
-        </section>
-
-        <h6>Should I seek help from a stop-smoking advisor?</h6>
-        <section>
-          <p>Yes – if there’s a good one nearby. If you’re in the UK you can find out where your local service is here: https://www.nhs.uk/Livewell/smoking/Pages/NHS-stop-smoking-adviser.aspx</p>
-        </section>
-
-        <h6>Should I call a telephone helpline?</h6>
-        <section>
-          <p>Yes – if there’s a good one you can use. If you’re in the UK you can find out more information here: https://www.nhs.uk/Livewell/smoking/Pages/NHS-stop-smoking-adviser.aspx</p>
-        </section>
-
-        <h6>Should I try hypnotherapy?</h6>
-        <section>
-          <p>The truth is that we don’t know whether this is effective or not. It might be, so if this is something you have set your heart on by all means give it a go.</p>
-        </section>
-
-        <h6>Are there any good smartphone apps that can help?</h6>
-        <section>
-          <p>We’ve developed an app called SF28 which is available on Android and iPhone. It’s been tested and proven to help. The most popular app is Smoke Free developed by Dave Crane. This has a
-            lot
-            of functions that people like and may well help. Just look up SF28 or Smoke Free on the app store or Google Play.</p>
-        </section>
-
-        <h6>Should I cut down gradually or stop abruptly?</h6>
-        <section>
-          <p>There is strong evidence that stopping abruptly gives the best chance of success.</p>
-        </section>
-
-        <h6>What is the best time of day to smoke my final cigarette?</h6>
-        <section>
-          <p>I don’t have enough evidence to tell you precisely what time to stop smoking – so it’s entirely up to you.</p>
-        </section>
-
-        <h6>Should I tell people I’m stopping or keep it to myself?</h6>
-        <section>
-          <p>It doesn’t seem to make much difference, so whatever you think will work for you.</p>
-        </section>
-
-        <h6>What should I do instead of smoking when I get stressed?</h6>
-        <section>
-          <p>There are many things you can do e.g. relaxation exercises, breathing exercises, physical exercise, distract yourself etc. To be honest, any of these will work better than smoking which
-            has been found to make things worse.</p>
-        </section>
-
-        <h6>Should I use a nicotine product?</h6>
-        <section>
-          <p>NRT has been proven to be safe and effective. Try it and see if it works for you. Just make sure you take a high enough dose and keep using it for as long as you need to. The most common
-            problem is people not using enough of it because they are afraid of overdosing on nicotine. That will not be a problem; if you start to feel sick then just reduce your dose a bit.</p>
-        </section>
-
-        <h6>Should I use a prescription medicine to help me stop smoking?</h6>
-        <section>
-          <p>Yes – they can help if you use them properly. Varenicline (Champix) is generally more effective than bupropion (Zyban).</p>
-        </section>
-
-        <h6>How long should I keep using my nicotine product?</h6>
-        <section>
-          <p>At least six weeks, and then as long as you feel you need to.</p>
-        </section>
-
-        <h6>Should I throw away my cigarettes and ashtrays?</h6>
-        <section>
-          <p>Probably. Get rid of temptations where possible. It could make all the difference.</p>
-        </section>
-
-        <h6>Should I avoid bars and/or alcohol?</h6>
-        <section>
-          <p>If you can: yes. Alcohol ruins so many quit attempts. If you do go out for a drink, I advise you to plan in advance how you’re going to handle the temptation to smoke.</p>
-        </section>
-        <h6>Should I exercise more?</h6>
-        <section>
-          <p>Yes – this is probably worth doing. Exercise reduces cravings and makes you feel better. The main thing is to find the kind of exercise that suits you – it doesn’t have to be exhausting!
-            Just walking more is helpful.</p>
-        </section>
-
-        <h6>Should I diet to avoid gaining weight?</h6>
-        <section>
-          <p>Probably not – but do carry round healthy snacks to help with the cravings.</p>
-        </section>
-
-        <h6>Should I quit smoking with my friend/partner?</h6>
-        <section>
-          <p>This could help. I recommend planning in advance how you’re going to support each other (daily texts/phone calls etc.)</p>
-        </section>
-
-        <h6>Should I change to electronic cigarettes?</h6>
-        <section>
-          <p>E-cigarettes can help you stop smoking. There are many different brands, so do a bit of research on the internet to find the best ones. Or go to a vape store – the people who work there
-            are often very expert and can help find a product that you get on with.</p>
-        </section>
-
-        <h6>Is there any point in just cutting down?</h6>
-        <section>
-          <p>Interestingly, the main benefit of cutting down is that makes you more likely to quit later on. I also recommend using a nicotine product to replace the cigarettes you’ve cut out. This
-            means you won’t be puffing so hard on the cigarettes you do smoke (undoing all the good work of cutting down!).</p>
-        </section>
+      <div class="modal-body" id="faqAccordion">
+        {% for counter,faq in faqs|default([]) %}
+          <div class="card">
+            <div class="card-header" id="heading{{ counter }}">
+              <h6 class="mb-0">
+                <button class="btn btn-link btn-block text-left font-weight-bold"
+                        data-toggle="collapse"
+                        data-target="#faq{{ counter }}"
+                        aria-expanded="false"
+                        aria-controls="faq{{ counter }}">
+                  {{ faq.question }}
+                </button>
+              </h6>
+            </div>
+            <section id="faq{{ counter }}" class="collapse" aria-labelledby="heading{{ counter }}" data-parent="#faqAccordion">
+              <div class="card-body">
+                {{ faq.answer|raw }}
+              </div>
+            </section>
+          </div>
+        {% endfor %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

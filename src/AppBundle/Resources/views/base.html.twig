@@ -2,25 +2,9 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa:300|Open+Sans:300,400" />
-    {% stylesheets 
-        '@AppBundle/Resources/assets/global/bootstrap/bootstrap.scss'
-        filter='compass'
-        filter='cssrewrite'
-        filter='?uglifycss'
-        name='BaseCSS'
-         %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
-    {% javascripts
-        '@AppBundle/Resources/assets/global/greensock/TweenMax.min.js'
-        '@AppBundle/Resources/assets/global/bower/jquery/dist/jquery.min.js'
-        '@AppBundle/Resources/assets/global/bower/tether/dist/js/tether.min.js'
-        '@AppBundle/Resources/assets/global/bower/bootstrap/dist/js/bootstrap.min.js'
-        filter='?uglifyjs2'
-        name='BaseJS' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {#<script src="{{ asset('build/app.js') }}"></script>#}
 {% endblock %}

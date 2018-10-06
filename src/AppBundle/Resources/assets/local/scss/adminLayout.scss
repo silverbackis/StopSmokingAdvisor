@@ -1,5 +1,5 @@
 //custom bootstrap variables
-@import 'bootstrap/variables';
+@import '../../global/bootstrap/variables';
 
 body,
 html {
@@ -95,21 +95,24 @@ td {
     background-size: 100% auto;
     display: block;
     font-size: 0;
-    height: 100px;
+    height: 80px;
     margin: 0 0 0 25px;
     overflow: hidden;
     text-indent: -1000px;
     width: 250px;
   }
 
+  .other-btns .btn {
+    min-width: 100px;
+    font-size: .7rem;
+  }
+
   .logout-link {
     color: $white;
-    display: inline-block;
+    display: block;
     font-size: 18px;
     line-height: 50px;
-    margin-left: 100px;
     transition: background-color $transition-dur;
-    width: 175px;
 
     &:hover,
     &:active,
@@ -118,14 +121,18 @@ td {
       text-decoration: none;
     }
 
-    &.dashboard {
-      background: $teal;
-      &:hover,
-      &:active,
-      &:focus {
-        background: $teal-dark;
-      }
-    }
+    //&.dashboard {
+    //  background: $teal;
+    //  border: 1px solid $white;
+    //  font-size: 12px;
+    //  line-height: normal;
+    //  padding: 5px;
+    //  &:hover,
+    //  &:active,
+    //  &:focus {
+    //    background: $teal-dark;
+    //  }
+    //}
 
     &:not(.dashboard) {
       background: $gray-light;

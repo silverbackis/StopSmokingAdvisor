@@ -1,5 +1,8 @@
+import NodeManager from '../../Utils/NodeManager'
+import TreeManager from '../../Utils/TreeManager'
+
 // Tree Object and proto
-function Tree(parentNode)
+function Tree(parentNode, $treeContainer)
 {
 	this.$ul = $("<ul />",{
 		class: "node-tree"
@@ -40,7 +43,7 @@ Tree.prototype.appendNode = function(nodeData){
 
 	if(nodeData.children.length>0)
 	{
-		createBranch(nodeData.children, newNode);
+    TreeManager.createBranch(nodeData.children, newNode);
 	}
 	return newNode;
 };
@@ -56,3 +59,4 @@ Tree.prototype.removeNodeIndex = function(nodeIndex){
 	this.nodes.splice(nodeIndex, 1);
 	this.updateSortValues();
 };
+export default Tree;

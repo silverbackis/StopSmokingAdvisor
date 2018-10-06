@@ -1,3 +1,6 @@
+import NodeManager from '../../Utils/NodeManager'
+import {AjaxManager, requests as ajax} from '../../Utils/AjaxManager'
+
 function AjaxInput($input, id, entity)
 {
 	var _self = this;
@@ -23,7 +26,7 @@ function AjaxInput($input, id, entity)
 			_self.update(e.type);
 		}
 	};
-	if(typeof this.$input.attr("data-update_events") != 'undefined')
+	if(typeof this.$input.attr("data-update_events") !== 'undefined')
 	{
 		this.$input.on(this.$input.attr("data-update_events"), inputChangeFn);
 		this.$input.on("keypress", function()
@@ -79,7 +82,7 @@ AjaxInput.prototype.update = function(etype){
 	var currentValue = this.getInputValue();
 	if(currentValue!==this.lastValue.submitted)
 	{
-		if(currentValue == this.lastValue.saved)
+		if(currentValue === this.lastValue.saved)
 		{
 			// last saved value means it must have validated properly before, just remove error notices - do not submit
 			this.error.current = false;
@@ -133,7 +136,7 @@ AjaxInput.prototype.update = function(etype){
 		};
 		//console.log("UPDATE: ", data);
 		var ms = etype==='blur' || etype==='change' ? 1 : null,
-		baseURL = (this.entity==='node' ? ajax.updateNode.url : (this.entity=='question' ? ajax.updateQuestion.url : ajax.updateAnswer.url));
+		baseURL = (this.entity==='node' ? ajax.updateNode.url : (this.entity === 'question' ? ajax.updateQuestion.url : ajax.updateAnswer.url));
 		ajax.updateNode.submit(data, baseURL + this.id, ms, { 
 			input: _self,
 			successFn: successFn
@@ -214,3 +217,4 @@ AjaxInput.prototype.setError = function(isError, message)
 	this.error.current = isError;
 	this.error.message = message;
 };
+export default AjaxInput

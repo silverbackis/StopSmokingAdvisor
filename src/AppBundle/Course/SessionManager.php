@@ -3,6 +3,7 @@
 namespace AppBundle\Course;
 
 use AppBundle\Entity\CourseData;
+use AppBundle\Entity\Faq;
 use AppBundle\Entity\Page;
 use AppBundle\Entity\Question;
 use AppBundle\Entity\Session;
@@ -90,16 +91,16 @@ class SessionManager
                 return 'Introduction';
                 break;
 
-            case 5:
-                return 'The Final Stretch - Week 4';
+            case 2:
+                return 'Your Quit Date';
                 break;
 
-            case 6:
-                return 'Well Done - Keep It Up!';
+            case 8:
+                return 'Smoke-Free Week ' . ($sessionNumber - 1) . ' - The Final Stretch';
                 break;
 
             default:
-                return 'SmokeFree Week ' . ($sessionNumber - 1);
+                return 'Smoke-Free Week ' . ($sessionNumber - 1);
                 break;
         }
     }
@@ -354,7 +355,8 @@ class SessionManager
                     'form' => null === $form ? null : $form->createView(),
                     'session_progress_percent' => $this->getSessionProgress(),
                     'preview' => $preview,
-                    'quit_plan' => $quitPlan
+                    'quit_plan' => $quitPlan,
+                    'faqs' => $this->em->getRepository(Faq::class)->findBy([], ['sortOrder' => 'ASC'])
                 ]
             )
         );

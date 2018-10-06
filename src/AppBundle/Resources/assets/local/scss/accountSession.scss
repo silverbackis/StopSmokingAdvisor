@@ -1,4 +1,4 @@
-@import 'bootstrap/variables';
+@import '../../global/bootstrap/variables';
 
 html,
 body {
@@ -127,7 +127,7 @@ h3 {
     }
   }
 
-  .custom-control-description {
+  .custom-control-label {
     background: $teal-dark;
     border: 1px solid $teal;
     color: rgba($white, .6);
@@ -136,7 +136,7 @@ h3 {
     width: 100%;
   }
 
-  .custom-control-description,
+  .custom-control-label,
   .bootstrap-select .btn,
   .text-input,
   .input-group-addon.text-pre {
@@ -220,8 +220,8 @@ h3 {
     }
   }
 
-  .custom-radio .custom-control-input:checked ~ .custom-control-description,
-  .custom-checkbox .custom-control-input:checked ~ .custom-control-description{
+  .custom-radio .custom-control-input:checked ~ .custom-control-label,
+  .custom-checkbox .custom-control-input:checked ~ .custom-control-label{
     color: $white;
   }
 

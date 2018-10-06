@@ -2,44 +2,37 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    {% stylesheets 
-        '@AppBundle/Resources/assets/local/scss/indexAction.scss'
-        filter='cssrewrite' 
-        filter='?uglifycss' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('build/home.css') }}"/>
+{% endblock %}
+
+{% block js_sdk_head %}
+  {{ parent() }}
+  <script src="https://content.jwplatform.com/libraries/8g2baDMg.js"></script>
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script src="https://content.jwplatform.com/libraries/8g2baDMg.js"></script>
-    {% javascripts
-        '@AppBundle/Resources/assets/global/bootstrap-toolkit/bootstrap-toolkit.js'
-        '@AppBundle/Resources/assets/global/BootstrapModalAlerts.js'
-        '@AppBundle/Resources/assets/local/js/indexAction.js'
-        filter='?uglifyjs2' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+  {{ parent() }}
+  <script src="{{ asset('build/home.js') }}"></script>
 {% endblock %}
 
 {% block body %}
-<div class="home-outer opacity-0">
+  <div class="home-outer opacity-0">
     <div class="site-wrapper">
-        <div class="page-wrapper home-wrapper">
-            <div class="container-fluid home-container" id="home-container">
-                <div class="alert-holder">
-                    {% for flash_message in app.session.flashBag.get('notice') %}
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <strong>{{ flash_message }}</strong>
-                        </div>
-                    {% endfor %}
-                </div>
-                <div class="row no-gutters main-home-row">
-                    <div class="col home-left">
+      <div class="page-wrapper home-wrapper">
+        <div class="container-fluid home-container" id="home-container">
+          <div class="alert-holder">
+            {% for flash_message in app.session.flashBag.get('notice') %}
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>{{ flash_message }}</strong>
+              </div>
+            {% endfor %}
+          </div>
+          <div class="row no-gutters main-home-row">
+            <div class="col home-left">
                         <span class="home-left-table">
                             <span class="align-middle home-left-table-cell">
                                 <div class="d-inline-block home-left-hmid">
@@ -49,171 +42,187 @@
                                     <div class="w-100 mobile-video-holder"></div>
                                     <div class="d-inline-block w-100 home-inner-mobile">
                                         <span class="home-text">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                            <p>accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae </p>
+                                            <p>Do you want to stop smoking? This free online course, led by Professor Robert West – co-founder of the NHS Stop Smoking Services – will guide you through the secrets of cigarette addiction and how to free yourself from its grip.</p>
                                         </span>
                                     </div>
                                 </div>
                                 <span class="copy-notice">
                                     &copy; Stop Smoking Advisor {{ "now"|date("Y") }} | 
-                                    <a href="/terms">Ts &amp; Cs</a> | 
-                                    <a href="https://www.britishwebsites.co.uk/" target="_blank">Site by British Websites</a>
+                                    <a href="{{ path('terms_page') }}">Ts &amp; Cs</a> |
+                                    <a href="https://www.britishwebsites.co.uk/" target="_blank" rel="noopener">Site by British Websites</a>
                                 </span>
                             </span>
                         </span>
-                    </div>
-                    <div class="col-12 col-md-auto home-right">
-                        <div class="video">
-                            <div class="video-cover">
-                                <div class="d-inline-block video-cover-bg"></div>
-                                <div class="video-center">
-                                    <img src="{{ asset('bundles/app/images/16-9-spacer.png') }}" alt="Stop Smoking Advisor - Video intro cover image" class="video-spacer-image" />
-                                    <div id="videoPlayer"></div>
-                                </div>
-                            </div>
+            </div>
+            <div class="col-12 col-md-auto home-right">
+              <div class="video">
+                <div class="video-cover">
+                  <div class="d-inline-block video-cover-bg"></div>
+                  <div class="video-center">
+                    <img src="{{ asset('bundles/app/images/16-9-spacer.png') }}" alt="Stop Smoking Advisor - Video intro cover image" class="video-spacer-image"/>
+                    <div id="videoPlayer"></div>
+                  </div>
+                </div>
 
-                            <a class="play-button" href="#">
+                <a class="play-button" href="#">
                                 <span class="d-inline-block w-100" style="perspective: 1000px;">
                                     <span class="link-text-size">Play</span>
                                 </span>
-                                <span class="play-icon-outer" style="perspective: 1000px;">
+                  <span class="play-icon-outer" style="perspective: 1000px;">
                                     <div class="play-icon-bg"></div>
                                     <span class="play-icon link-text-size"></span>
                                 </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="bottom-links">
-                    <div class="d-inline-block main-home-link-outer">
-                        <a class="main-home-link login" href="#login">
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="bottom-links">
+            <div class="d-inline-block main-home-link-outer">
+              <a class="main-home-link login" href="#login">
                             <span class="align-middle main-home-link-cell">
                                 <span class="d-inline-block" style="position: relative;">
                                     <span class="d-inline-block">
                                         <span class="link-text-size">Login</span>
                                         <div class="login-logos">
-                                            <img src="{{ asset('bundles/app/images/login_logo_f.png') }}" width="15" alt="Login with Facebook" />
-                                            <img src="{{ asset('bundles/app/images/login_logo_t.png') }}" width="34.5" alt="Login with Twitter" />
-                                            <img src="{{ asset('bundles/app/images/login_logo_g.png') }}" width="28.5" alt="Login with Google" />
+                                            <img src="{{ asset('bundles/app/images/login_logo_f.png') }}" width="15" alt="Login with Facebook"/>
+                                            <img src="{{ asset('bundles/app/images/login_logo_t.png') }}" width="34.5" alt="Login with Twitter"/>
+                                            <img src="{{ asset('bundles/app/images/login_logo_g.png') }}" width="28.5" alt="Login with Google"/>
                                         </div>
                                     </span>
                                 </span>
                             </span>
-                        </a>
-                    </div>
-                    <div class="d-inline-block main-home-link-outer">
-                        <a class="main-home-link register" href="#register">
+              </a>
+            </div>
+            <div class="d-inline-block main-home-link-outer">
+              <a class="main-home-link register" href="#register">
                             <span class="align-middle main-home-link-cell">
                                 <span class="d-inline-block">
                                     <span class="link-text-size">Sign up</span>
                                 </span>
                             </span>
-                        </a>
-                    </div>
-                </div>
+              </a>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-<div class="wrapper-outer login-outer opacity-0">
+  </div>
+  <div class="wrapper-outer login-outer opacity-0">
     <div class="page-wrapper login-wrapper">
-        <div class="container-fluid login-container" id="login-container">
-            <a href="#home" class="close-link"><span class="close-page-icon preload-bg"></span></a>
-            <table class="w-100 h-100">
-                <tr>
-                    <td class="align-middle">
-                        <span class="container inner-form-container">
-                            <h3 class="form-header">Login</h3>
-                            <form action="{{ path("fos_user_security_check") }}" data-loginAction="{{ path("fos_user_security_check") }}" data-forgotAction="{{ path('fos_user_resetting_send_email') }}" method="post" class="fos_user_security_check" id="loginForm">
-                                <div class="form-group">
-                                    <input type="email" class="form-control home-form-control form-control-lg" id="username" name="_username" placeholder="{{ 'form.email'|trans }}" />
-                                    <div class="form-control-feedback"></div>
-                                </div>
-                                <div id="forgotAccordion" role="tablist" aria-multiselectable="true">
-                                    <div class="card">
-                                        <div id="loginCollapse" class="collapse show">
-                                            <div class="form-group">
-                                                <input type="password" class="form-control home-form-control form-control-lg" id="password" name="_password" placeholder="{{ 'security.login.password'|trans }}"  />
-                                                <div class="form-control-feedback"></div>
-                                            </div>
-                                            <button type="submit" id="_submit" name="_submit" class="btn btn-login" data-size-reset="false">
-                                                <span class="link-text-size">{{ 'security.login.submit'|trans }}</span>
-                                            </button>
-                                            <div class="form-control-feedback forgot-password">
-                                                <a data-toggle="collapse" data-parent="#forgotAccordion" href="#forgotCollapse">Forgot password?</a>
-                                            </div>
-                                            {% if csrf_token %}
-                                                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    <div class="card">
-                                        <div id="forgotCollapse" class="collapse">
-                                            <button type="submit" id="_submit" name="_submit" class="btn btn-login">
-                                                <span class="link-text-size">{{ 'resetting.request.submit'|trans }}</span>
-                                            </button>
-                                            <div class="form-control-feedback forgot-password">
-                                                <a class="collapsed" data-toggle="collapse" data-parent="#forgotAccordion" href="#loginCollapse" id="showLoginForm">Remembered password?</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+      <div class="container-fluid login-container" id="login-container">
+        <a href="#home" class="close-link"><span class="close-page-icon preload-bg"></span></a>
+        <table class="w-100 h-100">
+          <tr>
+            <td class="align-middle">
+              <div class="container inner-form-container">
+                <h3 class="form-header">Login</h3>
+                <form action="{{ path("fos_user_security_check") }}" data-loginAction="{{ path("fos_user_security_check") }}"
+                      data-forgotAction="{{ path('fos_user_resetting_send_email') }}" method="post" class="fos_user_security_check" id="loginForm">
+                  <div class="form-group">
+                    <input type="email" class="form-control home-form-control form-control-lg" id="username" name="_username" placeholder="{{ 'form.email'|trans }}"/>
+                    <div class="form-control-feedback"></div>
+                  </div>
+                  <div id="forgotAccordion">
+                    <div class="card">
+                      <div id="loginCollapse" class="collapse show" aria-labelledby="headingOne" data-parent="#forgotAccordion">
+                        <div class="form-group">
+                          <input type="password" class="form-control home-form-control form-control-lg" id="password" name="_password"
+                                 placeholder="{{ 'security.login.password'|trans }}"/>
+                          <div class="form-control-feedback"></div>
+                        </div>
+                        <button type="submit" id="_submit_login" name="_submit" class="btn btn-login" data-size-reset="false">
+                          <span class="link-text-size">{{ 'security.login.submit'|trans }}</span>
+                        </button>
+                        <div class="form-control-feedback forgot-password">
+                          <a class="btn btn-link collapsed"
+                             data-toggle="collapse"
+                             id="showForgotForm"
+                             aria-controls="forgotCollapse"
+                             data-target="#forgotCollapse"
+                             aria-expanded="false"
+                          >Forgot password?</a>
+                        </div>
+                        {% if csrf_token %}
+                          <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+                        {% endif %}
+                      </div>
+                    </div>
 
-                            <div class="social-logins">
-                                <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="social-login-link face-link">
-                                    <div class="social-icon"></div>
-                                    <div class="align-middle social-link-cell">
+                    <div class="card">
+                      <div id="forgotCollapse" class="collapse" aria-labelledby="showForgotForm" data-parent="#forgotAccordion">
+                        <button type="submit" id="_submit_forgot" name="_submit" class="btn btn-login" data-size-reset="false">
+                          <span class="link-text-size">{{ 'resetting.request.submit'|trans }}</span>
+                        </button>
+                        <div class="form-control-feedback forgot-password">
+                          <a class="btn btn-link"
+                             data-toggle="collapse"
+                             id="showLoginForm"
+                             aria-controls="loginCollapse"
+                             data-target="#loginCollapse"
+                             aria-expanded="true"
+                          >
+                            Remembered password?
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+                <div class="social-logins">
+                  <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="social-login-link face-link">
+                    <div class="social-icon"></div>
+                    <div class="align-middle social-link-cell">
                                         <span class="text">
                                             Login with Facebook
                                         </span>
-                                    </div>
-                                </a>
-                                <a href="{{ path('hwi_oauth_service_redirect', {'service': 'twitter' }) }}" class="social-login-link twit-link">
-                                    <div class="social-icon"></div>
-                                    <div class="align-middle social-link-cell">
+                    </div>
+                  </a>
+                  <a href="{{ path('hwi_oauth_service_redirect', {'service': 'twitter' }) }}" class="social-login-link twit-link">
+                    <div class="social-icon"></div>
+                    <div class="align-middle social-link-cell">
                                         <span class="text">
                                             Login with Twitter
                                         </span>
-                                    </div>
-                                </a>
-                                <a href="{{ path('hwi_oauth_service_redirect', {'service': 'google' }) }}" class="social-login-link goog-link">
-                                    <div class="social-icon"></div>
-                                    <div class="align-middle social-link-cell">
+                    </div>
+                  </a>
+                  <a href="{{ path('hwi_oauth_service_redirect', {'service': 'google' }) }}" class="social-login-link goog-link">
+                    <div class="social-icon"></div>
+                    <div class="align-middle social-link-cell">
                                         <span class="text">
                                             Login with Google
                                         </span>
-                                    </div>
-                                </a>
-                            </div>
-                        </span>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
-</div>
-<div class="wrapper-outer register-outer opacity-0">
+  </div>
+  <div class="wrapper-outer register-outer opacity-0">
     <div class="page-wrapper register-wrapper">
-        <div class="container-fluid register-container align-middle" id="register-container">
-            <a href="#home" class="close-link"><span class="close-page-icon"></span></a>
-            <table class="w-100 h-100">
-                <tr>
-                    <td class="align-middle">
+      <div class="container-fluid register-container align-middle" id="register-container">
+        <a href="#home" class="close-link"><span class="close-page-icon"></span></a>
+        <table class="w-100 h-100">
+          <tr>
+            <td class="align-middle">
                         <span class="container inner-form-container">
                             <h3 class="form-header">Sign up</h3>
-                            {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'novalidate': 'novalidate', 'class': 'fos_user_registration_register'}}) }}
-                                <div class="form-group">
+                          {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'novalidate': 'novalidate', 'class': 'fos_user_registration_register'}}) }}
+                          <div class="form-group">
                                     {{ form_widget(form.email, { 'attr': {'class': 'form-control form-control-lg home-form-control', 'placeholder': 'form.email'} }) }}
-                                    <div class="form-control-feedback"></div>
+                            <div class="form-control-feedback"></div>
                                 </div>
                                 <div class="form-group">
                                     {{ form_widget(form.plainPassword.first, { 'attr': {'class': 'form-control form-control-lg home-form-control', 'placeholder': 'form.password'} }) }}
-                                    <div class="form-control-feedback"></div>
+                                  <div class="form-control-feedback"></div>
                                 </div>
                                 <div class="form-group">
                                     {{ form_widget(form.plainPassword.second, { 'attr': {'class': 'form-control form-control-lg home-form-control', 'placeholder': 'form.password_confirmation'} }) }}
-                                    <div class="form-control-feedback"></div>
+                                  <div class="form-control-feedback"></div>
                                 </div>
 
                                 <small id="passwordHelp" class="form-text password-help">
@@ -227,37 +236,37 @@
                                 <button type="submit" class="btn btn-register" data-size-reset="false">
                                     <span class="link-text-size">{{ 'registration.submit'|trans }}</span>
                                 </button>
-                            {{ form_end(form) }}
+                          {{ form_end(form) }}
                         </span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="resettingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">An email is coming...</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" id="modal_notice">Sorry, no further information has been loaded.</div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Got it</button>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
-</div>
-<!-- use javascript to hide the elements that need hiding for animating in -->
-<script>
-    var hideEls = document.getElementsByClassName("opacity-0"); 
-    for(var i = 0; i < hideEls.length; i++) {
-        hideEls[i].setAttribute("style", "visibility: hidden; opacity: 0;");
+
+  <!-- Modal -->
+  <div class="modal fade" id="resettingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">An email is coming...</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modal_notice">Sorry, no further information has been loaded.</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Got it</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- use javascript to hide the elements that need hiding for animating in -->
+  <script>
+    var hideEls = document.getElementsByClassName("opacity-0")
+    for (var i = 0; i < hideEls.length; i++) {
+      hideEls[ i ].setAttribute("style", "visibility: hidden; opacity: 0;")
     }
-</script>
+  </script>
 {% endblock %}

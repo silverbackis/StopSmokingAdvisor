@@ -2,36 +2,12 @@
 
 {% block stylesheets %}
   {{ parent() }}
-  {% stylesheets
-    '@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/css/bootstrap-select.css'
-    '@AppBundle/Resources/assets/global/bower/trumbowyg/dist/ui/trumbowyg.min.css'
-    '@AppBundle/Resources/assets/local/scss/adminLayout.scss'
-    '@AppBundle/Resources/assets/local/scss/adminManage.scss'
-    filter='cssrewrite'
-    filter='?uglifycss' %}
-    <link rel="stylesheet" href="{{ asset_url }}"/>
-  {% endstylesheets %}
+  <link rel="stylesheet" href="{{ asset('build/admin.css') }}"/>
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
-  {% javascripts
-    '@PlUploadBundle/Resources/public/plupload.full.min.js'
-    '@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/js/bootstrap-select.min.js'
-    '@AppBundle/Resources/assets/global/bower/trumbowyg/dist/trumbowyg.min.js'
-    '@AppBundle/Resources/assets/global/BootstrapModalAlerts.js'
-    '@AppBundle/Resources/assets/local/js/adminLayout.js'
-    '@AppBundle/Resources/assets/local/js/Entity/AjaxManager/*.js'
-    '@AppBundle/Resources/assets/local/js/Utils/AjaxManager.js'
-    '@AppBundle/Resources/assets/local/js/Utils/SidePanel.js'
-    '@AppBundle/Resources/assets/local/js/Utils/Answer.js'
-    '@AppBundle/Resources/assets/local/js/Entity/NodeManager/*.js'
-    '@AppBundle/Resources/assets/local/js/Utils/NodeManager.js'
-    '@AppBundle/Resources/assets/local/js/Entity/TreeManager/*.js'
-    '@AppBundle/Resources/assets/local/js/Utils/TreeManager.js'
-    filter='?uglifyjs2' %}
-    <script src="{{ asset_url }}"></script>
-  {% endjavascripts %}
+  <script src="{{ asset('build/admin.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -52,7 +28,7 @@
             <h1 class="ssa-logo">Stop Smoking Advisor</h1>
           </div>
           <div class="col align-self-center">
-            <select class="selectpicker" data-style="btn-secondary" id="sessionSelect">
+            <select class="selectpicker" id="sessionSelect">
               <option value="1">Session 1</option>
               <option value="2">Session 2</option>
               <option value="3">Session 3</option>
@@ -72,10 +48,15 @@
                 </a>
               </div>
             </div>
-            <div class="row no-gutters">
-              <div class="col-12">
-                <a href="{{ path('account_dashboard') }}" class="logout-link dashboard" target="_blank">
-                  User Dashboard
+            <div class="row no-gutters other-btns">
+              <div class="col-6">
+                <a href="{{ path('account_dashboard') }}" class="btn btn-outline-info btn-block" target="_blank">
+                  Dashboard
+                </a>
+              </div>
+              <div class="col-6">
+                <a href="{{ path('easyadmin') }}" class="btn btn-info btn-block">
+                  FAQs
                 </a>
               </div>
             </div>

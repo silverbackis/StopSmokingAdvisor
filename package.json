@@ -1,22 +1,30 @@
 {
-  "name": "assetic-and-gulp-cache-busting-for-symfony",
+  "name": "ssa-application-asset-management",
   "version": "1.0.0",
-  "description": "Symfony and Assetic with Gulp Cache Busing using irozgar/gulp-rev-versions-bundle",
-  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-server": "encore dev-server",
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore production"
+  },
+  "author": "Daniel West <daniel@silverback.is>",
   "directories": {
     "test": "tests"
   },
-  "dependencies": {},
+  "dependencies": {
+    "gsap": "^2.0.2"
+  },
   "devDependencies": {
-    "gulp": "gulpjs/gulp#4.0",
-    "gulp-debug": "^3.1.0",
-    "gulp-rev": "^7.1.2",
-    "rev-del": "^1.0.5"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Daniel West <daniel@silverback.is>",
-  "license": "Apache-2.0",
-  "homepage": "https://gist.github.com/silverbackdan/d20e01b7d13bf32df7c5fa5fd6de0f62"
+    "@symfony/webpack-encore": "https://github.com/symfony/webpack-encore",
+    "babel-polyfill": "^6.26.0",
+    "bootstrap": "^4.1.3",
+    "bootstrap-select": "^1.13.2",
+    "flatpickr": "^4.5.2",
+    "jquery": "^3.3.1",
+    "node-sass": "^4.9.3",
+    "popper.js": "^1.14.4",
+    "sass-loader": "^7.1.0",
+    "trumbowyg": "^2.11.1"
+  }
 }

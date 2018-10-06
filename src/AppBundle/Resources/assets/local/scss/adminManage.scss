@@ -1,5 +1,5 @@
 //custom bootstrap variables
-@import 'bootstrap/variables';
+@import '../../global/bootstrap/variables';
 
 .tree-alert {
   background: $green;
@@ -43,21 +43,17 @@
   }
 }
 
-.bootstrap-select.show>.dropdown-menu>.dropdown-menu {
-  display: block;
+.bootstrap-select {
+  position: relative;
 }
 
-.bootstrap-select.btn-group .dropdown-toggle .filter-option {
-  vertical-align: middle;
-}
 
-.dropdown-toggle.btn-secondary {
+.dropdown-toggle.btn-light {
   border-color: $teal-lighter;
 }
 
 .header-bar .filter-option {
   text-align: center !important;
-  font-size: 24px;
 }
 
 .dropdown-menu {
@@ -127,10 +123,7 @@
 
 .header-bar .dropdown-menu {
   text-align: center;
-
-  a {
-    color: $teal;
-  }
+  z-index: 10;
 }
 
 .bottom-tree-area {
@@ -288,21 +281,8 @@
     margin-bottom: 5px;
   }
 
-  .btn {
+  .btn-primary {
     width: 100%;
-
-    &.btn-sm {
-      font-family: inherit;
-      font-size: 12px;
-      margin: 0 2px 5px 0;
-      width: auto;
-
-      &:focus,
-      &:active,
-      &:hover {
-        color: $red;
-      }
-    }
   }
 
   .input-group {
@@ -320,6 +300,22 @@
         padding: .5rem .75rem;
       }
     }
+  }
+}
+
+.btn-condition {
+  font-family: inherit;
+  font-size: 12px;
+  margin: 0 2px 5px 0;
+  width: auto;
+  color: $primary;
+  border-color: $primary;
+
+  &:focus,
+  &:active,
+  &:hover {
+    border-color: $red;
+    color: $red;
   }
 }
 
@@ -553,7 +549,7 @@
       width: 18px;
     }
 
-    ~ .custom-control-description {
+    ~ .custom-control-label {
       color: $gray-light;
       font-size: 18px;
       font-weight: bold;
@@ -570,7 +566,7 @@
       margin-left: 19px;
     }
 
-    ~ .custom-control-description {
+    ~ .custom-control-label {
       color: $green;
     }
   }
@@ -636,9 +632,9 @@
     }
   }
 
-  .bootstrap-select {
-    min-width: 160px;
-  }
+  //.bootstrap-select {
+  //  min-width: 160px;
+  //}
 
   .progress {
     display: none;

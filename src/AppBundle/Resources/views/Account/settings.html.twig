@@ -4,6 +4,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('build/settings.css') }}"/>
+  {#
     {% stylesheets
         '@AppBundle/Resources/assets/local/scss/accountLayout.scss'
         '@AppBundle/Resources/assets/local/scss/accountSettings.scss'
@@ -11,15 +13,19 @@
         filter='?uglifycss' %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
+    #}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+  <script src="{{ asset('build/settings.js') }}"></script>
+  {#
     {% javascripts
         '@AppBundle/Resources/assets/local/js/accountSettings.js'
         filter='?uglifyjs2' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+    #}
 {% endblock %}
 
 {% block body %}
@@ -59,7 +65,7 @@
         {{ form_start(form_email, { 'action': path('account_settings'), 'attr': { 'class': 'col-12', 'id': 'new_email_form' } }) }}
           <div class="form-group row justify-content-center">
             <div class="col-12 col-md-auto">
-              {{ form_widget(form_email.email, {'attr': {'class': 'form-control-lg', 'placeholder': 'Current Password', 'autocomplete': 'off'} }) }}
+              {{ form_widget(form_email.email, {'attr': {'class': 'form-control form-control-lg', 'placeholder': 'Current Password', 'autocomplete': 'off'} }) }}
               {% if not form_email.email.vars.valid %}
                 <span class="form-text text-danger">{{ form_errors(form_email.email) }}</span>
               {% endif %}
@@ -86,7 +92,7 @@
         {{ form_start(form_password, { 'action': path('fos_user_change_password'), 'attr': { 'class': 'col-12' } }) }}
           <div class="form-group row justify-content-center">
             <div class="col-12 col-md-auto">
-              {{ form_widget(form_password.current_password, {'attr': {'class': 'form-control-lg', 'placeholder': 'Current Password', 'autocomplete': 'off'} }) }}
+              {{ form_widget(form_password.current_password, {'attr': {'class': 'form-control form-control-lg', 'placeholder': 'Current Password', 'autocomplete': 'off'} }) }}
               {% if not form_password.current_password.vars.valid %}
                 <span class="form-text text-danger">{{ form_errors(form_password.current_password) }}</span>
               {% endif %}
@@ -94,7 +100,7 @@
           </div>
           <div class="form-group row justify-content-center">
             <div class="col-12 col-md-auto">
-              {{ form_widget(form_password.plainPassword.first, {'attr': {'class': 'form-control-lg', 'placeholder': 'New Password', 'autocomplete': 'off'} }) }}
+              {{ form_widget(form_password.plainPassword.first, {'attr': {'class': 'form-control form-control-lg', 'placeholder': 'New Password', 'autocomplete': 'off'} }) }}
               {% if not form_password.plainPassword.first.vars.valid %}
                 <span class="form-text text-danger">{{ form_errors(form_password.plainPassword.first) }}</span>
               {% endif %}
@@ -102,7 +108,7 @@
           </div>
           <div class="form-group row justify-content-center">
             <div class="col-12 col-md-auto">
-              {{ form_widget(form_password.plainPassword.second, {'attr': {'class': 'form-control-lg', 'placeholder': 'Repeat New Password', 'autocomplete': 'off'} }) }}
+              {{ form_widget(form_password.plainPassword.second, {'attr': {'class': 'form-control form-control-lg', 'placeholder': 'Repeat New Password', 'autocomplete': 'off'} }) }}
               {% if not form_password.plainPassword.second.vars.valid %}
                 <span class="form-text text-danger">{{ form_errors(form_password.plainPassword.second) }}</span>
               {% endif %}

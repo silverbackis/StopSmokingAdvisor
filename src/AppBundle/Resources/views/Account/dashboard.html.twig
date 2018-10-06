@@ -1,6 +1,6 @@
 {% extends '@App/base.html.twig' %}
 
-{% set teal_deg = (((session_number-1)/6)*360)|round(2) %}
+{% set teal_deg = (((session_number-1)/8)*360)|round(2) %}
 
 {% set teal_deg_left = -180 %}
 {% set teal_deg_right = -180 %}
@@ -14,13 +14,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets
-        '@AppBundle/Resources/assets/local/scss/accountLayout.scss'
-        '@AppBundle/Resources/assets/local/scss/accountDashboard.scss'
-        filter='cssrewrite' 
-        filter='?uglifycss' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+  <link rel="stylesheet" href="{{ asset('build/dashboard.css') }}"/>
     
     <style type="text/css">
       .pie-semi-crop.left > .slice {
@@ -42,11 +36,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts
-        '@AppBundle/Resources/assets/local/js/accountDashboard.js'
-        filter='?uglifyjs2' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+  <script src="{{ asset('build/dashboard.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -148,7 +138,7 @@
                         </div>
                         <div class="dashboard-bottom-info">
                           <h4 class="small">sessions completed</h4>
-                          <h3 class="large">{{ session_number-1 }}/6</h3>
+                          <h3 class="large">{{ session_number-1 }}/8</h3>
                         </div>
                       </div>
                       {% else %}

@@ -1946,19 +1946,6 @@ var TreeManager = (function($, alert, confirm){
 		//hide target display
 		$pageContainer.removeClass("show-targets");
 	};
-	this.hashObj = function (object){
-		var string = JSON.stringify(object);
-
-		var hash = 0,
-		i = 0;
-		if (string.length === 0) return hash;
-		for (i; i < string.length; i++) {
-			char = string.charCodeAt(i);
-			hash = ((hash<<5)-hash)+char;
-			hash = hash & hash; // Convert to 32bit integer
-		}
-		return hash;
-	};
 
 	//Select/dropdown in header and trigger to load currently selected session
 	$sessionSelect.on("change", function(){

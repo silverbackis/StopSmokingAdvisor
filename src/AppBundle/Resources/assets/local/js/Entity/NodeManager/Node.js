@@ -1,7 +1,13 @@
+import { newInput, requests as ajax } from '../../Utils/AjaxManager'
+import SidePanel from '../../Utils/SidePanel'
+import Condition from './Condition'
+import BootstrapModalAlerts from '../../../../global/BootstrapModalAlerts'
+import SearchMenu from './SearchMenu'
+
 // Node Object and proto
 function Node(nodeData, tree)
 {
-	var _self = this,
+	let _self = this,
 	nodeParent = this.getParentId(nodeData);
 
 	this.debounceTimer = null;
@@ -23,7 +29,7 @@ function Node(nodeData, tree)
 	});
 	this.updatePageStatus();
 
-	if(nodeData.type=='link')
+	if(nodeData.type === 'link')
 	{
 		this.$nameInput.attr({
 			"data-column": "name"
@@ -37,7 +43,7 @@ function Node(nodeData, tree)
 		this.$nameInput.attr({
 			"data-column": "name"
 		});
-		this.inputs.push(AjaxManager.newInput(this.$nameInput, this.nodeData.id));
+		this.inputs.push(newInput(this.$nameInput, this.nodeData.id));
 	}
 
 	var $inputGroup = $("<div />",{
@@ -83,8 +89,10 @@ function Node(nodeData, tree)
 		class: 'tree-node',
 		id: 'node_'+nodeData.id
 	});
+	const TreeManager = require('../../Utils/TreeManager').default
+	const showTreeTargets = TreeManager.showTreeTargets
 
-	var $nodeAddPage = $("<a />",{
+	let $nodeAddPage = $("<a />",{
 			href: '#',
 			class: 'node-add page',
 			html: 'Add Page'
@@ -111,7 +119,7 @@ function Node(nodeData, tree)
 				this.$conditionInput
 			).append(
 				$("<span />",{
-					class: 'input-group-addon'
+					class: 'input-group-append'
 				}).append(
 					this.$addConditionButton
 				)
@@ -154,16 +162,16 @@ function Node(nodeData, tree)
 						html: 'Delete'
 					}).on("click", function(e){
 						e.preventDefault();
-						confirm("Are you sure you want to delete this node and all of its children?", {
+            BootstrapModalAlerts.confirm("Are you sure you want to delete this node and all of its children?", {
 							title: 'Are you sure?'
-						}, function(e, confirmed, bsma){ 
+						}, function(e, confirmed, bsma){
 							if(confirmed)
 							{
 								ajax.deleteNode.ops.successFn = function(){
 									_self.remove();
 								};
 								ajax.deleteNode.submit({}, ajax.deleteNode.url + nodeData.id);
-							} 
+							}
 						});
 					})
 				)
@@ -328,7 +336,7 @@ Node.prototype.searchName = function()
 	};
 	ajax.searchSession.submit({
 		search: this.$nameInput.val()
-	});		
+	});
 };
 Node.prototype.updatePageStatus = function()
 {
@@ -358,8 +366,9 @@ Node.prototype.addNodeByData = function(child, nodeData){
 		}
 		else
 		{
+      const TreeManager = require('../../Utils/TreeManager').default
 			//we have to add the child tree
-			createBranch([nodeData], this);
+      TreeManager.createBranch([nodeData], this);
 		}
 	}
 	else
@@ -368,7 +377,8 @@ Node.prototype.addNodeByData = function(child, nodeData){
 	}
 };
 Node.prototype.setCopyMoveAjax = function(child){
-	var sourceNode = selectedNode,
+  const TreeManager = require('../../Utils/TreeManager').default
+	var sourceNode = TreeManager.selectedNode,
 	type = sourceNode.request,
 	targetNode = this;
 	var data = {
@@ -392,8 +402,9 @@ Node.prototype.setCopyMoveAjax = function(child){
 	ajax.copyMoveNode.submit(data, ajax.copyMoveNode.url + type + '/' + sourceNode.nodeData.id);
 };
 Node.prototype.copy = function(targetNode, child, nodeData){
+  const TreeManager = require('../../Utils/TreeManager').default
 	targetNode.addNodeByData(child, nodeData);
-	hideTreeTargets();
+  TreeManager.hideTreeTargets();
 };
 Node.prototype.remove = function(){
 	if(this.childBranch)
@@ -453,3 +464,4 @@ Node.prototype.removeCondition = function(conditionID){
 	}
 	this.conditions[conditionID] = undefined;
 };
+export default Node;

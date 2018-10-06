@@ -31,16 +31,17 @@ framework:
         save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
     fragments:       ~
     http_method_override: true
-    assets:
-        version_strategy: irozgar_gulp_rev_versions.asset.gulp_rev_version_strategy
     php_errors:
         log: true
+    assets:
+        json_manifest_path: '%kernel.project_dir%/web/build/manifest.json'
 
 # Twig Configuration
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form_themes:
+        #- 'bootstrap_4_layout.html.twig'
         - 'form/custom_layout.html.twig'
 
 # Doctrine Configuration
@@ -128,27 +129,6 @@ sonata_seo:
 
             #Possible twitter namespace??
             #xmlns:twitter: "http://api.twitter.com/"
-
-assetic:
-    write_to: '%kernel.root_dir%/../src/AppBundle/Resources/assets/assetic'
-    filters:
-        cssrewrite: ~
-        compass:
-            bin:        /usr/local/bin/compass
-            apply_to:   '\.scss$'
-            load_paths: 
-                - "%kernel.root_dir%/../src/AppBundle/Resources/assets/global/"
-        uglifycss:
-            bin: /usr/local/bin/uglifycss
-        uglifyjs2:
-            bin: /usr/local/bin/uglifyjs
-    assets:
-        BaseCSS:
-            inputs:
-                - '@AppBundle/Resources/private/bootstrap/bootstrap.scss'
-
-irozgar_gulp_rev_versions:
-    manifest_path: "../src/AppBundle/Resources/assets/rev-manifest.json"
 
 bw_base:
     page:
@@ -249,3 +229,18 @@ hwi_oauth:
             options:
                 csrf: true
                 include_email: true
+
+easy_admin:
+    site_name: 'SSA'
+    design:
+        menu:
+            - FAQs
+            - { label: 'Session Management', url: '/admin' }
+    entities:
+        FAQs:
+            class: AppBundle\Entity\Faq
+            form:
+                fields:
+                    - question
+                    - { property: 'answer', type: 'FOS\CKEditorBundle\Form\Type\CKEditorType', type_options: { 'config': { 'toolbar': [ { name: 'styles', items: ['Bold', 'Italic', 'BulletedList', 'Link'] } ] } } }
+                    - sortOrder

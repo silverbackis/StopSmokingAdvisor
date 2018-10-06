@@ -1,0 +1,10 @@
+require('bootstrap-select/sass/bootstrap-select.scss')
+require('flatpickr/dist/flatpickr.min.css')
+require('../scss/accountLayout.scss')
+require('../scss/accountSession.scss')
+require('../../global/flatpickr_theme.css')
+
+require('bootstrap')
+require('bootstrap-select')
+require('flatpickr')
+require('./account/accountSession')

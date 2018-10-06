@@ -200,7 +200,7 @@
     
     {%- set label_data = {
         widget: custom ? block('checkbox_widget_custom') : parent(),
-        text_class: text_class|default('') ~ ' custom-control-description',
+        text_class: text_class|default('') ~ ' custom-control-label',
         label_attr: label_attr
     } -%}
 
@@ -356,5 +356,4 @@
 {%- block checkbox_widget_custom -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' custom-control-input')|trim}) %}
     <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-    <span class="{{ indicator_class|default('custom-control-indicator') }}"></span>
 {%- endblock checkbox_widget_custom -%}

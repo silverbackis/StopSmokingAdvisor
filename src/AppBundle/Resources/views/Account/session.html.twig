@@ -2,27 +2,12 @@
 
 {% block stylesheets %}
   {{ parent() }}
-  {% stylesheets
-    '@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/css/bootstrap-select.css'
-    '@AppBundle/Resources/assets/global/bower/flatpickr/dist/flatpickr.min.css'
-    '@AppBundle/Resources/assets/global/flatpickr_theme.css'
-    '@AppBundle/Resources/assets/local/scss/accountLayout.scss'
-    '@AppBundle/Resources/assets/local/scss/accountSession.scss'
-    filter='cssrewrite'
-    filter='?uglifycss' %}
-    <link rel="stylesheet" href="{{ asset_url }}"/>
-  {% endstylesheets %}
+  <link rel="stylesheet" href="{{ asset('build/session.css') }}"/>
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
-  {% javascripts
-    '@AppBundle/Resources/assets/global/bower/bootstrap-select/dist/js/bootstrap-select.min.js'
-    '@AppBundle/Resources/assets/global/bower/flatpickr/dist/flatpickr.js'
-    '@AppBundle/Resources/assets/local/js/accountSession.js'
-    filter='?uglifyjs2' %}
-    <script src="{{ asset_url }}"></script>
-  {% endjavascripts %}
+  <script src="{{ asset('build/session.js') }}"></script>
 {% endblock %}
 
 {% block body %}

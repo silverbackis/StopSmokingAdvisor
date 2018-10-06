@@ -1,3 +1,7 @@
+import {AjaxManager, requests as ajax} from './AjaxManager'
+import NodeManager from './NodeManager'
+import BootstrapModalAlerts from '../../../global/BootstrapModalAlerts'
+
 // Answer object - created by SidePanel
 function Answer(data)
 {
@@ -31,7 +35,7 @@ function Answer(data)
 			})
 		).on("click", function(e){
 			e.preventDefault();
-			confirm("Are you sure you want to delete this answer?", {
+      BootstrapModalAlerts.confirm("Are you sure you want to delete this answer?", {
 				title: 'Are you sure?'
 			}, function(e, confirmed, bsma){ 
 				if(confirmed)
@@ -113,3 +117,4 @@ Answer.prototype.remove = function()
 	});
 	this.$answer.remove();
 };
+export default Answer

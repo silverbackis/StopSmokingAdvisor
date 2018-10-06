@@ -1,145 +1,44 @@
-var TreeManager = (function($, alert, confirm){
+import jQuery from 'jquery'
+import BootstrapModalAlerts from '../../../global/BootstrapModalAlerts'
+import { requests } from './AjaxManager'
+import Tree from '../Entity/TreeManager/Tree'
+
+export const $treeContainer = $("#treeContainer");
+
+const TreeManagerCls = function($, alert, confirm) {
 	// References only for in this object
 	var tm = this,
 	$sessionSelect = $("#sessionSelect"),
 	$pageContainer = $("#pageContainer"),
 	rootTree;
 
+	requests.getSession.extendFn('submit', () => {
+    $treeContainer.empty();
+	})
+  requests.getSession.extendFn('success', (response) => {
+    tm.createBranch(response);
+  })
+
 	// Referenced and updatable vars from Entities
-	this.$treeContainer = $("#treeContainer");
 	this.selectedNode = null;
 	this.sessionNumber = $sessionSelect.val();
+	window.sessionNumber = this.sessionNumber
 
 	// All ajax
-	this.ajax = {
-		getSession: AjaxManager.newRequest('/admin/pages/get/', {
-			dataType: 'json',
-			submitFn: function(){
-				$treeContainer.empty();
-				SidePanel.hide();
-				NodeManager.clear();
-			},
-			successFn: function(response){
-				tm.createBranch(response);
-			},
-			abortable: true,
-			load: true
-		}),
-		getPage: AjaxManager.newRequest('/admin/page/get/', {
-			dataType: 'json',
-			submitFn: function(){
-				SidePanel.disableInputs();
-			},
-			abortable: true,
-			load: true
-		}),
-		searchSession: AjaxManager.newRequest('/admin/pages/search/', {
-			method: 'POST',
-			dataType: 'json',
-			contentType: 'application/json',
-			abortable: true,
-			uniqueRequest: {
-				url: true
-			},
-			initFn: function(){
-				return {
-					url: this.url + sessionNumber,
-					ops: {}
-				};
-			},
-			load: true,
-			status: {
-				enabled: false
-			}
-		}),
-		addNode: AjaxManager.newRequest('/admin/page/add', {
-			method: 'POST',
-			dataType: 'json',
-			contentType: 'application/json'
-		}),
-		deleteNode: AjaxManager.newRequest('/admin/page/delete/', {
-			dataType: 'json',
-			uniqueRequest: {
-				url: true
-			}
-		}),
-		updateNode: AjaxManager.newRequest('/admin/page/update/', {
-			method: 'POST',
-			dataType: 'json',
-			contentType: "application/json",
-			uniqueRequest: {
-				url: true,
-				data: false
-			}
-		}),
-		copyMoveNode: AjaxManager.newRequest('/admin/page/', {
-			method: 'POST',
-			dataType: 'json',
-			contentType: "application/json",
-			uniqueRequest: {
-				url: true
-			}
-		}),
-		addCondition: AjaxManager.newRequest('/admin/condition/add', {
-			method: 'POST',
-			dataType: 'json',
-			contentType: "application/json",
-			uniqueRequest: {
-				data: true
-			}
-		}),
-		deleteCondition: AjaxManager.newRequest('/admin/condition/delete/', {
-			dataType: 'json',
-			uniqueRequest: {
-				url: true
-			}
-		}),
-		updateQuestion: AjaxManager.newRequest('/admin/question/update/', {
-			method: 'POST',
-			dataType: 'json',
-			contentType: "application/json",
-			uniqueRequest: {
-				url: true,
-				data: true
-			}
-		}),
-		addAnswer: AjaxManager.newRequest('/admin/answer/add', {
-			method: 'POST',
-			dataType: 'json',
-			contentType: "application/json",
-			uniqueRequest: {
-				data: true
-			}
-		}),
-		deleteAnswer: AjaxManager.newRequest('/admin/answer/delete/', {
-			dataType: 'json',
-			uniqueRequest: {
-				url: true
-			}
-		}),
-		updateAnswer: AjaxManager.newRequest('/admin/answer/update/', {
-			method: 'POST',
-			dataType: 'json',
-			contentType: "application/json",
-			uniqueRequest: {
-				url: true,
-				data: true
-			}
-		})
-	};
+	this.ajax = requests
 
 	// Protected functions accessible from shild objects
-	this.createBranch = function(nodeData, parentNode){
-		var newTree = new Tree(parentNode);
+	this.createBranch = (nodeData, parentNode) => {
+		const newTree = new Tree(parentNode, $treeContainer);
 		if(!parentNode)
 		{
 			rootTree = newTree;
 		}
 		$(nodeData).each(function(){
-			var newNode = newTree.appendNode(this);
+			newTree.appendNode(this);
 		});
 	};
-	this.showTreeTargets = function(sNode, request){
+	this.showTreeTargets = (sNode, request) => {
 		if(this.selectedNode)
 		{
 			this.hideTreeTargets();
@@ -154,7 +53,7 @@ var TreeManager = (function($, alert, confirm){
 		$("#targetAction").text(request);
 		$pageContainer.addClass("show-targets");
 	};
-	this.hideTreeTargets = function(){
+	this.hideTreeTargets = () => {
 		// clear the selected node
 		this.selectedNode.$treeNode.removeClass("selected action-"+this.selectedNode.request);
 		this.selectedNode.request = null;
@@ -170,7 +69,7 @@ var TreeManager = (function($, alert, confirm){
 		i = 0;
 		if (string.length === 0) return hash;
 		for (i; i < string.length; i++) {
-			char = string.charCodeAt(i);
+			const char = string.charCodeAt(i);
 			hash = ((hash<<5)-hash)+char;
 			hash = hash & hash; // Convert to 32bit integer
 		}
@@ -180,14 +79,16 @@ var TreeManager = (function($, alert, confirm){
 	//Select/dropdown in header and trigger to load currently selected session
 	$sessionSelect.on("change", function(){
 		tm.sessionNumber = $(this).val();
-		tm.ajax.getSession.submit(null, ajax.getSession.url + tm.sessionNumber);
+		tm.ajax.getSession.submit(null, tm.ajax.getSession.url + tm.sessionNumber);
 	}).trigger("change");
 
 	// Cancel button when moving/copying nodes
-	$("#targetCancel").on("click",function(e){
+	$("#targetCancel").on("click", (e) => {
 		e.preventDefault();
-		hideTreeTargets();
+		this.hideTreeTargets();
 	});
+}
 
-	return null;
-})(jQuery, BootstrapModalAlerts.alert, BootstrapModalAlerts.confirm);
+export const TreeManager = new TreeManagerCls(jQuery, BootstrapModalAlerts.alert, BootstrapModalAlerts.confirm)
+
+export default TreeManager;
