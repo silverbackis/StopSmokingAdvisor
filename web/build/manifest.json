@@ -10,5 +10,7 @@
   "build/session.css": "http://localhost:8080/build/session.css",
   "build/session.js": "http://localhost:8080/build/session.js",
   "build/settings.css": "http://localhost:8080/build/settings.css",
-  "build/settings.js": "http://localhost:8080/build/settings.js"
+  "build/settings.js": "http://localhost:8080/build/settings.js",
+  "build/terms.css": "http://localhost:8080/build/terms.css",
+  "build/terms.js": "http://localhost:8080/build/terms.js"
 }

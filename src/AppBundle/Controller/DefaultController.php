@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\TextPage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -46,13 +47,17 @@ class DefaultController extends Controller
     /**
      * @Route("/terms", name="terms_page")
      */
-    public function termsAction(Request $request)
+    public function termsAction()
     {
         $seoPage = $this->container->get('sonata.seo.page');
-        $seoPage->setTitle("Terms &amp; Privacy - ".$seoPage->getTitle());
+        $seoPage->setTitle('Terms & Privacy - ' .$seoPage->getTitle());
+
+        $repo = $this->getDoctrine()->getRepository(TextPage::class);
 
         return $this->render('@App/Default/terms.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            'base_dir' => \dirname($this->getParameter('kernel.root_dir')) . '' .DIRECTORY_SEPARATOR,
+            'terms' => $repo->find('terms'),
+            'privacy' => $repo->find('privacy')
         ]);
     }
 

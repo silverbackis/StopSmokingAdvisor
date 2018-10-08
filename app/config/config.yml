@@ -230,17 +230,37 @@ hwi_oauth:
                 csrf: true
                 include_email: true
 
+fos_ck_editor:
+    configs:
+        simple:
+            toolbar:
+                - { name: 'styles', items: ['Bold', 'Italic', 'BulletedList', 'Link', 'Unlink'] }
+        advanced:
+            toolbar:
+                - { name: 'styles', items: ['Bold', 'Italic', 'Underline', 'BulletedList', 'NumberedList', 'Link', 'Unlink', 'Format', 'FontSize'] }
+
 easy_admin:
     site_name: 'SSA'
     design:
         menu:
             - FAQs
-            - { label: 'Session Management', url: '/admin' }
+            - { entity: TextPage, icon: 'align-left', label: 'Text Page' }
+            - { label: 'Sessions / Tree', url: '/admin', icon: 'share-alt' }
     entities:
         FAQs:
             class: AppBundle\Entity\Faq
             form:
                 fields:
                     - question
-                    - { property: 'answer', type: 'FOS\CKEditorBundle\Form\Type\CKEditorType', type_options: { 'config': { 'toolbar': [ { name: 'styles', items: ['Bold', 'Italic', 'BulletedList', 'Link'] } ] } } }
+                    - { property: 'answer', type: 'FOS\CKEditorBundle\Form\Type\CKEditorType', type_options: { config_name: 'simple' } }
                     - sortOrder
+        TextPage:
+            class: AppBundle\Entity\TextPage
+            disabled_actions: ['new', 'delete']
+            label: 'Text Page'
+            list:
+                title: "Text Pages"
+            form:
+                fields:
+                    - id
+                    - { property: 'htmlContent', type: 'FOS\CKEditorBundle\Form\Type\CKEditorType', type_options: { config_name: 'advanced' } }

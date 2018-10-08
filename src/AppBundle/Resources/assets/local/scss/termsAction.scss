@@ -1,0 +1,25 @@
+//custom bootstrap variables
+@import '../../global/bootstrap/variables';
+
+body,
+html {
+  background: $white;
+  color: $gray;
+}
+
+.navbar {
+  border-bottom: 1px solid $gray;
+  .ssa-logo {
+    max-height: 50px;
+  }
+}
+
+.content {
+  padding: 2rem;
+
+  .tab-content {
+    border: 1px solid $gray-lighter;
+    border-top: 0;
+    padding: 2rem;
+  }
+}

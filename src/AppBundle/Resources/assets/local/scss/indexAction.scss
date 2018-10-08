@@ -142,15 +142,21 @@ body {
 
 .copy-notice {
   bottom: 0;
-  color: $gray-light;
+  color: darken($gray-light, 8%);
   font-size: 12px;
-  left: 7px;
   line-height: 12px;
   position: absolute;
   transform: rotateZ(-90deg);
   transform-origin: 0 0;
   white-space: nowrap;
   z-index: 3;
+  padding: 4px 7px;
+  left: 0;
+  transition: background-color .3s;
+  background-color: transparent;
+  &:hover {
+    background-color: $gray-lightest;
+  }
 }
 
 .copy-notice>a,

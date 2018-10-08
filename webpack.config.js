@@ -23,6 +23,7 @@ Encore
   // .addEntry('app', ['babel-polyfill', './src/AppBundle/Resources/assets/global/index.js'])
   .addEntry('app', './src/AppBundle/Resources/assets/global/index.js')
   .addEntry('home', './src/AppBundle/Resources/assets/local/js/home/index.js')
+  .addEntry('terms', './src/AppBundle/Resources/assets/local/js/terms.js')
   .addEntry('admin', './src/AppBundle/Resources/assets/local/js/admin.js')
   .addEntry('dashboard', './src/AppBundle/Resources/assets/local/js/dashboard.js')
   .addEntry('settings', './src/AppBundle/Resources/assets/local/js/settings.js')

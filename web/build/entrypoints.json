@@ -15,6 +15,14 @@
       "build/home.css"
     ]
   },
+  "terms": {
+    "js": [
+      "build/terms.js"
+    ],
+    "css": [
+      "build/terms.css"
+    ]
+  },
   "admin": {
     "js": [
       "build/admin.js"
