@@ -4772,6 +4772,10 @@ resolve@^1.3.2:
   dependencies:
     path-parse "^1.0.5"
 
+responsive-toolkit@^2.6.3:
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/responsive-toolkit/-/responsive-toolkit-2.6.3.tgz#410c2a41b819f46a56f4d9c23bd1d9b3771f5026"
+
 ret@~0.1.10:
   version "0.1.15"
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"

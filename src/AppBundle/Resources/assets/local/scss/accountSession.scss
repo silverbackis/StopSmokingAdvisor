@@ -6,19 +6,6 @@ body {
   color: $gray;
 }
 
-.bootstrap-select.show>.dropdown-menu {
-  height: 100vh;
-  min-height: 100px !important;
-}
-
-.bootstrap-select.show>.dropdown-menu>.dropdown-menu {
-  display: block;
-  height: 100%;
-  max-height: none !important;
-  min-height: none !important;
-  position: absolute;
-  top: 0;
-}
 
 .bootstrap-select.btn-group .dropdown-toggle .filter-option {
   vertical-align: middle;
@@ -109,14 +96,12 @@ h3 {
     max-width: 600px;
     position: relative;
     width: 100%;
-    .custom-control-indicator {
-      display: none;
-    }
   }
 
   .custom-control {
     margin: 0;
     padding: 0;
+    display: inline-block;
 
     &.text-radio {
       width: 50%;
@@ -134,31 +119,49 @@ h3 {
     padding: .5rem 1rem;
     transition: color .3s;
     width: 100%;
+    display:block;
+    cursor: pointer;
+    &:before,
+    &:after {
+      display:none;
+    }
   }
 
   .custom-control-label,
   .bootstrap-select .btn,
   .text-input,
-  .input-group-addon.text-pre {
+  .input-group-prepend {
     font-size: 1.4rem;
-  }
-
-  .bootstrap-select .btn,
-  .text-input,
-  .input-group-addon.text-pre {
-    background: rgba($white, .2);
-    border: 0;
-    color: $white;
-
-    ~ .input-group-addon {
-      background: rgba($white, .2);
-      border: 0;
-      color: $white;
+    .input-group-text {
+      font-size: 1.4rem;
     }
   }
 
-  .input-group-addon.text-pre {
-    border-right: 1px solid rgba($white, .3);
+  %session-input {
+    background: rgba($white, .2);
+    border: 0 solid rgba($white, .3);
+    color: $white;
+  }
+  .bootstrap-select .btn,
+  .text-input{
+    @extend %session-input;
+  }
+
+  .input-group-prepend,
+  .input-group-append {
+    .input-group-text {
+      @extend %session-input;
+    }
+  }
+  .input-group-prepend {
+    .input-group-text {
+      border-right-width: 1px;
+    }
+  }
+  .input-group-append {
+    .input-group-text {
+      border-left-width: 1px;
+    }
   }
 
   .bootstrap-select {
@@ -211,9 +214,8 @@ h3 {
   }
 
   .text-input {
-    line-height: 1.25;
-    padding: 15px;
-    width: 100%;
+    //line-height: 1.25;
+    //padding: 15px;
 
     &:focus {
       outline: none;

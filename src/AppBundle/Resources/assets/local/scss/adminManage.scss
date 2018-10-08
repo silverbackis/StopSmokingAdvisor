@@ -536,6 +536,7 @@
     top: 0;
     transition: background $transition-dur;
     width: 45px;
+    vertical-align: middle;
 
     .toggle-circle {
       background: $white;
@@ -556,6 +557,11 @@
       line-height: 26px;
       margin-left: 5px;
       transition: color $transition-dur;
+      vertical-align: middle;
+      &:before,
+      &:after {
+        display: none;
+      }
     }
   }
 

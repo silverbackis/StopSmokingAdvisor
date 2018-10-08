@@ -1,22 +1,51 @@
 require('../../scss/indexAction.scss')
 
 import jQuery from 'jquery'
-import RBT from '../../../global/bootstrap-toolkit/bootstrap-toolkit'
+import viewport from 'responsive-toolkit'
 import {reflow, changeLayout} from './reflow'
 import introTimeline from './introTimeline'
 import Store from './store'
 import introVideo from './video'
 import { transitionPage } from './pageTransitions'
-
 require('./forms')
 require('./pageTransitions')
+
+const $ = jQuery
+
+const visibilityDivs = {
+  'xs': $('<div class="device-xs d-block d-sm-none"></div>'),
+  'sm': $('<div class="device-sm d-none d-sm-block d-md-none"></div>'),
+  'md': $('<div class="device-md d-none d-md-block d-lg-none"></div>'),
+  'lg': $('<div class="device-lg d-none d-lg-block d-xl-none"></div>'),
+  'xl': $('<div class="device-xl d-none d-xl-block"></div>')
+};
+
+viewport.use('bootstrap4', visibilityDivs)
+viewport.interval = 300;
+viewport.breakpointChanged = function(fn, ms) {
+  const self = viewport;
+
+  //clear the resize event if previously set
+  if(self.resizeFn){
+    $(window).off("resize orientationchange", self.resizeFn);
+  }
+
+  self.resizeFn = function(){
+    clearTimeout(self.timer);
+    self.timer = setTimeout(function(){
+      let newBreakpoint = self.current();
+      if(newBreakpoint!==self.lastBreakpoint){
+        fn(newBreakpoint, self.lastBreakpoint);
+        self.lastBreakpoint = newBreakpoint;
+      }
+    }, ms || self.interval);
+  };
+  $(window).on("resize orientationchange", self.resizeFn);
+}
 
 const store = new Store({
   videoPlaying: false
 })
-
-const RBT_instance = new RBT(jQuery)
-const $ = jQuery
 
 const smallBreaks = [ 'xs', 'sm' ];
 const largeBreaks = [ 'md', 'lg', 'xl' ];
@@ -51,8 +80,8 @@ function hashChangeEvent (init) {
 
 $(function () {
   reflow(store.getKey('videoPlaying'))
-  RBT_instance.viewport.breakpointChanged(breakpointListener)
-  changeLayout(smallBreaks.indexOf(RBT_instance.viewport.current()) !== -1 ? 'mobile' : 'desktop')
+  viewport.breakpointChanged(breakpointListener)
+  changeLayout(smallBreaks.indexOf(viewport.current()) !== -1 ? 'mobile' : 'desktop')
   $(window).resize(reflow)
   introTimeline.play()
   $(window).on('hashchange', hashChangeEvent)

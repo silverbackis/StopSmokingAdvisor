@@ -42,7 +42,7 @@ class SessionType extends AbstractType
                 $input_type_class = ChoiceType::class;
 
                 $input_ops['custom'] = true;
-                $input_ops['text_class'] = 'custom-control-description';
+                $input_ops['text_class'] = 'custom-control-label';
                 $input_ops['expanded'] = true;
                 $input_ops['multiple'] = $input_type === 'choice_multi';
                 if ($input_type !== 'choice_multi') {
@@ -103,7 +103,8 @@ class SessionType extends AbstractType
                 $input_type_class = TextType::class;
                 $input_ops['attr'] = [
                     'placeholder' => 'Enter your answer here',
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'off',
+                    'class' => 'form-control form-control-lg'
                 ];
                 $input_ops['wrapper_class'] = 'text-input-outer text';
             break;
@@ -116,12 +117,13 @@ class SessionType extends AbstractType
                     'autocomplete' => 'off'
                 ];
                 $input_ops['wrapper_class'] = 'text-input-outer number';
+                $input_ops['attr']['class'] = 'form-control form-control-lg';
                 if ($input_type==='float_spend_weekly') {
-                    $input_ops['attr']['class'] = 'money';
+                    $input_ops['attr']['class'] .= ' money';
                     $input_ops['attr']['step'] = '0.01';
-                    $input_ops['input_group_html'] = '<span class="input-group-addon text-pre">
+                    $input_ops['input_group_html'] = '<span class="input-group-prepend"><span class="input-group-text">
                         &pound;
-                      </span>';
+                      </span></span>';
                     $input_ops['input_addon_before'] = true;
                 }
             break;
@@ -132,12 +134,13 @@ class SessionType extends AbstractType
                     $input_ops['attr'] = [
                         'placeholder' => 'Select date',
                         'autocomplete' => 'off',
+                        'class' => 'form-control form-control-lg',
                         //'id' => 'DateInput'
                     ];
                     $input_ops['wrapper_class'] = 'text-input-outer date';
-                    $input_ops['input_group_html'] = '<a class="input-group-addon" href="#" id="calpicker">
+                    $input_ops['input_group_html'] = '<div class="input-group-append"><a class="input-group-text" href="#" id="calpicker">
                         <img src="{{ asset(\'bundles/app/svg/calendar.svg\') }}" />
-                      </a>';
+                      </a></div>';
                 }
             break;
         }
