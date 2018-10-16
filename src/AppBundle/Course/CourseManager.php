@@ -7,6 +7,7 @@ use AppBundle\Entity\CourseData;
 use AppBundle\Entity\Page;
 use AppBundle\Entity\Session;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
@@ -214,7 +215,11 @@ class CourseManager
     {
         // Set the availability of the current session
         $quit_date = $this->session_manager->getData('quit_date');
-        $this->quit_date = null === $quit_date ? null : new \DateTime($quit_date);
+        try {
+            $this->quit_date = null === $quit_date ? null : new \DateTime($quit_date);
+        } catch (Exception $e) {
+            $this->quit_date = null;
+        }
         if (
             null === $this->course->getLatestSession() ||
             $this->course->getLatestSession()->getId() !== $this->current_session->getId()
