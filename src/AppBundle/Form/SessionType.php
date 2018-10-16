@@ -37,7 +37,7 @@ class SessionType extends AbstractType
         $input_type = $question->getInputType();
         switch ($input_type) {
             case 'choice_boolean':
-            case 'choice_boolean_continue':
+            case 'choice_boolean_reset':
             case 'choice_multi':
                 $input_type_class = ChoiceType::class;
 

@@ -306,7 +306,7 @@ class SessionManager
                     $CourseData->setDisplayText($question->getDisplayTextForAnswerValue($CourseData->getValue()));
                     $this->em->persist($CourseData);
                     $this->em->flush();
-                    if ($question->getInputType() === 'choice_boolean_continue' && $CourseData->getValue() !== 'bool_1') {
+                    if ($question->getInputType() === 'choice_boolean_reset' && $CourseData->getValue() === 'bool_1') {
                         return new RedirectResponse($this->router->generate('account_restart'));
                     }
 
