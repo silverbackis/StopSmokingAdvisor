@@ -66,7 +66,8 @@ const LocalSidePanel = function () {
   $.trumbowyg.svgPath = '/bundles/app/svg/icons.svg'
   this.$wysiwyg.trumbowyg({
     btns: [ [ 'viewHTML' ], [ 'strong', 'em' ], [ 'link' ] ],
-    autogrow: true
+    autogrow: true,
+    removeformatPasted: true
   })
 
   // ajax inputs
