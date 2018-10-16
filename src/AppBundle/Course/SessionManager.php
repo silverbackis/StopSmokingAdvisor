@@ -74,8 +74,11 @@ class SessionManager
     public function isValidQuestion(Question $question = null): bool
     {
         $questionExists = null !== $question;
-        $variableExists = null !== $question->getVariable() && '' !== $question->getVariable();
-        return $questionExists && $variableExists;
+        if ($questionExists) {
+            $variableExists = null !== $question->getVariable() && '' !== $question->getVariable();
+            return $variableExists;
+        }
+        return false;
     }
 
     public function getCurrentPage()
