@@ -85,24 +85,18 @@ class SessionManager
 
     public function getPageTitle(Page $page)
     {
+        $titles = [
+            'Introduction',
+            'Your Quit Date',
+            'First Week Smoke-Free',
+            'Second Week Smoke-Free',
+            'Third Week Smoke-Free',
+            'Fourth Week Smoke-Free',
+            'Fifth Week Smoke-Free',
+            'The Final Stretch'
+        ];
         $sessionNumber = $page->getSession();
-        switch ($sessionNumber) {
-            case 1:
-                return 'Introduction';
-                break;
-
-            case 2:
-                return 'Your Quit Date';
-                break;
-
-            case 8:
-                return 'Smoke-Free Week ' . ($sessionNumber - 1) . ' - The Final Stretch';
-                break;
-
-            default:
-                return 'Smoke-Free Week ' . ($sessionNumber - 1);
-                break;
-        }
+        return $titles[$sessionNumber-1] ?? 'Session ' . $sessionNumber;
     }
 
     public function setNextPage()
