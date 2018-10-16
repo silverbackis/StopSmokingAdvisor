@@ -128,9 +128,11 @@ class CourseManager
 
         foreach($courseData as $datum)
         {
-            $newDatum = clone $datum;
-            $newDatum->setCourse($this->course);
-            $this->em->persist($newDatum);
+            if ($datum->getVar() !== 'quit_date') {
+                $newDatum = clone $datum;
+                $newDatum->setCourse($this->course);
+                $this->em->persist($newDatum);
+            }
         }
 
         $this->em->flush();
