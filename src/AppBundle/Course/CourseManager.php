@@ -179,7 +179,7 @@ class CourseManager
                 $allSessions = $course->getSessions()->toArray();
                 $this->current_session = end($allSessions);
 
-                if ($this->current_session->getCompleted()) {
+                if ($this->current_session->getCompleted() && $this->current_session->getSession() < 8) {
                     // The session entity already there is finished - no good. Create the next session
                     $this->current_session = $this->createNewSession($this->current_session->getSession() + 1);
                 }

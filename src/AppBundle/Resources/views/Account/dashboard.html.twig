@@ -1,6 +1,6 @@
 {% extends '@App/base.html.twig' %}
 
-{% set teal_deg = (((session_number-1)/8)*360)|round(2) %}
+{% set teal_deg = ((sessions_completed/max_sessions)*360)|round(2) %}
 
 {% set teal_deg_left = -180 %}
 {% set teal_deg_right = -180 %}
@@ -94,7 +94,12 @@
                   </tr>
                   <tr>
                     <td class="h-100 dashboard-feature-content text-center">
-                      {% if session_available %}
+                      {% if sessions_completed == max_sessions %}
+                        <h1>Congratulations!<br />
+                          You've completed your final session.</h1>
+                        <h2 class="text-next-session">Click below if you'd like to restart the course.</h2>
+                        <a href="{{ path('account_restart') }}" class="btn btn-lg btn-success btn-start">Start Again <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="Restart Stop Smoking Advisor" /></a>
+                      {% elseif session_available %}
                         <h1>{{ session_number > 1 ? 'Welcome Back!' : 'Ready to try and quit?' }}</h1>
                         <h2>Your {{ session_number > 1 ? 'next' : 'first' }} session is {{ session_started ? 'still' : 'now' }} available</h2>
 
@@ -106,7 +111,7 @@
                         <a href="{{ path('account_restart') }}" class="btn btn-lg btn-success btn-start">Start Again <img class="next-icon" src="{{ asset('bundles/app/svg/next.svg') }}" alt="Restart Stop Smoking Advisor" /></a>
                       {% else %}
                         <h1>Great job!<br />
-                        You've completed session {{ session_number-1 }}.</h1>
+                        You've completed session {{ sessions_completed }}.</h1>
                         <h2 class="text-next-session">Your next session: {{ session_available_date }}</h2>
                         <h3 class="reminder-info">{{ reminder_emails ? 'You will receive a reminder email' : 'Please be aware you will not receive a reminder email' }} <a href="{{ path('account_settings') }}">(change)</a></h3>
                       {% endif %}
@@ -138,7 +143,7 @@
                         </div>
                         <div class="dashboard-bottom-info">
                           <h4 class="small">sessions completed</h4>
-                          <h3 class="large">{{ session_number-1 }}/8</h3>
+                          <h3 class="large">{{ sessions_completed }}/{{ max_sessions }}</h3>
                         </div>
                       </div>
                       {% else %}

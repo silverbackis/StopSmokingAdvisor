@@ -24,12 +24,19 @@ class AccountController extends Controller
 
         $EXPIRE = $course_manager->getCourse()->getSessionExpire();
         $AVAIL = $course_manager->getCourse()->getSessionAvailable();
+        $currentSession = $course_manager->getCurrentSession();
+        $completedSessions = $currentSession->getSession();
+        if (!$currentSession->getCompleted()) {
+            $completedSessions--;
+        }
         return $this->render('@App/Account/dashboard.html.twig', [
             'session_available' => $course_manager->isSessionAvailable(),
             'session_expired' => $course_manager->isSessionExpired(),
             'session_expired_date' => null === $EXPIRE ? null : $EXPIRE->format("l jS F Y"),
             'session_started' => \count($course_manager->getCurrentSession()->getViews()) > 0,
             'session_number' => $course_manager->getCurrentSession()->getSession(),
+            'sessions_completed' => $completedSessions,
+            'max_sessions' => 8,
             'session_available_date' => null === $AVAIL ? null : $AVAIL->format("l jS F"),
             'weekly_spend' => $course_manager->getData('weekly_spend'),
             'quit_date' =>$course_manager->getData('quit_date'),
