@@ -269,6 +269,6 @@ class CourseData
 
     public function getInputType(): string
     {
-        return $this->question->getInputType();
+        return $this->question ? $this->question->getInputType() : null;
     }
 }
