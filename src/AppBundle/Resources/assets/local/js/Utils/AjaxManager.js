@@ -118,7 +118,7 @@ export const requests = {
     },
     initFn: function(){
       return {
-        url: this.url + sessionNumber,
+        url: this.url + $("#sessionSelect").val(),
         ops: {}
       };
     },

@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints as SSAPageAssert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity
@@ -158,6 +159,19 @@ class Page
                     $clone->setPage($this);
                 }
             }
+        }
+    }
+
+    /**
+     * @Assert\Callback()
+     * @param ExecutionContextInterface $context
+     */
+    public function validate (ExecutionContextInterface $context)
+    {
+        if ($this->getType() === 'link' && $this->getForwardToPage() && $this->getSession() !== $this->getForwardToPage()->getSession()) {
+            $context->buildViolation('You can only forward to pages in the same session.')
+                ->atPath('forward_to_page')
+                ->addViolation();
         }
     }
 

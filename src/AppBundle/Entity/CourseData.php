@@ -267,7 +267,7 @@ class CourseData
         return $this;
     }
 
-    public function getInputType(): string
+    public function getInputType(): ?string
     {
         return $this->question ? $this->question->getInputType() : null;
     }
