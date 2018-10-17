@@ -207,14 +207,16 @@ $(function() {
                 window.location.href = response.href
               },
               202: function (response) {
+                if ($form.attr("action") === '/resetting/send-email'){
+                  if (response.message) {
+                    $("#modal_notice").html(response.message)
+                  } else {
+                    $("#modal_notice").html('Sorry, we could not retrieve the exact message from the server to display to you. However, it appears your password reset request was successful and you should receive an email.')
+                  }
+                  $('#resettingModal').modal()
+                }
                 //validation success
                 hidErr()
-                if (response.message) {
-                  $("#modal_notice").html(response.message)
-                } else {
-                  $("#modal_notice").html('Sorry, we could not retrieve the exact message from the server to display to you. However, it appears your password reset request was successful and you should receive an email.')
-                }
-                $('#resettingModal').modal()
                 buttonTextReset()
               },
               400: function (response) {

@@ -1,4 +1,5 @@
 "Bad credentials." : "Invalid username or password."
+"User account is disabled.": "You cannot log in because you still need to confirm your email address. An email was sent to you when you first subscribed."
 fos_user:
     username:
         already_used: 'The username is already used.'

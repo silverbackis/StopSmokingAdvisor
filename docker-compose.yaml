@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+    mysql:
+        image: mysql:5
+        command: mysqld --user=root --verbose
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: "symfony"
+            MYSQL_USER: "symfony"
+            MYSQL_PASSWORD: "password"
+            MYSQL_ROOT_PASSWORD: "root"
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
