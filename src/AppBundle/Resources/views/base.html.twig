@@ -1,10 +1,33 @@
 {% extends '@BWBase/base.html.twig' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa:300|Open+Sans:300,400" />
-    <link rel="stylesheet" href="{{ asset('build/app.css') }}" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa:300|Open+Sans:300,400"/>
+  <link rel="stylesheet" href="{{ asset('build/app.css') }}"/>
 {% endblock %}
 
 {% block javascripts %}
-    {#<script src="{{ asset('build/app.js') }}"></script>#}
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css"/>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
+  <script>
+    window.addEventListener("load", function () {
+      window.cookieconsent.initialise({
+        "palette": {
+          "popup": {
+            "background": "#efefef",
+            "text": "#404040"
+          },
+          "button": {
+            "background": "#8ec760",
+            "text": "#ffffff"
+          }
+        },
+        "position": "bottom-right",
+        "content": {
+          // "message": "This",
+          "href": "https://www.stopsmokingadvisor.net/terms"
+        }
+      })
+    })
+  </script>
+  {#<script src="{{ asset('build/app.js') }}"></script>#}
 {% endblock %}
