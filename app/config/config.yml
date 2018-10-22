@@ -72,6 +72,7 @@ swiftmailer:
     host:      "%mailer_host%"
     username:  "%mailer_user%"
     password:  "%mailer_password%"
+    encryption: ssl
     spool:     { type: memory }
 
 sonata_seo:
@@ -176,7 +177,7 @@ fos_user:
             validation_groups:  [UsersPassword, Registration]
         confirmation:
             enabled:    true
-            template:   '@User/registration.txt.twig'
+            template:   '@User/registration.email.twig'
     profile:
         form:
             validation_groups:  [UsersPassword, Profile]

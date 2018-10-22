@@ -13,4 +13,8 @@
 {{ 'resetting.email.message'|trans({'%name%': user.firstName | default(""), '%confirmationUrl%': confirmationUrl}) }}
 {% endautoescape %}
 {% endblock %}
-{% block body_html %}{% endblock %}
+{% block body_html %}
+{% include '@App/Emails/template.html.twig' with {
+  content: 'resetting.email.message'|trans({'%name%': user.firstName | default(""), '%confirmationUrl%': confirmationUrl})|nl2br
+} %}
+{% endblock %}
