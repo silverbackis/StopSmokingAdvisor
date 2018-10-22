@@ -29,3 +29,8 @@ parameters:
     google_app_secret: ~
     twitter_app_id: ~
     twitter_app_secret: ~
+    router.request_context.host: 'stopsmokingadvisor.net'
+    router.request_context.scheme: 'https'
+    router.request_context.base_url: '/'
+    asset.request_context.base_path: '%router.request_context.base_url%'
+    asset.request_context.secure: true
